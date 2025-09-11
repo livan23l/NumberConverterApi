@@ -351,7 +351,7 @@ class CBase {
 
         // Remove the trailing zeros
         result = result.replace(/0+$/, '');
-        if (result == '') result == '0';
+        if (result == '') result = '0';
 
         return result;
     }
@@ -388,7 +388,7 @@ class CBase {
 
         // Remove the leading zeros
         result = result.replace(/^0+/, '');
-        if (result == '') result == '0';
+        if (result == '') result = '0';
 
         return result;
     }
