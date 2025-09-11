@@ -3,6 +3,11 @@ import { tests as decTestsHex } from "./decimals/decimals_to_hexadecimal.test.js
 import { tests as decTestsOct } from "./decimals/decimals_to_octal.test.js";
 import { tests as decTestsBin } from "./decimals/decimals_to_binary.test.js";
 
+// Octal Tests
+import { tests as octTestsHex } from "./octal/octal_to_hexadecimal.test.js";
+import { tests as octTestsDec } from "./octal/octal_to_decimal.test.js";
+import { tests as octTestsBin } from "./octal/octal_to_binary.test.js";
+
 // Binary Tests
 import { tests as binTestsOct } from "./binary/binary_to_octal.test.js";
 import { tests as binTestsDec } from "./binary/binary_to_decimal.test.js";
@@ -81,6 +86,18 @@ class Tester {
         }
     }
 
+    static async runAllOctalTests() {
+        try {
+            this.#body.from.type = 'octal';
+            console.log('                        OCTAL TESTS');
+            await this.#executeTests(octTestsBin, 'binary', 'To Binary');
+            await this.#executeTests(octTestsDec, 'decimal', 'To Decimal');
+            await this.#executeTests(octTestsHex, 'hexadecimal', 'To Hexadecimal');
+        } catch(err) {
+            console.log(err.message);
+        }
+    }
+
     static async runAllBinaryTests() {
         try {
             this.#body.from.type = 'binary';
@@ -97,6 +114,8 @@ class Tester {
         await this.runAllDecimalsTests();
         console.log('\n');
         await this.runAllBinaryTests();
+        console.log('\n');
+        await this.runAllOctalTests();
     }
 }
 
