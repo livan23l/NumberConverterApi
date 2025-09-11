@@ -81,7 +81,7 @@ export class Router {
          * 
          * @param {string} uri - The current URI.
          * @param {string} method - GET or POST.
-         * @returns {object} - The current action with the callback and the
+         * @returns {object} The current action with the callback and the
          * variables.
          */
         const getAction = (uri, method) => {

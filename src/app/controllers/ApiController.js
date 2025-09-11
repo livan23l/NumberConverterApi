@@ -26,7 +26,7 @@ export class ApiController extends Controller {
      * 
      * @param {object} from - The `from` object with the value and the type.
      * @param {object} to - The `to` object with the type and formats.
-     * @returns {string} - The converted value.
+     * @returns {string} The converted value.
      */
     #makeConversion(from, to) {
         const currentClass = this.#getClassByType(from.type);
@@ -81,7 +81,7 @@ export class ApiController extends Controller {
      * the final value with warnings if there are some.
      * 
      * @param {object} from - The from object with the type and the value.
-     * @returns {object} - The resulting value and warnings if any.
+     * @returns {object} The resulting value and warnings if any.
      */
     #validateFrom(from) {
         // Get the current class depending on the type
@@ -108,7 +108,7 @@ export class ApiController extends Controller {
      * object with all the founded errors.
      * 
      * @param {object} data - The request data.
-     * @returns {object} - An object with all the founded errors.
+     * @returns {object} An object with all the founded errors.
      */
     #validateData(data) {
         // Validate the data
@@ -141,7 +141,7 @@ export class ApiController extends Controller {
      * expected result.
      * 
      * @param {object} data - The request data.
-     * @returns {object} - The final response.
+     * @returns {object} The final response.
      */
     #handleConversion(data) {
         // Validate the data

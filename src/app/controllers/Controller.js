@@ -15,7 +15,7 @@ export class Controller {
      * 
      * @param {object} data - The data to be validated
      * @param {object} validations - The object with the validations
-     * @returns {object} - The object with all the errors
+     * @returns {object} The object with all the errors
      * 
      * The possible validations are:
      * - 'condition:...' -> Sets a condition to validate the field.
@@ -35,7 +35,7 @@ export class Controller {
          * If the element doesn't exists it will return undefined.
          * 
          * @param {string} elementKey - The key of the element to search.
-         * @returns {*} - The element value or undefined if it doesn't exists.
+         * @returns {*} The element value or undefined if it doesn't exists.
          */
         const getElement = (elementKey) => {
             const keys = elementKey.split('.');
@@ -79,7 +79,7 @@ export class Controller {
          * @param {string} field - The field name.
          * @param {*} value - The current value.
          * @param {string} validations - The validation for the current value.
-         * @returns {string|null} - The first error in the validation.
+         * @returns {string|null} The first error in the validation.
          */
         const validate = (field, value, validations) => {
             const validationsArray = validations.split('|');
@@ -173,7 +173,7 @@ export class Controller {
     /**
      * Gets the body of the HTTP POST petition.
      * 
-     * @returns {Promise<object>} - The parsed body.
+     * @returns {Promise<object>} The parsed body.
      */
     _getRequest() {
         return new Promise((resolve, reject) => {
