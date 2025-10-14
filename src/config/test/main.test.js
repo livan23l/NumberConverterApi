@@ -1,3 +1,8 @@
+// Hexadecimal tests
+import { tests as hexTestsDec } from "./hexadecimal/hexadecimal_to_decimal.test.js";
+import { tests as hexTestsOct } from "./hexadecimal/hexadecimal_to_octal.test.js";
+import { tests as hexTestsBin } from "./hexadecimal/hexadecimal_to_binary.test.js";
+
 // Decimals tests
 import { tests as decTestsHex } from "./decimals/decimals_to_hexadecimal.test.js";
 import { tests as decTestsOct } from "./decimals/decimals_to_octal.test.js";
@@ -74,6 +79,18 @@ class Tester {
         if (okTests > 0) console.log(`Test [OK]: ${okTests} tests passed`);
     }
 
+    static async runAllHexadecimalTests() {
+        try {
+            this.#body.from.type = 'hexadecimal';
+            console.log('                        HEXADECIMAL TESTS');
+            await this.#executeTests(hexTestsBin, 'binary', 'To Binary');
+            await this.#executeTests(hexTestsOct, 'octal', 'To Octal');
+            await this.#executeTests(hexTestsDec, 'decimal', 'To Decimal');
+        } catch(err) {
+            console.log(err.message);
+        }
+    }
+
     static async runAllDecimalsTests() {
         try {
             this.#body.from.type = 'decimal';
@@ -111,6 +128,8 @@ class Tester {
     }
 
     static async runAllTests() {
+        await this.runAllHexadecimalTests();
+        console.log('\n');
         await this.runAllDecimalsTests();
         console.log('\n');
         await this.runAllBinaryTests();
