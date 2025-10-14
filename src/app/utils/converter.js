@@ -313,23 +313,27 @@ class CBase {
 
     /**
      * Generates the conversion into decimal base of one decimal part in another
-     * base.
+     * base. This method multiplies each digit of the original number by the
+     * original base raised to the relative position exponent
      * 
      * @static
      * @param {string} number - The decimal part in another base.
-     * @param {number} originalBase - The original base of the number.
+     * @param {string[]} baseChars - The valid characters of the initial number.
      * @returns {string} The decimal part in decimal base.
      */
-    static _base10DecimalsTemplate(number, originalBase) {
+    static _base10DecimalsTemplate(number, baseChars) {
         let result = '0';
 
-        // Make the conversion from back to from
-        let currentMult = this._strFullDivision('1', originalBase);
+        // Get the current base of the number
+        const base = baseChars.length;
+
+        // Make the conversion
+        let currentMult = this._strFullDivision('1', base);
         for (const dig of number) {
             // Add the corresponding value to the result if the digit is not '0'
             if (dig != '0') {
                 // Multiply the current multiplier by the current digit
-                const digNum = Number(dig);
+                const digNum = baseChars.indexOf(dig);
                 const value = this._strMultiplication(currentMult, digNum);
 
                 // Get the decimal part of the current value
@@ -345,8 +349,8 @@ class CBase {
                 result = this._strIntAddition(resultWithZeros, decimalPart);
             }
 
-            // Generate the next value
-            currentMult = this._strFullDivision(currentMult, originalBase);
+            // Decrease the exponent of the multiple by one
+            currentMult = this._strFullDivision(currentMult, base);
         }
 
         // Remove the trailing zeros
@@ -358,32 +362,36 @@ class CBase {
 
     /**
      * Generates the conversion into decimal base of one integer part in another
-     * base.
+     * base. This method multiplies each digit of the original number by the
+     * original base raised to the relative position exponent.
      * 
      * @static
      * @param {string} number - The integer part in another base.
-     * @param {number} originalBase - The original base of the number.
+     * @param {string[]} baseChars - The valid characters of the initial number.
      * @returns {string} The integer part in decimal base.
      */
-    static _base10IntegersTemplate(number, originalBase) {
+    static _base10IntegersTemplate(number, baseChars) {
         let result = '0';
+
+        // Get the current base of the number
+        const base = baseChars.length;
 
         // Make the conversion from back to from
         let currentMult = '1';
         for (const dig of number.split('').reverse()) {
             // Add the corresponding value to the result if the digit is not '0'
             if (dig != '0') {
-                // Multiply the current multiplier by the current digit
-                const digNum = Number(dig);
+                // Multiply the current multiplier by the current digit value
+                const digNum = baseChars.indexOf(dig);
                 const value = this._strMultiplication(currentMult, digNum);
 
                 // Add the product to the result
                 result = this._strIntAddition(value.intPart, result);
             }
-            
-            // Generate the next value
-            const next = this._strMultiplication(currentMult, originalBase);
-            currentMult = next.intPart;
+
+            // Increase the exponent of the multiple by one
+            const nextMult = this._strMultiplication(currentMult, base);
+            currentMult = nextMult.intPart;
         }
 
         // Remove the leading zeros
@@ -454,6 +462,165 @@ export class CHexadecimal extends CBase {
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D',
         'E', 'F'
     ];
+
+    /**
+     * This method provides a general template for converting the integer and
+     * decimal parts of an hexadecimal number to binary. It receives the
+     * hexadecimal number in string format and returns the binary number.
+     * 
+     * @static
+     * @param {string} number - The digits of one hexadecimal number.
+     * @returns {string} The binary representation.
+     */
+    static #getBinaryTemplate(number) {
+        const binaryDigits = {
+            '0': '0000', '1': '0001', '2': '0010', '3': '0011', '4': '0100',
+            '5': '0101', '6': '0110', '7': '0111', '8': '1000', '9': '1001',
+            'A': '1010', 'B': '1011', 'C': '1100', 'D': '1101', 'E': '1110',
+            'F': '1111'
+        };
+
+        let res = '';
+        for (const dig of number) {
+            res += binaryDigits[dig];
+        }
+
+        return res;
+    }
+
+    /**
+     * Converts the decimal part of one hexadecimal number in binary
+     * representation. Removes the trailing zeros before returning the result.
+     * 
+     * @static
+     * @param {string} number - The decimal part of an hexadecimal number.
+     * @returns {string} The number in binary representation.
+     */
+    static #getBinaryDecimals(number) {
+        let decimals = this.#getBinaryTemplate(number);
+
+        // Remove the trailing zeros
+        decimals = decimals.replace(/0+$/, '');
+
+        // Check if the result is empty
+        if (decimals == '') decimals = '0';
+
+        return decimals;
+    }
+
+    /**
+     * Converts the integer part of one hexadecimal number in binary
+     * representation. Removes the leading zeros before returning the result.
+     * 
+     * @static
+     * @param {string} number - The integer part of an hexadecimal number.
+     * @returns {string} The number in binary representation.
+     */
+    static #getBinaryIntegers(number) {
+        let integers = this.#getBinaryTemplate(number);
+
+        // Remove the leading zeros
+        integers = integers.replace(/^0+/, '');
+
+        // Check if the result is empty
+        if (integers == '') integers = '0';
+
+        return integers;
+    }
+
+    /**
+     * Generates the decimal part of one hexadecimal number that will be
+     * converted into a decimal number.
+     * 
+     * @static
+     * @param {string} number - The decimal part of an hexadecimal number.
+     * @returns {string} The decimal part in decimal base.
+     */
+    static #getBase10Decimals(number) {
+        return this._base10DecimalsTemplate(number, this.validChars);
+    }
+
+    /**
+     * Generates the integer part of one hexadecimal number that will be
+     * converted into a decimal number.
+     * 
+     * @static
+     * @param {string} number - The integer part of an hexadecimal number.
+     * @returns {string} The integer part in decimal base.
+     */
+    static #getBase10Integers(number) {
+        return this._base10IntegersTemplate(number, this.validChars);
+    }
+
+    /**
+     * Makes the conversion from one hexadecimal number to the corresponding
+     * number in base62. The hexadecimal number can be negative and can contain
+     * a decimal part. In this method it's possible to send one custom order in
+     * the valid characters. This method will make two conversions, one from
+     * hexadecimal to decimal and the second one from decimal to base62.
+     * 
+     * @static
+     * @param {string} number - The hexadecimal number to convert in base62.
+     * @param {string[]} customChars - A custom character order. 
+     * @returns {string} The number in base62 format.
+     */
+    static tobase62(number, customChars) {
+        const decimalNumber = this.todecimal(number);
+        return CDecimal.tobase62(decimalNumber, customChars);
+    }
+
+    /**
+     * Makes the conversion from one hexadecimal number to the corresponding
+     * number in octal. The hexadecimal number can be negative and can contain a
+     * decimal part. This method will make two conversions, one from hexadecimal
+     * to binary and the second one from binary to octal.
+     * 
+     * @static
+     * @param {string} number - The hexadecimal number to convert in octal.
+     * @returns {string} The number in octal format.
+     */
+    static tooctal(number) {
+        const binaryNumber = this.tobinary(number);
+        return CBinary.tooctal(binaryNumber);
+    }
+
+    /**
+     * Makes the conversion from one hexadecimal number to the corresponding
+     * number in decimal. The hexadecimal number can be negative and can contain
+     * a decimal part.
+     * 
+     * @static
+     * @param {string} number - The hexadecimal number to convert in decimal.
+     * @returns {string} The number in decimal format.
+     */
+    static todecimal(number) {
+        return this._conversion(
+            number,
+            10,
+            CDecimal.validChars,
+            this.#getBase10Decimals,
+            this.#getBase10Integers
+        );
+    }
+
+    /**
+     * Makes the conversion from one hexadecimal number to the corresponding
+     * number in binary. The hexadecimal number can be negative and can contain
+     * a decimal part.
+     * 
+     * @static
+     * @param {string} number - The hexadecimal number to convert in binary.
+     * @returns {string} The number in binary format.
+     */
+    static tobinary(number) {
+        return this._conversion(
+            number,
+            2,
+            CBinary.validChars,
+            this.#getBinaryDecimals,
+            this.#getBinaryIntegers
+        );
+    }
 }
 
 export class CDecimal extends CBase {
@@ -677,7 +844,7 @@ export class COctal extends CBase {
     static #getBinaryIntegers(number) {
         let integers = this.#getBinaryTemplate(number);
 
-        // Remove the trailing zeros
+        // Remove the leading zeros
         integers = integers.replace(/^0+/, '');
 
         // Check if the result is empty
@@ -695,7 +862,7 @@ export class COctal extends CBase {
      * @returns {string} The decimal part in decimal base.
      */
     static #getBase10Decimals(number) {
-        return this._base10DecimalsTemplate(number, 8);
+        return this._base10DecimalsTemplate(number, this.validChars);
     }
 
     /**
@@ -707,7 +874,7 @@ export class COctal extends CBase {
      * @returns {string} The integer part in decimal base.
      */
     static #getBase10Integers(number) {
-        return this._base10IntegersTemplate(number, 8);
+        return this._base10IntegersTemplate(number, this.validChars);
     }
 
     /**
@@ -729,12 +896,12 @@ export class COctal extends CBase {
 
     /**
      * Makes the conversion from one octal number to the corresponding number
-     * in hexadecimal. The binary number can be negative and can contain a
+     * in hexadecimal. The octal number can be negative and can contain a
      * decimal part. This method will make two conversions, one from octal to
      * binary and the second one from binary to hexadecimal.
      * 
      * @static
-     * @param {string} number - The binary number to convert in hexadecimal.
+     * @param {string} number - The octal number to convert in hexadecimal.
      * @returns {string} The number in hexadecimal format.
      */
     static tohexadecimal(number) {
@@ -879,7 +1046,7 @@ export class CBinary extends CBase {
      * @returns {string} The decimal part in decimal base.
      */
     static #getBase10Decimals(number) {
-        return this._base10DecimalsTemplate(number, 2);
+        return this._base10DecimalsTemplate(number, this.validChars);
     }
 
     /**
@@ -891,7 +1058,7 @@ export class CBinary extends CBase {
      * @returns {string} The integer part in decimal base.
      */
     static #getBase10Integers(number) {
-        return this._base10IntegersTemplate(number, 2);
+        return this._base10IntegersTemplate(number, this.validChars);
     }
 
     /**
