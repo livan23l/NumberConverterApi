@@ -312,13 +312,40 @@ class CBase {
     }
 
     /**
+     * This method provides a general template for converting the integer and
+     * decimal parts of a number with a power of two base, based on the binary
+     * representation of the original base.
+     * 
+     * @param {string} number - The number with a power of two base.
+     * @param {'integer'|'decimal'} typeOfNumber - The sent part of the number.
+     * @param {object} binaryDigits - The binary representation of the base.
+     * @returns {string} The binary conversion of the number.
+     */
+    static _base2GeneralTemplate(number, typeOfNumber, binaryDigits) {
+        // Make the conversion for each digit
+        let res = '';
+        for (const dig of number) {
+            res += binaryDigits[dig];
+        }
+
+        // Remove the leading or trailing zeros
+        if (typeOfNumber == 'integer') res = res.replace(/^0+/, '');
+        else res = res.replace(/0+$/, '');
+
+        // Check if the result is empty
+        if (res == '') res = '0';
+
+        return res;
+    }
+
+    /**
      * Generates the conversion into decimal base of one decimal part in another
      * base. This method multiplies each digit of the original number by the
      * original base raised to the relative position exponent
      * 
      * @static
      * @param {string} number - The decimal part in another base.
-     * @param {string[]} baseChars - The valid characters of the initial number.
+     * @param {string[]} baseChars - The valid characters of the number base.
      * @returns {string} The decimal part in decimal base.
      */
     static _base10DecimalsTemplate(number, baseChars) {
@@ -327,11 +354,14 @@ class CBase {
         // Get the current base of the number
         const base = baseChars.length;
 
+        // Get the current zero value based on the characters of the base
+        const cur0 = baseChars[0];
+
         // Make the conversion
         let currentMult = this._strFullDivision('1', base);
         for (const dig of number) {
             // Add the corresponding value to the result if the digit is not '0'
-            if (dig != '0') {
+            if (dig != cur0) {
                 // Multiply the current multiplier by the current digit
                 const digNum = baseChars.indexOf(dig);
                 const value = this._strMultiplication(currentMult, digNum);
@@ -367,7 +397,7 @@ class CBase {
      * 
      * @static
      * @param {string} number - The integer part in another base.
-     * @param {string[]} baseChars - The valid characters of the initial number.
+     * @param {string[]} baseChars - The valid characters of the number base.
      * @returns {string} The integer part in decimal base.
      */
     static _base10IntegersTemplate(number, baseChars) {
@@ -376,11 +406,14 @@ class CBase {
         // Get the current base of the number
         const base = baseChars.length;
 
+        // Get the current zero value based on the characters of the base
+        const cur0 = baseChars[0];
+
         // Make the conversion from back to from
         let currentMult = '1';
         for (const dig of number.split('').reverse()) {
-            // Add the corresponding value to the result if the digit is not '0'
-            if (dig != '0') {
+            // Add the corresponding value to the result
+            if (dig != cur0) {
                 // Multiply the current multiplier by the current digit value
                 const digNum = baseChars.indexOf(dig);
                 const value = this._strMultiplication(currentMult, digNum);
@@ -410,13 +443,21 @@ class CBase {
      * 
      * @static
      * @param {string} number - The number to convert into another base.
-     * @param {number} base - The new base for the number.
-     * @param {string[]} baseChars - The valid characters in the new base.
-     * @param {function} decMethod - The static method to get the decimal part.
-     * @param {function} intMethod - The static method to get the integer part.
+     * @param {string[]} curChars - The valid characters of the current base.
+     * @param {string[]} newChars - The valid characters of the new base.
+     * @param {function} decMethod - The callback to get the decimal part.
+     * This callback will receive the following attributes:
+     * - (string) The decimal part of the number in string format.
+     * - (string[]) The valid characters of the current base.
+     * - (string[]) The valid characters of the new base.
+     * @param {function} intMethod - The callback to get the integer part.
+     * This callback will receive the following attributes:
+     * - (string) The integer part of the number in string format.
+     * - (string[]) The valid characters of the current base.
+     * - (string[]) The valid characters of the new base.
      * @returns {string} The new value in the specified base.
      */
-    static _conversion(number, base, baseChars, decMethod, intMethod) {
+    static _conversion(number, curChars, newChars, decMethod, intMethod) {
         // Define the number characteristics
         const isNegative = number.startsWith('-');
         const isDecimal = number.includes('.');
@@ -429,13 +470,13 @@ class CBase {
         // Add the new decimal digits to the final result
         if (isDecimal) {
             result.push('.');
-            result.push(decMethod.call(this, decimalPart, base, baseChars));
+            result.push(decMethod.call(this, decimalPart, curChars, newChars));
         }
 
         // Check if the integer part is basically zero to return the result
         if (intPart == '0' || intPart == '-0') {
             // Set the corresponding zero in the final value
-            const cur0 = baseChars[0];
+            const cur0 = newChars[0];
             const joinedNumber = cur0 + result.join('');
             const finalNumber = ((isNegative) ? '-' : '') + joinedNumber;
 
@@ -448,7 +489,7 @@ class CBase {
         if (isNegative) intPart = intPart.slice(1);
 
         // Generate the integer part and add it to the result
-        result.unshift(intMethod.call(this, intPart, base, baseChars));
+        result.unshift(intMethod.call(this, intPart, curChars, newChars));
 
         // Add the negative sign if it's negative
         if (isNegative) result.unshift('-');
@@ -463,106 +504,78 @@ export class CHexadecimal extends CBase {
         'E', 'F'
     ];
 
-    /**
-     * This method provides a general template for converting the integer and
-     * decimal parts of an hexadecimal number to binary. It receives the
-     * hexadecimal number in string format and returns the binary number.
-     * 
-     * @static
-     * @param {string} number - The digits of one hexadecimal number.
-     * @returns {string} The binary representation.
-     */
-    static #getBinaryTemplate(number) {
-        const binaryDigits = {
-            '0': '0000', '1': '0001', '2': '0010', '3': '0011', '4': '0100',
-            '5': '0101', '6': '0110', '7': '0111', '8': '1000', '9': '1001',
-            'A': '1010', 'B': '1011', 'C': '1100', 'D': '1101', 'E': '1110',
-            'F': '1111'
-        };
-
-        let res = '';
-        for (const dig of number) {
-            res += binaryDigits[dig];
-        }
-
-        return res;
-    }
+    static binaryDigits = {
+        '0': '0000', '1': '0001', '2': '0010', '3': '0011', '4': '0100',
+        '5': '0101', '6': '0110', '7': '0111', '8': '1000', '9': '1001',
+        'A': '1010', 'B': '1011', 'C': '1100', 'D': '1101', 'E': '1110',
+        'F': '1111'
+    };
 
     /**
      * Converts the decimal part of one hexadecimal number in binary
-     * representation. Removes the trailing zeros before returning the result.
+     * representation.
      * 
      * @static
-     * @param {string} number - The decimal part of an hexadecimal number.
+     * @private
+     * @param {string} number - The decimal part of a hexadecimal number.
      * @returns {string} The number in binary representation.
      */
     static #getBinaryDecimals(number) {
-        let decimals = this.#getBinaryTemplate(number);
-
-        // Remove the trailing zeros
-        decimals = decimals.replace(/0+$/, '');
-
-        // Check if the result is empty
-        if (decimals == '') decimals = '0';
-
-        return decimals;
+        return this._base2GeneralTemplate(number, 'decimal', this.binaryDigits);
     }
 
     /**
      * Converts the integer part of one hexadecimal number in binary
-     * representation. Removes the leading zeros before returning the result.
+     * representation.
      * 
      * @static
-     * @param {string} number - The integer part of an hexadecimal number.
+     * @private
+     * @param {string} number - The integer part of a hexadecimal number.
      * @returns {string} The number in binary representation.
      */
     static #getBinaryIntegers(number) {
-        let integers = this.#getBinaryTemplate(number);
-
-        // Remove the leading zeros
-        integers = integers.replace(/^0+/, '');
-
-        // Check if the result is empty
-        if (integers == '') integers = '0';
-
-        return integers;
+        return this._base2GeneralTemplate(number, 'integer', this.binaryDigits);
     }
 
     /**
-     * Generates the decimal part of one hexadecimal number that will be
-     * converted into a decimal number.
+     * Converts the decimal part of a hexadecimal number to its base-decimal
+     * representation.
      * 
      * @static
-     * @param {string} number - The decimal part of an hexadecimal number.
+     * @private
+     * @param {string} number - The decimal part of a hexadecimal number.
+     * @param {string[]} numberChars - The valid characters of the number base.
      * @returns {string} The decimal part in decimal base.
      */
-    static #getBase10Decimals(number) {
-        return this._base10DecimalsTemplate(number, this.validChars);
+    static #getBase10Decimals(number, numberChars) {
+        return this._base10DecimalsTemplate(number, numberChars);
     }
 
     /**
-     * Generates the integer part of one hexadecimal number that will be
-     * converted into a decimal number.
+     * converts the integer part of a hexadecimal number to its base-decimal
+     * representation.
      * 
      * @static
-     * @param {string} number - The integer part of an hexadecimal number.
+     * @private
+     * @param {string} number - The integer part of a hexadecimal number.
+     * @param {string[]} numberChars - The valid characters of the number base.
      * @returns {string} The integer part in decimal base.
      */
-    static #getBase10Integers(number) {
-        return this._base10IntegersTemplate(number, this.validChars);
+    static #getBase10Integers(number, numberChars) {
+        return this._base10IntegersTemplate(number, numberChars);
     }
 
     /**
      * Makes the conversion from one hexadecimal number to the corresponding
-     * number in base62. The hexadecimal number can be negative and can contain
+     * number in base 62. The hexadecimal number can be negative and can contain
      * a decimal part. In this method it's possible to send one custom order in
      * the valid characters. This method will make two conversions, one from
-     * hexadecimal to decimal and the second one from decimal to base62.
+     * hexadecimal to decimal and the second one from decimal to base 62.
      * 
      * @static
-     * @param {string} number - The hexadecimal number to convert in base62.
-     * @param {string[]} customChars - A custom character order. 
-     * @returns {string} The number in base62 format.
+     * @param {string} number - The hexadecimal number to convert in base 62.
+     * @param {string[]} customChars - A custom character order.
+     * @returns {string} The number in base 62 format.
      */
     static tobase62(number, customChars) {
         const decimalNumber = this.todecimal(number);
@@ -596,7 +609,7 @@ export class CHexadecimal extends CBase {
     static todecimal(number) {
         return this._conversion(
             number,
-            10,
+            this.validChars,
             CDecimal.validChars,
             this.#getBase10Decimals,
             this.#getBase10Integers
@@ -615,7 +628,7 @@ export class CHexadecimal extends CBase {
     static tobinary(number) {
         return this._conversion(
             number,
-            2,
+            this.validChars,
             CBinary.validChars,
             this.#getBinaryDecimals,
             this.#getBinaryIntegers
@@ -627,7 +640,7 @@ export class CDecimal extends CBase {
     static validChars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
     /**
-     * Gets the numbers from the decimal part in one conversion from one decimal
+     * Gets the digits from the decimal part in one conversion from one decimal
      * number to another base depending on the valid characters in the new base.
      * 
      * Returns the new decimal part with up to 25 digits. If the conversion
@@ -635,14 +648,18 @@ export class CDecimal extends CBase {
      * method appends a '...' to the end.
      * 
      * @static
+     * @private
      * @param {string} decimal - The decimal part to be converted.
-     * @param {number} base - The new base for the decimal part.
-     * @param {string[]} baseChars - The valid characters in the new base.
-     * @returns {string}
+     * @param {string[]} _ignored - Ignored parameter.
+     * @param {string[]} baseChars - The valid characters of the new base.
+     * @returns {string} The decimal part in decimal base.
      */
-    static #getDecimals(decimal, base, baseChars) {
+    static #getDecimals(decimal, _ignored, baseChars) {
         const maxDecimals = 25;
         let finalVal = '';
+
+        // Get the destination base
+        const base = baseChars.length;
 
         // Generate the new decimal value
         let isComplete = false;
@@ -670,17 +687,21 @@ export class CDecimal extends CBase {
     }
 
     /**
-     * Gets the numbers from the integer part in one conversion from one decimal
+     * Gets the digits from the integer part in one conversion from one decimal
      * number to another base depending on the valid characters in the new
      * base. Returns the final value reached until get zero in the divisions.
      * 
      * @static
+     * @private
      * @param {string} number - The decimal number to be converted.
-     * @param {number} base - The new base for the decimal number.
-     * @param {string[]} baseChars - The valid characters in the new base.
-     * @returns {string}
+     * @param {string[]} _ignored - Ignored parameter.
+     * @param {string[]} baseChars - The valid characters of the new base.
+     * @returns {string} The integer part in decimal base.
      */
-    static #getIntegers(number, base, baseChars) {
+    static #getIntegers(number, _ignored, baseChars) {
+        // Get the destination base
+        const base = baseChars.length;
+
         // Generate the integer part until reach the expected coefficient
         const expectedCoefficient = '0';
         let finalValue = '';
@@ -700,14 +721,14 @@ export class CDecimal extends CBase {
 
     /**
      * Makes the conversion from one decimal number to the corresponding number
-     * in base62. The decimal number can be negative and can contain a decimal
+     * in base 62. The decimal number can be negative and can contain a decimal
      * part. In this method it's possible to send one custom order in the valid
      * characters.
      * 
      * @static
-     * @param {string} number - The decimal number to convert in base62.
-     * @param {string[]} customChars - A custom character order. 
-     * @returns {string} The number in base62 format.
+     * @param {string} number - The decimal number to convert in base 62.
+     * @param {string[]} customChars - A custom character order.
+     * @returns {string} The number in base 62 format.
      */
     static tobase62(number, customChars) {
         const validChars = (customChars.length > 0)
@@ -716,7 +737,7 @@ export class CDecimal extends CBase {
 
         return this._conversion(
             number,
-            62,
+            this.validChars,
             validChars,
             this.#getDecimals,
             this.#getIntegers,
@@ -735,7 +756,7 @@ export class CDecimal extends CBase {
     static tohexadecimal(number) {
         return this._conversion(
             number,
-            16,
+            this.validChars,
             CHexadecimal.validChars,
             this.#getDecimals,
             this.#getIntegers,
@@ -754,7 +775,7 @@ export class CDecimal extends CBase {
     static tooctal(number) {
         return this._conversion(
             number,
-            8,
+            this.validChars,
             COctal.validChars,
             this.#getDecimals,
             this.#getIntegers,
@@ -773,7 +794,7 @@ export class CDecimal extends CBase {
     static tobinary(number) {
         return this._conversion(
             number,
-            2,
+            this.validChars,
             CBinary.validChars,
             this.#getDecimals,
             this.#getIntegers,
@@ -784,110 +805,74 @@ export class CDecimal extends CBase {
 export class COctal extends CBase {
     static validChars = ['0', '1', '2', '3', '4', '5', '6', '7'];
 
-    /**
-     * This method provides a general template for converting the integer and
-     * decimal parts of an octal number to binary. It receives the octal number
-     * in string format and returns the binary representation.
-     * 
-     * @static
-     * @param {string} number - The digits of one octal number.
-     * @returns {string} The binary representation.
-     */
-    static #getBinaryTemplate(number) {
-        const binaryDigits = {
-            '0': '000',
-            '1': '001',
-            '2': '010',
-            '3': '011',
-            '4': '100',
-            '5': '101',
-            '6': '110',
-            '7': '111'
-        };
-
-        let res = '';
-        for (const dig of number) {
-            res += binaryDigits[dig];
-        }
-
-        return res;
-    }
+    static binaryDigits = {
+        '0': '000', '1': '001', '2': '010', '3': '011',
+        '4': '100', '5': '101', '6': '110', '7': '111'
+    };
 
     /**
      * Converts the decimal part of one octal number in binary representation.
-     * Removes the trailing zeros before returning the result.
      * 
      * @static
+     * @private
      * @param {string} number - The decimal part of an octal number.
      * @returns {string} The number in binary representation.
      */
     static #getBinaryDecimals(number) {
-        let decimals = this.#getBinaryTemplate(number);
-
-        // Remove the trailing zeros
-        decimals = decimals.replace(/0+$/, '');
-
-        // Check if the result is empty
-        if (decimals == '') decimals = '0';
-
-        return decimals;
+        return this._base2GeneralTemplate(number, 'decimal', this.binaryDigits);
     }
 
     /**
      * Converts the integer part of one octal number in binary representation.
-     * Removes the leading zeros before returning the result.
      * 
      * @static
+     * @private
      * @param {string} number - The integer part of an octal number.
      * @returns {string} The number in binary representation.
      */
     static #getBinaryIntegers(number) {
-        let integers = this.#getBinaryTemplate(number);
-
-        // Remove the leading zeros
-        integers = integers.replace(/^0+/, '');
-
-        // Check if the result is empty
-        if (integers == '') integers = '0';
-
-        return integers;
+        return this._base2GeneralTemplate(number, 'integer', this.binaryDigits);
     }
 
     /**
-     * Generates the decimal part of one octal number that will be converted
-     * into a decimal number.
+     * Converts the decimal part of an octal number to its base-decimal
+     * representation.
      * 
      * @static
+     * @private
      * @param {string} number - The decimal part of an octal number.
+     * @param {string[]} numberChars - The valid characters of the number base.
      * @returns {string} The decimal part in decimal base.
      */
-    static #getBase10Decimals(number) {
-        return this._base10DecimalsTemplate(number, this.validChars);
+    static #getBase10Decimals(number, numberChars) {
+        return this._base10DecimalsTemplate(number, numberChars);
     }
 
     /**
-     * Generates the integer part of one octal number that will be converted
-     * into a decimal number.
+     * converts the integer part of an octal number to its base-decimal
+     * representation.
      * 
      * @static
+     * @private
      * @param {string} number - The integer part of an octal number.
+     * @param {string[]} numberChars - The valid characters of the number base.
      * @returns {string} The integer part in decimal base.
      */
-    static #getBase10Integers(number) {
-        return this._base10IntegersTemplate(number, this.validChars);
+    static #getBase10Integers(number, numberChars) {
+        return this._base10IntegersTemplate(number, numberChars);
     }
 
     /**
-     * Makes the conversion from one octal number to the corresponding number
-     * in base62. The octal number can be negative and can contain a decimal
-     * part. In this method it's possible to send one custom order in the valid
+     * Makes the conversion from one octal number to the corresponding number in
+     * base 62. The octal number can be negative and can contain a decimal part.
+     * In this method it's possible to send one custom order in the valid
      * characters. This method will make two conversions, one from octal to
-     * decimal and the second one from decimal to base62.
+     * decimal and the second one from decimal to base 62.
      * 
      * @static
-     * @param {string} number - The octal number to convert in base62.
-     * @param {string[]} customChars - A custom character order. 
-     * @returns {string} The number in base62 format.
+     * @param {string} number - The octal number to convert in base 62.
+     * @param {string[]} customChars - A custom character order.
+     * @returns {string} The number in base 62 format.
      */
     static tobase62(number, customChars) {
         const decimalNumber = this.todecimal(number);
@@ -895,10 +880,10 @@ export class COctal extends CBase {
     }
 
     /**
-     * Makes the conversion from one octal number to the corresponding number
-     * in hexadecimal. The octal number can be negative and can contain a
-     * decimal part. This method will make two conversions, one from octal to
-     * binary and the second one from binary to hexadecimal.
+     * Makes the conversion from one octal number to the corresponding number in
+     * hexadecimal. The octal number can be negative and can contain a decimal
+     * part. This method will make two conversions, one from octal to binary and
+     * the second one from binary to hexadecimal.
      * 
      * @static
      * @param {string} number - The octal number to convert in hexadecimal.
@@ -910,9 +895,8 @@ export class COctal extends CBase {
     }
 
     /**
-     * Makes the conversion from one octal number to the corresponding number
-     * in decimal. The octal number can be negative and can contain a decimal
-     * part.
+     * Makes the conversion from one octal number to the corresponding number in
+     * decimal. The octal number can be negative and can contain a decimal part.
      * 
      * @static
      * @param {string} number - The octal number to convert in decimal.
@@ -921,7 +905,7 @@ export class COctal extends CBase {
     static todecimal(number) {
         return this._conversion(
             number,
-            10,
+            this.validChars,
             CDecimal.validChars,
             this.#getBase10Decimals,
             this.#getBase10Integers
@@ -929,9 +913,8 @@ export class COctal extends CBase {
     }
 
     /**
-     * Makes the conversion from one octal number to the corresponding number
-     * in binary. The octal number can be negative and can contain a decimal
-     * part.
+     * Makes the conversion from one octal number to the corresponding number in
+     * binary. The octal number can be negative and can contain a decimal part.
      * 
      * @static
      * @param {string} number - The octal number to convert in binary.
@@ -940,7 +923,7 @@ export class COctal extends CBase {
     static tobinary(number) {
         return this._conversion(
             number,
-            2,
+            this.validChars,
             CBinary.validChars,
             this.#getBinaryDecimals,
             this.#getBinaryIntegers
@@ -958,44 +941,45 @@ export class CBinary extends CBase {
      * result is the integer part and forward when it's the decimal part.
      * 
      * @static
+     * @private
      * @param {string} number - The binary number to be converted.
-     * @param {number} base - The new base of the number (4, 8, 16, 32...).
-     * @param {string[]} baseChars - The corresponding chars in the new base.
-     * @param {boolean} append - If the generation will be backward or forward.
+     * @param {string[]} baseChars - The characters of the new base.
+     * @param {boolean} [isInteger=true] - If the number is the integer part.
      * @returns {string} The resulting number in the new base.
      */
-    static #getBase2Template(number, base, baseChars, append = true) {
+    static #getBase2Template(number, baseChars, isInteger = true) {
         // Get the cycles depending on the current base
         const cyclesPerBase = {
             8: 3,
             16: 4
         };
+        const base = baseChars.length;
         const cycles = cyclesPerBase[base];
 
         // Define the variables to generate the integer part of the value
         let result = '';
         let value = 0;
-        let exp = (append) ? 0 : cycles - 1;
+        let exp = (isInteger) ? 0 : cycles - 1;
 
         // Define if the value will be append or pushed
-        const addToResult = (append)
+        const addToResult = (isInteger)
             ? (val) => { result = baseChars[val] + result; }
             : (val) => { result += baseChars[val] };
 
         // Make the conversion
-        const numberOrder = (append) ? number.split('').reverse() : number;
+        const numberOrder = (isInteger) ? number.split('').reverse() : number;
         for (const dig of numberOrder) {
             // Check if it's the end of the current cycle
             if (exp >= cycles || exp < 0) {
                 addToResult(value);
                 value = 0;
-                exp = (append) ? 0 : cycles - 1;
+                exp = (isInteger) ? 0 : cycles - 1;
             }
 
             // Check if the current value will be added
             if (dig == '1') value += (2 ** exp);
 
-            if (append) exp++; else exp--;
+            if (isInteger) exp++; else exp--;
         }
 
         // Check if the cycle was not finish to add the remaining
@@ -1013,13 +997,14 @@ export class CBinary extends CBase {
      * exponents of two (4, 8, 16, 32...).
      * 
      * @static
+     * @private
      * @param {string} decimals - The decimals that will be converted.
-     * @param {number} base - The new base of the decimals.
-     * @param {string[]} baseChars - The corresponding chars in the new base.
+     * @param {string[]} _ignored - Ignored parameter.
+     * @param {string[]} baseChars - The characters of the new base.
      * @returns {string} The converted decimals in the new base.
      */
-    static #getBase2Decimals(decimals, base, baseChars) {
-        return this.#getBase2Template(decimals, base, baseChars, false);
+    static #getBase2Decimals(decimals, _ignored, baseChars) {
+        return this.#getBase2Template(decimals, baseChars, false);
     }
 
     /**
@@ -1028,50 +1013,55 @@ export class CBinary extends CBase {
      * exponents of two (4, 8, 16, 32...).
      * 
      * @static
+     * @private
      * @param {string} number - The number that will be converted.
-     * @param {number} base - The new base of the decimals.
-     * @param {string[]} baseChars - The corresponding chars in the new base.
+     * @param {string[]} _ignored - Ignored parameter.
+     * @param {string[]} baseChars - The characters of the new base.
      * @returns {string} The converted number in the new base.
      */
-    static #getBase2Integers(number, base, baseChars) {
-        return this.#getBase2Template(number, base, baseChars);
+    static #getBase2Integers(number, _ignored, baseChars) {
+        return this.#getBase2Template(number, baseChars);
     }
 
     /**
-     * Generates the decimal part of one binary number that will be converted
-     * into a decimal number.
+     * Converts the decimal part of a binary number to its base-decimal
+     * representation.
      * 
      * @static
+     * @private
      * @param {string} number - The decimal part of a binary number.
+     * @param {string[]} numberChars - The valid characters of the number base.
      * @returns {string} The decimal part in decimal base.
      */
-    static #getBase10Decimals(number) {
-        return this._base10DecimalsTemplate(number, this.validChars);
+    static #getBase10Decimals(number, numberChars) {
+        return this._base10DecimalsTemplate(number, numberChars);
     }
 
     /**
-     * Generates the integer part of one binary number that will be converted
-     * into a decimal number.
+     * converts the integer part of a binery number to its base-decimal
+     * representation.
      * 
      * @static
+     * @private
      * @param {string} number - The integer part of a binary number.
+     * @param {string[]} numberChars - The valid characters of the number base.
      * @returns {string} The integer part in decimal base.
      */
-    static #getBase10Integers(number) {
-        return this._base10IntegersTemplate(number, this.validChars);
+    static #getBase10Integers(number, numberChars) {
+        return this._base10IntegersTemplate(number, numberChars);
     }
 
     /**
      * Makes the conversion from one binary number to the corresponding number
-     * in base62. The binary number can be negative and can contain a decimal
+     * in base 62. The binary number can be negative and can contain a decimal
      * part. In this method it's possible to send one custom order in the valid
      * characters. This method will make two conversions, one from binary to
-     * decimal and the second one from decimal to base62.
+     * decimal and the second one from decimal to base 62.
      * 
      * @static
-     * @param {string} number - The binary number to convert in base62.
-     * @param {string[]} customChars - A custom character order. 
-     * @returns {string} The number in base62 format.
+     * @param {string} number - The binary number to convert in base 62.
+     * @param {string[]} customChars - A custom character order.
+     * @returns {string} The number in base 62 format.
      */
     static tobase62(number, customChars) {
         const decimalNumber = this.todecimal(number);
@@ -1090,7 +1080,7 @@ export class CBinary extends CBase {
     static tohexadecimal(number) {
         return this._conversion(
             number,
-            16,
+            this.validChars,
             CHexadecimal.validChars,
             this.#getBase2Decimals,
             this.#getBase2Integers
@@ -1109,11 +1099,11 @@ export class CBinary extends CBase {
     static todecimal(number) {
         return this._conversion(
             number,
-            10,
+            this.validChars,
             CDecimal.validChars,
             this.#getBase10Decimals,
             this.#getBase10Integers
-        )
+        );
     }
 
     /**
@@ -1128,7 +1118,7 @@ export class CBinary extends CBase {
     static tooctal(number) {
         return this._conversion(
             number,
-            8,
+            this.validChars,
             COctal.validChars,
             this.#getBase2Decimals,
             this.#getBase2Integers
@@ -1153,15 +1143,148 @@ export class CBase62 extends CBase {
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
         'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
     ];
+
+    /**
+     * Converts the decimal part of a base 62 number to its base-decimal
+     * representation.
+     * 
+     * @static
+     * @private
+     * @param {string} number - The decimal part of a base 62 number.
+     * @param {string[]} numberChars - The valid characters of the number base.
+     * @returns {string} The decimal part in decimal base.
+     */
+    static #getBase10Decimals(number, numberChars) {
+        return this._base10DecimalsTemplate(number, numberChars);
+    }
+
+    /**
+     * converts the integer part of a base 62 number to its base-decimal
+     * representation.
+     * 
+     * @static
+     * @private
+     * @param {string} number - The integer part of a base 62 number.
+     * @param {string[]} numberChars - The valid characters of the number base.
+     * @returns {string} The integer part in decimal base.
+     */
+    static #getBase10Integers(number, numberChars) {
+        return this._base10IntegersTemplate(number, numberChars);
+    }
+
+    /**
+     * Converts a base 62 number to another base 62 number. This method is
+     * intended to be able to change the order of the characters in a base 62
+     * number.
+     * 
+     * @static
+     * @param {string} number - The original base 62 number.
+     * @param {string[]} initialCharsOrder - The initial character order.
+     * @param {string[]} finalCharsOrder - The final character order.
+     * @returns {string} The base 62 number with the final character order.
+     */
+    static tobase62(number, initialCharsOrder, finalCharsOrder) {
+        // Set the default character order
+        if (initialCharsOrder.length == 0) initialCharsOrder = this.validChars;
+        if (finalCharsOrder.length == 0) finalCharsOrder = this.validChars;
+
+        // Change each digit of the number for the new digits order
+        let newNumber = '';
+        for (const dig of number) {
+            // Find the index of the current digit
+            const idx = initialCharsOrder.indexOf(dig);
+
+            // Add the corresponding digit to the new number
+            newNumber += finalCharsOrder[idx];
+        }
+
+        return newNumber;
+    }
+
+    /**
+     * Makes the conversion from one base 62 number to the corresponding number
+     * in hexadecimal. The base 62 number can be negative and can contain a
+     * decimal part. In this method it's possible to send the original custom
+     * order in the valid characters. This method will make two conversions, one
+     * from base 62 to decimal and the second one from decimal to hexadecimal.
+     * 
+     * @static
+     * @param {string} number - The base 62 number to convert in hexadecimal.
+     * @param {string[]} customChars - The custom initial character order.
+     * @returns {string} The number in hexadecimal format.
+     */
+    static tohexadecimal(number, customChars) {
+        const decimalNumber = this.todecimal(number, customChars);
+        return CDecimal.tohexadecimal(decimalNumber);
+    }
+
+    /**
+     * Makes the conversion from one base 62 number to the corresponding number
+     * in decimal. The base 62 number can be negative and can contain a decimal
+     * part. In this method it's possible to send the original custom order in
+     * the valid characters.
+     * 
+     * @static
+     * @param {string} number - The base 62 number to convert in decimal.
+     * @param {string[]} customChars - The custom initial character order.
+     * @returns {string} The number in decimal format.
+     */
+    static todecimal(number, customChars) {
+        const initialChars = (customChars.length > 0)
+            ? customChars
+            : this.validChars;
+
+        return this._conversion(
+            number,
+            initialChars,
+            CDecimal.validChars,
+            this.#getBase10Decimals,
+            this.#getBase10Integers
+        );
+    }
+
+    /**
+     * Makes the conversion from one base 62 number to the corresponding number
+     * in octal. The base 62 number can be negative and can contain a decimal
+     * part. In this method it's possible to send the original custom order in
+     * the valid characters. This method will make two conversions, one from
+     * base 62 to decimal and the second one from decimal to octal.
+     * 
+     * @static
+     * @param {string} number - The base 62 number to convert in octal.
+     * @param {string[]} customChars - The custom initial character order.
+     * @returns {string} The number in octal format.
+     */
+    static tooctal(number, customChars) {
+        const decimalNumber = this.todecimal(number, customChars);
+        return CDecimal.tooctal(decimalNumber);
+    }
+
+    /**
+     * Makes the conversion from one base 62 number to the corresponding number
+     * in binary. The base 62 number can be negative and can contain a decimal
+     * part. In this method it's possible to send the original custom order in
+     * the valid characters. This method will make two conversions, one from
+     * base 62 to decimal and the second one from decimal to binary.
+     * 
+     * @static
+     * @param {string} number - The base 62 number to convert in binary.
+     * @param {string[]} customChars - The custom initial character order.
+     * @returns {string} The number in binary format.
+     */
+    static tobinary(number, customChars) {
+        const decimalNumber = this.todecimal(number, customChars);
+        return CDecimal.tobinary(decimalNumber);
+    }
 }
 
 export class CText extends CBase {
     static validChars = [
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
-        'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'Á', 'É',
-        'Í', 'Ó', 'Ú', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
-        'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y',
-        'z', 'á', 'é', 'í', 'ó', 'ú'
+        'Ñ', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'Á',
+        'É', 'Í', 'Ó', 'Ú', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+        'k', 'l', 'm', 'n', 'ñ', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w',
+        'x', 'y', 'z', 'á', 'é', 'í', 'ó', 'ú'
     ];
     static _removeAllWhiteSpaces = false;
     static _canContainMinus = false;
