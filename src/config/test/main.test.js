@@ -4,6 +4,7 @@ import { tests as hexTestsOct } from "./hexadecimal/hexadecimal_to_octal.test.js
 import { tests as hexTestsBin } from "./hexadecimal/hexadecimal_to_binary.test.js";
 
 // Decimals tests
+import { tests as decTestsB62 } from "./decimals/decimals_to_base62.test.js";
 import { tests as decTestsHex } from "./decimals/decimals_to_hexadecimal.test.js";
 import { tests as decTestsOct } from "./decimals/decimals_to_octal.test.js";
 import { tests as decTestsBin } from "./decimals/decimals_to_binary.test.js";
@@ -98,6 +99,7 @@ class Tester {
             await this.#executeTests(decTestsBin, 'binary', 'To Binary');
             await this.#executeTests(decTestsOct, 'octal', 'To Octal');
             await this.#executeTests(decTestsHex, 'hexadecimal', 'To Hexadecimal');
+            await this.#executeTests(decTestsB62, 'base62', 'To Base 62');
         } catch(err) {
             console.log(err.message);
         }
