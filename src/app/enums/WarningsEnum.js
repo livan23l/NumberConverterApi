@@ -5,6 +5,8 @@ export const WarningsEnum = {
     TOOMANYDECIMALS: () =>
         'The result had too many decimals. These were truncated to only ' +
         'twenty-five characters.',
+    SEPARATION: () =>
+        'The value sent did not have the specified separation.',
 
     CHEXADECIMALVAL: value =>
         `\`${value}\` is not a valid hexadecimal number.`,

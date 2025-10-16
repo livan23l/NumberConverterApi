@@ -5,6 +5,133 @@ import { ErrorsEnum } from '../enums/ErrorsEnum.js';
 
 export class ApiController extends Controller {
     /**
+     * Gets the corresponding characters according to the separation format in
+     * the sent object.
+     * 
+     * @param {object} dataObj - The object with the format and separtions.
+     * @returns {object} The object with the characters for the separations.
+     */
+    #getSeparationsChars(dataObj) {
+        const separations = {};
+
+        // Check if the result will be separated
+        if (dataObj.type == 'text') return separations;
+        if (dataObj.format?.separation == null) return separations;
+
+        // Get the type of separation
+        const separationType = dataObj.format.separation;
+        if (separationType == 'none') return separations;
+
+        // Define the characters of the separation
+        separations.int = ',';
+        separations.dec = '.';
+        if (separationType == 'period') {
+            separations.int = '.';
+            separations.dec = ',';
+        }
+
+        return separations;
+    }
+
+    /**
+     * Performs the initial deseparation of the sent value according to the
+     * specified format. This method receives the object with warnings to be
+     * added if the value does not contain the specified separation. If it
+     * does, the separation is removed from the 'from' object.
+     * 
+     * @param {object} warnings - The object with the warnings.
+     * @param {object} from - The object with the data 'from' with the formater.
+     * @returns {void}
+     */
+    #unseparateValue(warnings, from) {
+        // Get the separation characters
+        const separations = this.#getSeparationsChars(from);
+        if (Object.keys(separations).length == 0) return;
+
+        // Separate the current value into integer and decimal parts
+        let [intPart, ...rest] = from.value.split(separations.dec);
+        const decPart = rest.join(separations.dec);
+
+        // Check if the integer part is separated
+        let isSeparated = false;
+        if (intPart.includes(separations.int)) {
+            // Remove the separation characters from the value
+            intPart = intPart.replaceAll(separations.int, '');
+            isSeparated = true;
+        }
+
+        // Check if the value contains a decimal part
+        if (decPart && separations.dec != '.') isSeparated = true;
+
+        // Check if the original value is separated
+        if (!isSeparated) {
+            warnings['from.format.separation'] = WarningsEnum.SEPARATION();
+            return;
+        }
+
+        // Unseparate the original value
+        from.value = intPart;
+        if (decPart) from.value += '.' + decPart;
+    }
+
+    /**
+     * Performs the final separation of the result of a conversion if this is
+     * specified in the format. This method receives the object with the result
+     * and changes its value. If no separation is defined, this method will
+     * return void.
+     * 
+     * @param {object} result - The object that contains the result.
+     * @param {object} to - The object with the data 'to' with the formater.
+     * @returns {void}
+     */
+    #separateResult(result, to) {
+        // Check if the result of the conversion is not null
+        if (result.data == null) return;
+
+        // Get the separation characters
+        const separations = this.#getSeparationsChars(to);
+        if (Object.keys(separations).length == 0) return;
+
+        // Separate the current result into integer and decimal parts
+        let [intPart, decPart] = result.data.split('.');
+
+        // Check if the integer part is negative to remove the negative sign
+        const isNegative = intPart.startsWith('-');
+        if (isNegative) intPart = intPart.slice(1);
+
+        // Define the separation digits and the index to add the separation
+        const sepDigits = 3;
+        let sepIdx = sepDigits - (intPart.length % sepDigits);
+        if (sepIdx == sepDigits) sepIdx = 0;
+
+        // Perform the separation
+        let separatedResult = '';
+        for (const dig of intPart) {
+            // Validate to add the separation character
+            if (sepIdx == sepDigits) {
+                separatedResult += separations.int;
+                sepIdx = 0;
+            }
+            sepIdx++;
+
+            // Add the current digit to the new value
+            separatedResult += dig;
+        }
+
+        // Check if the result was negative
+        if (isNegative) separatedResult = '-' + separatedResult;
+
+        // Check if the result has a decimal part
+        if (decPart != null) {
+            separatedResult += separations.dec;
+            separatedResult += decPart;
+        }
+
+        // Change the data of the result by the new result
+        result.data = separatedResult;
+    }
+
+    /**
      * This method will add all possible final warnings so that these can later
      * be added to the final response.
      * 
@@ -184,7 +311,7 @@ export class ApiController extends Controller {
             return this._object({ errors: dataErrors });
         }
 
-        // Add the warnings
+        // Add the warning if the type of the value is integer
         const warnings = {};
         if (typeof data.from.value == 'number') {
             data.from.value = data.from.value.toString();
@@ -197,6 +324,9 @@ export class ApiController extends Controller {
                 'from.value': ErrorsEnum.MINLEN('from.value', 1)
             }});
         }
+
+        // Remove the separation of the from value
+        this.#unseparateValue(warnings, data.from);
 
         // Validate the `from.value` depending on `from.type`
         const fromValidation = this.#validateFrom(data.from);
@@ -223,8 +353,8 @@ export class ApiController extends Controller {
             this.#addFinalWarnings(result, warnings);
         }
 
-        // Add the separation if this is defined
-        // --------
+        // Add the final separation to the result
+        this.#separateResult(result, data.to);
 
         // Define the response
         const response = (Object.keys(warnings).length > 0)
