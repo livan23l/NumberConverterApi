@@ -83,16 +83,14 @@ export class Controller {
          */
         const validate = (field, value, validations) => {
             const validationsArray = validations.split('|');
-            let error = null;
 
             // Check the 'condition' rule
             const hasCondition = validationsArray[0].match(/condition/);
             if (hasCondition) {
-                // Check the condition
+                // Check the condition to validate the field
                 try {
                     const condition = validationsArray[0].split(':')[1];
-                    if (!eval(condition)) return error;
-
+                    if (!eval(condition)) return null;
                     validationsArray.shift();
                 } catch {
                     return ErrorsEnum.UNKWOUN(field);
@@ -103,9 +101,7 @@ export class Controller {
             const isRequired = validationsArray[0].match(/required/);
             if (value === undefined) {
                 // Check if the field is not required
-                if (!isRequired) return error;
-
-                // Return the corresponding error
+                if (!isRequired) return null;
                 return ErrorsEnum.REQUIRED(field);
             }
             if (isRequired) validationsArray.shift();
@@ -113,10 +109,8 @@ export class Controller {
             // Check if the value is null
             const isNullable = validationsArray[0].match(/nullable/);
             if (value === null) {
-                if (isNullable) return error;
-
-                error = ErrorsEnum.NULLABLE(field);
-                return error;
+                if (isNullable) return null;
+                return ErrorsEnum.NULLABLE(field);
             }
             if (isNullable) validationsArray.shift();
 
@@ -144,12 +138,11 @@ export class Controller {
 
                 if (!result) {
                     const errorKey = validation.key.toUpperCase();
-                    error = ErrorsEnum[errorKey](...errorParams);
-                    break;
+                    return ErrorsEnum[errorKey](...errorParams);
                 }
             }
 
-            return error;
+            return null;
         };
 
         const errors = {};
