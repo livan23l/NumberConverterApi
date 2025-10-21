@@ -5,8 +5,9 @@ class CBase {
     static _canContainPeriod = true;
 
     /**
-     * Standardize the value following two rules:
-     * - Removes the leading zeros.
+     * Standardize the value following this rules:
+     * - Removes the leading zeros for the integer part.
+     * - Removes the trailing zeros for the decimal part.
      * - Removes all whitespace if the property is true. Otherwise, it only
      * removes leading and trailing spaces, keeping one for intermediate spaces.
      * 
@@ -20,32 +21,28 @@ class CBase {
 
         // Check if the value will remove all the white spaces
         value = (this._removeAllWhiteSpaces)
-            ? value.replaceAll(' ', '')
-            : value.replaceAll(/\s+/, ' ');
+            ? value.replace(/\s+/g, '')
+            : value.replace(/\s+/g, ' ');
 
         // Check if the value starts with '-' to remove the leading zeros
         const hasNegSign = value.startsWith('-');
         if (hasNegSign) value = value.slice(1);
 
-        // Remove the leading zeros from the value
-        let newValue = (hasNegSign) ? '-' : '';
-        for (let i = 0; i < value.length; i++) {
-            const digit = value[i];
+        // Remove the leading zeros
+        value = value.replace(/^0+/, '');
 
-            // Finish when the current digit is differnt from '0'
-            if (digit != '0') {
-                const remValue = value.slice(i);
-                newValue += (digit == '.') ? '0' + remValue : remValue;
-                break;
-            }
-        }
+        // Check if the value contains '.' to remove the trailing zeros
+        if (value.includes('.')) value = value.replace(/0+$/, '');
 
-        // Check if the new value is emtpy
-        if (['-', ''].includes(newValue)) newValue = '0';
-        // Check if the value needs one final '0'
-        else if (newValue.endsWith('.')) newValue += '0';
+        // Check if the start or/and the end of the value is empty
+        if (value == '') value = '0';
+        if (value.startsWith('.')) value = '0' + value;
+        if (value.endsWith('.')) value += '0';
 
-        return newValue;
+        // Add the negative sign if the value is not '0'
+        if (hasNegSign && value != '0' && value != '0.0') value = '-' + value;
+
+        return value;
     }
 
     /**
