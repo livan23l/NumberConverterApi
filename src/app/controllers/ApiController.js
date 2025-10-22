@@ -218,6 +218,7 @@ export class ApiController extends Controller {
 
         //--To formats
         if (to.type == 'base62') parameters.push(getCharsOrder(to));
+        else if (to.type == 'text') parameters.push(to.format.lang);
 
         // Return the conversion
         return currentClass[`to${to.type}`](...parameters);
@@ -282,7 +283,7 @@ export class ApiController extends Controller {
                                       'nullable|str|in:' + validSeparations,
             'to':              'required|obj',
             'to.type':         'required|str|in:' + validTypes,
-            'to.format.lang':  'condition:data.to.type=="text"|nullable|str|' +
+            'to.format.lang':  'condition:data.to.type=="text"|required|str|' +
                                'in:' + validLangs,
             'to.format.order': 'condition:data.to.type=="base62"|nullable|' +
                                'str|in:' + validOrders,
