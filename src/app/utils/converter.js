@@ -1205,7 +1205,7 @@ export class CDecimal extends CBase {
                 const lastSubGroup = subGroups.at(-1);
 
                 // Check if the last group will not be named
-                if (curScale.idx < 0 ||
+                if (
                     (lastSubGroup == '000' && (dPS == 3 || !afterHasAtLeastOne))
                 ) {
                     // Decrease the scale
@@ -1231,7 +1231,8 @@ export class CDecimal extends CBase {
 
                 //--The scale
                 const isThousandInBigDPS = curScale.idx == 0 && dPS > 3;
-                if (!isThousandInBigDPS) {
+                const isLessThanThousandInLowDPS = curScale.idx < 0 && dPS == 3;
+                if (!isThousandInBigDPS && !isLessThanThousandInLowDPS) {
                     lastSubGroupName += (lastSubGroup == '001') ?
                         numbers[curScale.key] :  // Singular
                         numbers[curScale.key + 'x'];  // Plural
