@@ -8,6 +8,8 @@ import { tests as decTestsB62 } from "./decimals/decimals_to_base62.test.js";
 import { tests as decTestsHex } from "./decimals/decimals_to_hexadecimal.test.js";
 import { tests as decTestsOct } from "./decimals/decimals_to_octal.test.js";
 import { tests as decTestsBin } from "./decimals/decimals_to_binary.test.js";
+import { tests as decTestsTextEn } from "./decimals/decimals_to_text_en.test.js";
+import { tests as decTestsTextEs } from "./decimals/decimals_to_text_es.test.js";
 
 // Octal Tests
 import { tests as octTestsHex } from "./octal/octal_to_hexadecimal.test.js";
@@ -100,6 +102,11 @@ class Tester {
             await this.#executeTests(decTestsOct, 'octal', 'To Octal');
             await this.#executeTests(decTestsHex, 'hexadecimal', 'To Hexadecimal');
             await this.#executeTests(decTestsB62, 'base62', 'To Base 62');
+            this.#body.to.format = {};
+            this.#body.to.format.lang = 'en';
+            await this.#executeTests(decTestsTextEn, 'text', 'To Text En');
+            this.#body.to.format.lang = 'es';
+            await this.#executeTests(decTestsTextEs, 'text', 'To Text Es');
         } catch(err) {
             console.log(err.message);
         }
