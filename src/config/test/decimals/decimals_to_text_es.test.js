@@ -6,6 +6,7 @@ export const tests = [
     { input: '2', expected: 'dos' },
     { input: '5', expected: 'cinco' },
     { input: '10', expected: 'diez' },
+    { input: '21', expected: 'veintiuno' },
 
     // Negative integers
     { input: '-1', expected: 'menos uno' },
@@ -40,6 +41,8 @@ export const tests = [
     { input: '0.5.1', expected: null },
 
     // Big integers
+    { input: '1000', expected: 'mil' },
+    { input: '21201', expected: 'veintiún mil doscientos uno' },
     { input: '123456', expected: 'ciento veintitrés mil cuatrocientos cincuenta y seis' },
     { input: '8526945', expected: 'ocho millones quinientos veintiséis mil novecientos cuarenta y cinco' },
     { input: '1048575', expected: 'un millón cuarenta y ocho mil quinientos setenta y cinco' },
@@ -63,8 +66,11 @@ export const tests = [
     },
 
     // Big decimals
+    { input: '1001.21', expected: 'mil uno punto veintiuno' },
+    { input: '1021.1', expected: 'mil veintiuno punto uno' },
     { input: '12345.6789', expected: 'doce mil trescientos cuarenta y cinco punto seis siete ocho nueve' },
-    { input: '98765.4321', expected: 'noventa y ocho mil setecientos sesenta y cinco punto cuatro tres dos uno' },
+    { input: '98765.321', expected: 'noventa y ocho mil setecientos sesenta y cinco punto trescientos veintiuno' },
+    { input: '1001000001001001121001501001.1', expected: 'mil un cuatrillones un trillón mil un billones ciento veintiún mil un millones quinientos un mil uno punto uno' },
     {
         input: '-.0123456789876543217987897897456789765457999999797788998754578979878454566666410',
         expected: 'menos cero punto cero uno dos tres cuatro cinco seis siete ocho nueve ocho siete seis cinco cuatro tres dos uno siete nueve ocho siete ocho nueve siete ocho nueve siete cuatro cinco seis siete ocho nueve siete seis cinco cuatro cinco siete nueve nueve nueve nueve nueve nueve siete nueve siete siete ocho ocho nueve nueve ocho siete cinco cuatro cinco siete ocho nueve siete nueve ocho siete ocho cuatro cinco cuatro cinco seis seis seis seis seis cuatro uno'
