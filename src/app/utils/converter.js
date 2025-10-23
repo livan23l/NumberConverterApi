@@ -844,7 +844,7 @@ export class CDecimal extends CBase {
                     '10': 'diez', '11': 'once', '12': 'doce', '13': 'trece',
                     '14': 'catorce', '15': 'quince', '16': 'dieciséis',
                     '17': 'diecisiete', '18': 'dieciocho', '19': 'diecinueve',
-                    '20': 'veinte', '21': 'veintiuno', '22': 'veintidós',
+                    '20': 'veinte', '21': 'veintiún', '22': 'veintidós',
                     '23': 'veintitrés', '24': 'veinticuatro',
                     '25': 'veinticinco', '26': 'veintiséis',
                     '27': 'veintisiete', '28': 'veintiocho',
@@ -1158,7 +1158,7 @@ export class CDecimal extends CBase {
                     numbers[scale.key] :  // Singular
                     numbers[scale.key + 'x'];  // Plural
 
-                // Fix the gramatical error in spanish with 'one thousand'
+                // Fix the gramatical error in Spanish with 'one thousand'
                 if (lang == 'es' && name == 'un mil') name = 'mil';
 
                 return name + ' ';
@@ -1186,7 +1186,7 @@ export class CDecimal extends CBase {
 
                 // Name all the subgroups except the last one.
                 let name = '';
-                let afterHasAtLeastOne = false;
+                let hadAtLeastOne = false;
                 const subScale = getScale(dPS);
                 for (let i = 0; i < subGroups.length - 1; i++) {
                     const curSubGroup = subGroups[i];
@@ -1195,7 +1195,7 @@ export class CDecimal extends CBase {
                     name += getScaleName(subScale, curSubGroup);
 
                     // Change the value of the flag
-                    if (name != '') afterHasAtLeastOne = true;
+                    if (name != '') hadAtLeastOne = true;
 
                     // Decrease the scale
                     updateScale(subScale, 'decrease');
@@ -1205,9 +1205,7 @@ export class CDecimal extends CBase {
                 const lastSubGroup = subGroups.at(-1);
 
                 // Check if the last group will not be named
-                if (
-                    (lastSubGroup == '000' && (dPS == 3 || !afterHasAtLeastOne))
-                ) {
+                if (lastSubGroup == '000' && (dPS == 3 || !hadAtLeastOne)) {
                     // Decrease the scale
                     updateScale(curScale, 'decrease');
 
@@ -1222,20 +1220,34 @@ export class CDecimal extends CBase {
                     getDigitsName(lastSubGroup) + ' ' :
                     '';
 
-                // Fix the gramatical error in spanish for 'un' instead of 'uno'
-                if (lang == 'es' && lastSubGroupName.endsWith('un ') &&
-                    curScale.idx <= 0
-                ) {
-                    lastSubGroupName = lastSubGroupName.replace('un ', 'uno ');
+                // Fix the final gramatical errors in Spanish
+                if (lang == 'es' && curScale.idx <= 0) {
+                    const fixs = [['un ', 'uno '], ['veintiún ', 'veintiuno ']];
+
+                    // Correct all the fixes
+                    for (const fix of fixs) {
+                        if (lastSubGroupName.endsWith(fix[0])) {
+                            lastSubGroupName = lastSubGroupName.replace(
+                                fix[0], fix[1]
+                            );
+                        }
+                    }
                 }
 
                 //--The scale
                 const isThousandInBigDPS = curScale.idx == 0 && dPS > 3;
                 const isLessThanThousandInLowDPS = curScale.idx < 0 && dPS == 3;
                 if (!isThousandInBigDPS && !isLessThanThousandInLowDPS) {
-                    lastSubGroupName += (lastSubGroup == '001') ?
-                        numbers[curScale.key] :  // Singular
-                        numbers[curScale.key + 'x'];  // Plural
+                    if (lastSubGroup == '001') {  // Singular
+                        // Fix the gramatical error '001' plural in spanish
+                        if (lang == 'es' && hadAtLeastOne) {
+                            lastSubGroupName += numbers[curScale.key + 'x'];
+                        } else {
+                            lastSubGroupName += numbers[curScale.key];
+                        }
+                    } else {  // Plural
+                        lastSubGroupName += numbers[curScale.key + 'x'];
+                    }
                 }
 
                 // Decrease the scale
@@ -1257,9 +1269,16 @@ export class CDecimal extends CBase {
                 // Get the name of all the integer part
                 name += getDigitsName(intPart);
 
-                // Fix the gramatical error in spanish for 'un' instead of 'uno'
-                if (lang == 'es' && name.endsWith('un')) {
-                    name = name.replace('un', 'uno');
+                // Fix the final gramatical errors in Spanish
+                if (lang == 'es') {
+                    const fixs = [['un', 'uno'], ['veintiún', 'veintiuno']];
+
+                    // Correct all the fixes
+                    for (const fix of fixs) {
+                        if (name.endsWith(fix[0])) {
+                            name = name.replace(fix[0], fix[1]);
+                        }
+                    }
                 }
 
                 return name;
@@ -1319,8 +1338,13 @@ export class CDecimal extends CBase {
                 for (const dig of decPart) name += ' ' + getDigitsName(dig);
             }
 
-            // Fix the gramatical error in spanish for 'un' instead of 'uno'
-            if (lang == 'es') name = name.replaceAll(' un', ' uno');
+            // Fix the final gramatical errors in Spanish
+            if (lang == 'es') {
+                const fixs = [[' un', ' uno'], ['veintiún', 'veintiuno']];
+
+                // Correct all the fixes
+                for (const fix of fixs) name = name.replaceAll(fix[0], fix[1]);
+            }
 
             return signName + name;
         }
