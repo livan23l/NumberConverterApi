@@ -1873,8 +1873,8 @@ export class CBase62 extends CBase {
      * @param {'en'|'es'} lang - The language to 'translate' the number.
      * @returns The number in text format in the sent language.
      */
-    static totext(number, lang) {
-        const decimalNumber = this.todecimal(number);
+    static totext(number, customChars, lang) {
+        const decimalNumber = this.todecimal(number, customChars);
         return CDecimal.totext(decimalNumber, lang);
     }
 }
