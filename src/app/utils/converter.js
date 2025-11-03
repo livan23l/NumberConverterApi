@@ -1351,6 +1351,11 @@ export class CDecimal extends CBase {
 
         // Generate the number
         const [intPart, decPart] = number.split('.');
+
+        // Validate if the integer part of the number is too long
+        if (intPart.length > remaining[lang].scale.maximumDigits) return 'NTL';
+
+        // Return the number converted
         return getIntegerPartName(intPart) + getDecimalPartName(decPart);
     }
 }
