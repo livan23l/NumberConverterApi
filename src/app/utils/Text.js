@@ -1,11 +1,28 @@
-class Test {
+import { Base } from "./Base.js";
+
+export class Text extends Base {
+    static validChars = [
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+        'Ñ', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'Á',
+        'É', 'Í', 'Ó', 'Ú', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+        'k', 'l', 'm', 'n', 'ñ', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w',
+        'x', 'y', 'z', 'á', 'é', 'í', 'ó', 'ú', '-', ' '
+    ];
+    static _removeAllWhiteSpaces = false;
+    static _canContainMinus = false;
+    static _canContainPeriod = false;
+
     /**
+     * Converts one written number into decimal format. The number can be in two
+     * languages: English and Spanish. The written number can be negative and
+     * contain a decimal written part.
      * 
+     * @static
      * @param {string} number - The written number.
      * @param {string} lang - The language of the number.
      * @return {string} The number in decimal format.
      */
-    todecimal(number, lang) {
+    static todecimal(number, lang) {
         // Generate relationships between names and numbers in units
         const unitsNext = {
             es: 'illions|thousands|point',
@@ -15,7 +32,7 @@ class Test {
             es: {
                 cero: { num: '0', next: 'point', dec: true },
                 uno: { num: '1', next: 'point', dec: true },
-                un: { num: '1', next: 'illion|illions', dec: false },
+                un: { num: '1', next: 'illion|illions|thousands', dec: false },
                 dos: { num: '2', next: unitsNext.es, dec: true },
                 tres: { num: '3', next: unitsNext.es, dec: true },
                 cuatro: { num: '4', next: unitsNext.es, dec: true },
@@ -111,8 +128,8 @@ class Test {
 
         // Generate relationships between names and numbers in hundreds
         const hundredsNext = {
-            es: 'illlions|thousands|tens|units|point',
-            en: 'illlions|thousands|tens|units|point'
+            es: 'illions|thousands|tens|unitsForS|:uno|point',
+            en: 'illions|thousands|tens|unitsForS|point'
         };
         const hundreds = {
             es: {
@@ -134,8 +151,8 @@ class Test {
 
         // Generate relationships between names and numbers in thousands
         const thousandsNext = {
-            es: 'illlions|hundreds|tens|units|point',
-            en: 'illlions|hundreds|tens|units|point'
+            es: 'illions|hundreds|tens|unitsForS|:uno|point',
+            en: 'illions|hundreds|tens|unitsForS|point'
         };
         const thousands = {
             es: {
@@ -148,8 +165,8 @@ class Test {
 
         // Generate relationships between names and numbers in 'illions'
         const illionsNext = {
-            es: 'illlions|thousands|hundreds|tens|units|point',
-            en: 'illlions|hundreds|tens|units|point'
+            es: 'illions|thousands|hundreds|tens|unitsForS|:uno|point',
+            en: 'illions|hundreds|tens|unitsForS|point'
         };
         const illions = {
             es: {
@@ -481,7 +498,6 @@ class Test {
         const Illions = illions[lang];
         const Additionals = additionals[lang];
         const UnitsKeys = Object.keys(Units);
-        const UnitsForScaleKeys = Object.keys(UnitsForScale);
         const TensKeys = Object.keys(Tens);
         const HundredsKeys = Object.keys(Hundreds);
         const ThousandsKeys = Object.keys(Thousands);
@@ -510,7 +526,7 @@ class Test {
             }
             else if (UnitsKeys.includes(word)) {
                 // Validate if the unit is one unit for scale
-                if (UnitsForScaleKeys.includes(word)) {
+                if (UnitsForScale.includes(word)) {
                     wordAttributes.type = 'unitsForS';
                 } else {
                     wordAttributes.type = 'units';
@@ -537,10 +553,6 @@ class Test {
 
                 wordAttributes.obj = Illions[word];
             }
-            else {  // NAN
-                wordAttributes.type = 'NAN';
-                wordAttributes.obj = {};
-            }
 
             return wordAttributes;
         };
@@ -557,19 +569,21 @@ class Test {
          */
         const getWordResult = (word, lastNext) => {
             // Define the result structure
-            const result = {
-                val: 'NAN', next: '', type: '', dec: false
-            };
+            const result = { val: 'NAN', next: '', type: '', dec: false };
 
-            // Get the attributes of the current word
+            // Get the attributes of the current word and set the type
             const wordAttributes = getWordAttributes(word);
-            if (wordAttributes.type == 'NAN') return result;
+            if (wordAttributes.type == null) return result;
+            result.type = wordAttributes.type;
 
             // Get all the expected types for the current word
             const expectedTypes = lastNext.split('|');
 
-            // Check if the last word expected the type of the current one
-            if (!expectedTypes.includes(wordAttributes.type)) return result;
+            // Check if the last word expected the current one
+            if (
+                !expectedTypes.includes(wordAttributes.type) &&
+                !expectedTypes.includes(`:${word}`)
+            ) return result;
 
             // Set the 'dec' propety
             result.dec = wordAttributes.obj.dec;
@@ -598,11 +612,23 @@ class Test {
         if (firstWordResult.val == 'NAN') return 'NAN';
 
         // Make the conversion for the rest of the words
-        let thousandBefore = false;  // Checks if there were 'thousand' before
-        let isDecimalPart = false;  // Checks if there is decimal part
+        let isDecimalPart = false;
+        let thousandBefore = firstWordResult.type == 'thousands';
         let lastResult = firstWordResult;
         let currentValue = firstWordResult.val;
         let finalValue = '0';
+
+        /**
+         * Updates the final value, the current value and the thousand before
+         * flag.
+         * 
+         * @returns {void}
+         */
+        const updateFinalValue = () => {
+            thousandBefore = false;
+            finalValue = this._strIntAddition(finalValue, currentValue);
+            currentValue = '0';
+        };
 
         /**
          * Gets the result of the sent word and validates its value. It also
@@ -617,9 +643,36 @@ class Test {
             // Check the value of the result
             if (wordRes.val == 'NAN') return false;
 
-            // Update the current value and the last result
-            currentValue += ' + ' + wordRes.val;
+            // Update the last result
             lastResult.next = wordRes.next;
+
+            // Update the current value
+            if (wordRes.type.includes('illion')) {  // illions or illion
+                // Validation for spanish plural
+                if (currentValue == '1' && wordRes.type.endsWith('s')) {
+                    return false;
+                }
+
+                currentValue = this._strMultiplication(
+                    wordRes.val, Number(currentValue)
+                );
+                updateFinalValue();
+            }
+            else if (wordRes.type == 'thousands') {
+                // Validation for spanish loop in thousands
+                if (thousandBefore) return false;
+
+                // Validation for spanish in 'one thousand'
+                if (currentValue == '') currentValue = '1';
+                currentValue = this._strMultiplication(
+                    wordRes.val, Number(currentValue)
+                );
+
+                updateFinalValue();
+                thousandBefore = true;
+            } else {  // Is not one scale
+                currentValue = this._strIntAddition(currentValue, wordRes.val);
+            }
 
             return true;
         };
@@ -627,7 +680,7 @@ class Test {
         for (let i = 1; i < numberSplited.length; i++) {
             const word = numberSplited[i];
 
-            // Check if the word has the connector '-'
+            // Check if the word has the current connector
             const connSymb = Additionals.conn.symbol;
             const connIdx = word.indexOf(connSymb);
 
@@ -653,6 +706,9 @@ class Test {
             if (!getAndValidate(word)) return 'NAN';
         }
 
+        // Check if the current value has content
+        if (currentValue != '0') updateFinalValue();
+
         // Check if the last word can be the last one
         if (
             (!isDecimalPart && !lastResult.next.split('|').includes('point')) ||
@@ -662,6 +718,3 @@ class Test {
         return finalValue;
     }
 }
-
-const test = new Test;
-console.log(test.todecimal('dos mil', 'es'));
