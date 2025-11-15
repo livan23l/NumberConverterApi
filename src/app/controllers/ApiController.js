@@ -215,6 +215,7 @@ export class ApiController extends Controller {
         // Add additional parameters depending on the formats
         //--From formats
         if (from.type == 'base62') parameters.push(getCharsOrder(from));
+        else if (from.type == 'text') parameters.push(from.format.lang);
 
         //--To formats
         if (to.type == 'base62') parameters.push(getCharsOrder(to));
