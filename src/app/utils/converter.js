@@ -502,10 +502,10 @@ export class CHexadecimal extends CBase {
     ];
 
     static binaryDigits = {
-        '0': '0000', '1': '0001', '2': '0010', '3': '0011', '4': '0100',
-        '5': '0101', '6': '0110', '7': '0111', '8': '1000', '9': '1001',
-        'A': '1010', 'B': '1011', 'C': '1100', 'D': '1101', 'E': '1110',
-        'F': '1111'
+        0: '0000', 1: '0001', 2: '0010', 3: '0011', 4: '0100',
+        5: '0101', 6: '0110', 7: '0111', 8: '1000', 9: '1001',
+        A: '1010', B: '1011', C: '1100', D: '1101', E: '1110',
+        F: '1111'
     };
 
     /**
@@ -826,72 +826,72 @@ export class CDecimal extends CBase {
     static totext(number, lang) {
         // Define the names according to the number of digits
         const units = {
-            'es': {
-                '0': 'cero', '1': 'un', '2': 'dos', '3': 'tres', '4': 'cuatro',
-                '5': 'cinco', '6': 'seis', '7': 'siete', '8': 'ocho',
-                '9': 'nueve'
+            es: {
+                0: 'cero', 1: 'un', 2: 'dos', 3: 'tres', 4: 'cuatro',
+                5: 'cinco', 6: 'seis', 7: 'siete', 8: 'ocho',
+                9: 'nueve'
             },
-            'en': {
-                '0': 'zero', '1': 'one', '2': 'two', '3': 'three', '4': 'four',
-                '5': 'five', '6': 'six', '7': 'seven', '8': 'eight', '9': 'nine'
+            en: {
+                0: 'zero', 1: 'one', 2: 'two', 3: 'three', 4: 'four',
+                5: 'five', 6: 'six', 7: 'seven', 8: 'eight', 9: 'nine'
             }
         };
         const tens = {
-            'es': {
+            es: {
                 breakpoint: '30',
                 union: ' y ',
                 numbers: {
-                    '10': 'diez', '11': 'once', '12': 'doce', '13': 'trece',
-                    '14': 'catorce', '15': 'quince', '16': 'dieciséis',
-                    '17': 'diecisiete', '18': 'dieciocho', '19': 'diecinueve',
-                    '20': 'veinte', '21': 'veintiún', '22': 'veintidós',
-                    '23': 'veintitrés', '24': 'veinticuatro',
-                    '25': 'veinticinco', '26': 'veintiséis',
-                    '27': 'veintisiete', '28': 'veintiocho',
-                    '29': 'veintinueve', '30': 'treinta', '40': 'cuarenta',
-                    '50': 'cincuenta', '60': 'sesenta', '70': 'setenta',
-                    '80': 'ochenta', '90': 'noventa'
+                    10: 'diez', 11: 'once', 12: 'doce', 13: 'trece',
+                    14: 'catorce', 15: 'quince', 16: 'dieciséis',
+                    17: 'diecisiete', 18: 'dieciocho', 19: 'diecinueve',
+                    20: 'veinte', 21: 'veintiún', 22: 'veintidós',
+                    23: 'veintitrés', 24: 'veinticuatro',
+                    25: 'veinticinco', 26: 'veintiséis',
+                    27: 'veintisiete', 28: 'veintiocho',
+                    29: 'veintinueve', 30: 'treinta', 40: 'cuarenta',
+                    50: 'cincuenta', 60: 'sesenta', 70: 'setenta',
+                    80: 'ochenta', 90: 'noventa'
                 }
             },
-            'en': {
+            en: {
                 breakpoint: '20',
                 union: '-',
                 numbers: {
-                    '10': 'ten', '11': 'eleven', '12': 'twelve',
-                    '13': 'thirteen', '14': 'fourteen', '15': 'fifteen',
-                    '16': 'sixteen', '17': 'seventeen', '18': 'eighteen',
-                    '19': 'nineteen', '20': 'twenty', '30': 'thirty',
-                    '40': 'forty', '50': 'fifty', '60': 'sixty',
-                    '70': 'seventy', '80': 'eighty', '90': 'ninety'
+                    10: 'ten', 11: 'eleven', 12: 'twelve',
+                    13: 'thirteen', 14: 'fourteen', 15: 'fifteen',
+                    16: 'sixteen', 17: 'seventeen', 18: 'eighteen',
+                    19: 'nineteen', 20: 'twenty', 30: 'thirty',
+                    40: 'forty', 50: 'fifty', 60: 'sixty',
+                    70: 'seventy', 80: 'eighty', 90: 'ninety'
                 }
             }
         };
         const hundreds = {
-            'es': {
-                '100': 'cien', '100x': 'ciento ',
-                '200': 'doscientos', '200x': 'doscientos ',
-                '300': 'trescientos', '300x': 'trescientos ',
-                '400': 'cuatrocientos', '400x': 'cuatrocientos ',
-                '500': 'quinientos', '500x': 'quinientos ',
-                '600': 'seiscientos', '600x': 'seiscientos ',
-                '700': 'setecientos', '700x': 'setecientos ',
-                '800': 'ochocientos', '800x': 'ochocientos ',
-                '900': 'novecientos', '900x': 'novecientos '
+            es: {
+                100: 'cien', '100x': 'ciento ',
+                200: 'doscientos', '200x': 'doscientos ',
+                300: 'trescientos', '300x': 'trescientos ',
+                400: 'cuatrocientos', '400x': 'cuatrocientos ',
+                500: 'quinientos', '500x': 'quinientos ',
+                600: 'seiscientos', '600x': 'seiscientos ',
+                700: 'setecientos', '700x': 'setecientos ',
+                800: 'ochocientos', '800x': 'ochocientos ',
+                900: 'novecientos', '900x': 'novecientos '
             },
-            'en': {
-                '100': 'one hundred', '100x': 'one hundred ',
-                '200': 'two hundred', '200x': 'two hundred ',
-                '300': 'three hundred', '300x': 'three hundred ',
-                '400': 'four hundred', '400x': 'four hundred ',
-                '500': 'five hundred', '500x': 'five hundred ',
-                '600': 'six hundred', '600x': 'six hundred ',
-                '700': 'seven hundred', '700x': 'seven hundred ',
-                '800': 'eight hundred', '800x': 'eight hundred ',
-                '900': 'nine hundred', '900x': 'nine hundred '
+            en: {
+                100: 'one hundred', '100x': 'one hundred ',
+                200: 'two hundred', '200x': 'two hundred ',
+                300: 'three hundred', '300x': 'three hundred ',
+                400: 'four hundred', '400x': 'four hundred ',
+                500: 'five hundred', '500x': 'five hundred ',
+                600: 'six hundred', '600x': 'six hundred ',
+                700: 'seven hundred', '700x': 'seven hundred ',
+                800: 'eight hundred', '800x': 'eight hundred ',
+                900: 'nine hundred', '900x': 'nine hundred '
             }
         };
         const remaining = {
-            'orderKeys': [
+            orderKeys: [
                 'thousand', 'million', 'billion', 'trillion', 'quadrillion',
                 'quintillion', 'sextillion', 'septillion', 'octillion',
                 'nonillion', 'decillion', 'undecillion', 'duodecillion',
@@ -899,105 +899,105 @@ export class CDecimal extends CBase {
                 'sexdecillion', 'septendecillion', 'octodecillion',
                 'novemdecillion', 'vigintillion'
             ],
-            'es': {
+            es: {
                 scale: {
-                    'digitsPerScale': 6, 'minimumDigits': 4,
-                    'maximumDigits': 126, 'thousand': 3, 'million': 6,
-                    'billion': 12, 'trillion': 18, 'quadrillion': 24,
-                    'quintillion': 30, 'sextillion': 36, 'septillion': 42,
-                    'octillion': 48, 'nonillion': 54, 'decillion': 60,
-                    'undecillion': 66, 'duodecillion': 72, 'tredecillion': 78,
-                    'quattuordecillion': 84, 'quindecillion': 90,
-                    'sexdecillion': 96, 'septendecillion': 102,
-                    'octodecillion': 108, 'novemdecillion': 114,
-                    'vigintillion': 120
+                    digitsPerScale: 6, minimumDigits: 4,
+                    maximumDigits: 126, thousand: 3, million: 6,
+                    billion: 12, trillion: 18, quadrillion: 24,
+                    quintillion: 30, sextillion: 36, septillion: 42,
+                    octillion: 48, nonillion: 54, decillion: 60,
+                    undecillion: 66, duodecillion: 72, tredecillion: 78,
+                    quattuordecillion: 84, quindecillion: 90,
+                    sexdecillion: 96, septendecillion: 102,
+                    octodecillion: 108, novemdecillion: 114,
+                    vigintillion: 120
                 },
                 numbers: {
-                    'thousand': 'mil', 'thousandx': 'mil',
-                    'million': 'millón', 'millionx': 'millones',
-                    'billion': 'billón', 'billionx': 'billones',
-                    'trillion': 'trillón', 'trillionx': 'trillones',
-                    'quadrillion': 'cuatrillón', 'quadrillionx': 'cuatrillones',
-                    'quintillion': 'quintillón', 'quintillionx': 'quintillones',
-                    'sextillion': 'sextillón', 'sextillionx': 'sextillones',
-                    'septillion': 'septillón', 'septillionx': 'septillones',
-                    'octillion': 'octillón', 'octillionx': 'octillones',
-                    'nonillion': 'nonillón', 'nonillionx': 'nonillones',
-                    'decillion': 'decillón', 'decillionx': 'decillones',
-                    'undecillion': 'undecillón', 'undecillionx': 'undecillones',
-                    'duodecillion': 'duodecillón',
-                    'duodecillionx': 'duodecillones',
-                    'tredecillion': 'tredecillón',
-                    'tredecillionx': 'tredecillones',
-                    'quattuordecillion': 'cuatordecillón',
-                    'quattuordecillionx': 'cuatordecillones',
-                    'quindecillion': 'quindecillón',
-                    'quindecillionx': 'quindecillones',
-                    'sexdecillion': 'sexdecillón',
-                    'sexdecillionx': 'sexdecillones',
-                    'septendecillion': 'septendecillón',
-                    'septendecillionx': 'septendecillones',
-                    'octodecillion': 'octodecillón',
-                    'octodecillionx': 'octodecillones',
-                    'novemdecillion': 'novendecillón',
-                    'novemdecillionx': 'novendecillones',
-                    'vigintillion': 'vigintillón',
-                    'vigintillionx': 'vigintillones'
+                    thousand: 'mil', thousandx: 'mil',
+                    million: 'millón', millionx: 'millones',
+                    billion: 'billón', billionx: 'billones',
+                    trillion: 'trillón', trillionx: 'trillones',
+                    quadrillion: 'cuatrillón', quadrillionx: 'cuatrillones',
+                    quintillion: 'quintillón', quintillionx: 'quintillones',
+                    sextillion: 'sextillón', sextillionx: 'sextillones',
+                    septillion: 'septillón', septillionx: 'septillones',
+                    octillion: 'octillón', octillionx: 'octillones',
+                    nonillion: 'nonillón', nonillionx: 'nonillones',
+                    decillion: 'decillón', decillionx: 'decillones',
+                    undecillion: 'undecillón', undecillionx: 'undecillones',
+                    duodecillion: 'duodecillón',
+                    duodecillionx: 'duodecillones',
+                    tredecillion: 'tredecillón',
+                    tredecillionx: 'tredecillones',
+                    quattuordecillion: 'cuatordecillón',
+                    quattuordecillionx: 'cuatordecillones',
+                    quindecillion: 'quindecillón',
+                    quindecillionx: 'quindecillones',
+                    sexdecillion: 'sexdecillón',
+                    sexdecillionx: 'sexdecillones',
+                    septendecillion: 'septendecillón',
+                    septendecillionx: 'septendecillones',
+                    octodecillion: 'octodecillón',
+                    octodecillionx: 'octodecillones',
+                    novemdecillion: 'novendecillón',
+                    novemdecillionx: 'novendecillones',
+                    vigintillion: 'vigintillón',
+                    vigintillionx: 'vigintillones'
                 }
             },
-            'en': {
+            en: {
                 scale: {
-                    'digitsPerScale': 3, 'minimumDigits': 4,
-                    'maximumDigits': 66, 'thousand': 3, 'million': 6,
-                    'billion': 9, 'trillion': 12, 'quadrillion': 15,
-                    'quintillion': 18, 'sextillion': 21, 'septillion': 24,
-                    'octillion': 27, 'nonillion': 30, 'decillion': 33,
-                    'undecillion': 36, 'duodecillion': 39, 'tredecillion': 42,
-                    'quattuordecillion': 45, 'quindecillion': 48,
-                    'sexdecillion': 51, 'septendecillion': 54,
-                    'octodecillion': 57, 'novemdecillion': 60,
-                    'vigintillion': 63
+                    digitsPerScale: 3, minimumDigits: 4,
+                    maximumDigits: 66, thousand: 3, million: 6,
+                    billion: 9, trillion: 12, quadrillion: 15,
+                    quintillion: 18, sextillion: 21, septillion: 24,
+                    octillion: 27, nonillion: 30, decillion: 33,
+                    undecillion: 36, duodecillion: 39, tredecillion: 42,
+                    quattuordecillion: 45, quindecillion: 48,
+                    sexdecillion: 51, septendecillion: 54,
+                    octodecillion: 57, novemdecillion: 60,
+                    vigintillion: 63
                 },
                 numbers: {
-                    'thousand': 'thousand', 'thousandx': 'thousand',
-                    'million': 'million', 'millionx': 'million',
-                    'billion': 'billion', 'billionx': 'billion',
-                    'trillion': 'trillion', 'trillionx': 'trillion',
-                    'quadrillion': 'quadrillion', 'quadrillionx': 'quadrillion',
-                    'quintillion': 'quintillion', 'quintillionx': 'quintillion',
-                    'sextillion': 'sextillion', 'sextillionx': 'sextillion',
-                    'septillion': 'septillion', 'septillionx': 'septillion',
-                    'octillion': 'octillion', 'octillionx': 'octillion',
-                    'nonillion': 'nonillion', 'nonillionx': 'nonillion',
-                    'decillion': 'decillion', 'decillionx': 'decillion',
-                    'undecillion': 'undecillion', 'undecillionx': 'undecillion',
-                    'duodecillion': 'duodecillion',
-                    'duodecillionx': 'duodecillion',
-                    'tredecillion': 'tredecillion',
-                    'tredecillionx': 'tredecillion',
-                    'quattuordecillion': 'quattuordecillion',
-                    'quattuordecillionx': 'quattuordecillion',
-                    'quindecillion': 'quindecillion',
-                    'quindecillionx': 'quindecillion',
-                    'sexdecillion': 'sexdecillion',
-                    'sexdecillionx': 'sexdecillion',
-                    'septendecillion': 'septendecillion',
-                    'septendecillionx': 'septendecillion',
-                    'octodecillion': 'octodecillion',
-                    'octodecillionx': 'octodecillion',
-                    'novemdecillion': 'novemdecillion',
-                    'novemdecillionx': 'novemdecillion',
-                    'vigintillion': 'vigintillion',
-                    'vigintillionx': 'vigintillion'
+                    thousand: 'thousand', thousandx: 'thousand',
+                    million: 'million', millionx: 'million',
+                    billion: 'billion', billionx: 'billion',
+                    trillion: 'trillion', trillionx: 'trillion',
+                    quadrillion: 'quadrillion', quadrillionx: 'quadrillion',
+                    quintillion: 'quintillion', quintillionx: 'quintillion',
+                    sextillion: 'sextillion', sextillionx: 'sextillion',
+                    septillion: 'septillion', septillionx: 'septillion',
+                    octillion: 'octillion', octillionx: 'octillion',
+                    nonillion: 'nonillion', nonillionx: 'nonillion',
+                    decillion: 'decillion', decillionx: 'decillion',
+                    undecillion: 'undecillion', undecillionx: 'undecillion',
+                    duodecillion: 'duodecillion',
+                    duodecillionx: 'duodecillion',
+                    tredecillion: 'tredecillion',
+                    tredecillionx: 'tredecillion',
+                    quattuordecillion: 'quattuordecillion',
+                    quattuordecillionx: 'quattuordecillion',
+                    quindecillion: 'quindecillion',
+                    quindecillionx: 'quindecillion',
+                    sexdecillion: 'sexdecillion',
+                    sexdecillionx: 'sexdecillion',
+                    septendecillion: 'septendecillion',
+                    septendecillionx: 'septendecillion',
+                    octodecillion: 'octodecillion',
+                    octodecillionx: 'octodecillion',
+                    novemdecillion: 'novemdecillion',
+                    novemdecillionx: 'novemdecillion',
+                    vigintillion: 'vigintillion',
+                    vigintillionx: 'vigintillion'
                 }
             }
         };
         const signs = {
-            'es': {
-                'point': 'punto', 'minus': 'menos'
+            es: {
+                point: 'punto', minus: 'menos'
             },
-            'en': {
-                'point': 'point', 'minus': 'minus'
+            en: {
+                point: 'point', minus: 'minus'
             }
         }
 
@@ -1364,8 +1364,8 @@ export class COctal extends CBase {
     static validChars = ['0', '1', '2', '3', '4', '5', '6', '7'];
 
     static binaryDigits = {
-        '0': '000', '1': '001', '2': '010', '3': '011',
-        '4': '100', '5': '101', '6': '110', '7': '111'
+        0: '000', 1: '001', 2: '010', 3: '011',
+        4: '100', 5: '101', 6: '110', 7: '111'
     };
 
     /**
