@@ -29,6 +29,9 @@ export const tests = [
     { input: 'a', expected: 'NAN' },
     { input: '15', expected: null },
     { input: 'four', expected: 'NAN' },
+    { input: 'cien doscientos', expected: 'NAN' },
+    { input: 'ciento diez doscientos ocho', expected: 'NAN' },
+    { input: 'tres mil dos mil', expected: 'NAN' },
     { input: 'un millón dos billones', expected: 'NAN' },
     { input: 'un trillón dos billones un billón cinco', expected: 'NAN' },
     { input: 'cien mil cuarenta y cinco mil', expected: 'NAN' },
@@ -36,6 +39,12 @@ export const tests = [
     { input: 'millón', expected: 'NAN' },
     { input: 'cincuenta y cincuenta', expected: 'NAN' },
     { input: 'mil zero', expected: 'NAN' },
+    { input: 'menos mil cincuenta y cinco punto mil', expected: 'NAN' },
+    { input: 'menos mil cincuenta y cinco punto ciento treinta y cero', expected: 'NAN' },
+    { input: 'menos mil cincuenta y cinco punto tres mil', expected: 'NAN' },
+    { input: 'menos mil cincuenta y cinco punto dos millones', expected: 'NAN' },
+    { input: 'menos mil cincuenta y cinco punto ciento sesenta y tres dos', expected: 'NAN' },
+    { input: 'menos mil cincuenta y cinco punto cinco seis doscientos nueve', expected: 'NAN' },
 
     // Big integers
     { input: 'mil', expected: '1000' },
@@ -66,12 +75,14 @@ export const tests = [
     // Big decimals
     { input: 'mil uno punto veintiuno', expected: '1001.21' },
     { input: 'mil veintiuno punto uno', expected: '1021.1' },
+    { input: 'mil veintiuno punto cero', expected: '1021.0' },
+    { input: 'mil veintiuno punto cero uno', expected: '1021.01' },
     { input: 'doce mil trescientos cuarenta y cinco punto seis siete ocho nueve', expected: '12345.6789' },
     { input: 'noventa y ocho mil setecientos sesenta y cinco punto trescientos veintiuno', expected: '98765.321' },
     { input: 'mil un cuatrillones un trillón mil un billones ciento veintiún mil un millones quinientos un mil uno punto uno', expected: '1001000001001001121001501001.1' },
     {
         input: 'menos cero punto cero uno dos tres cuatro cinco seis siete ocho nueve ocho siete seis cinco cuatro tres dos uno siete nueve ocho siete ocho nueve siete ocho nueve siete cuatro cinco seis siete ocho nueve siete seis cinco cuatro cinco siete nueve nueve nueve nueve nueve nueve siete nueve siete siete ocho ocho nueve nueve ocho siete cinco cuatro cinco siete ocho nueve siete nueve ocho siete ocho cuatro cinco cuatro cinco seis seis seis seis seis cuatro uno',
-        expected: '-0.0123456789876543217987897897456789765457999999797788998754578979878454566666410'
+        expected: '-0.012345678987654321798789789745678976545799999979778899875457897987845456666641'
     },
 
     // Big decimals positives and negatives

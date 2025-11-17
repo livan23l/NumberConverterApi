@@ -28,6 +28,8 @@ export const tests = [
     { input: 'a', expected: 'NAN' },
     { input: '15', expected: null },
     { input: 'tres', expected: 'NAN' },
+    { input: 'one hundred two thousand', expected: 'NAN' },
+    { input: 'one hundred two hundred', expected: 'NAN' },
     { input: 'one million two billion', expected: 'NAN' },
     { input: 'one trillion two billion one billion five', expected: 'NAN' },
     { input: '   OnE       mILLIon       siX       hUnDRed   fIfTy-FoUr     thOUSaNd  SIXty-fIvE      ', expected: '1654065' },
@@ -36,6 +38,10 @@ export const tests = [
     { input: 'hundred', expected: 'NAN' },
     { input: 'fifty-fifty', expected: 'NAN' },
     { input: 'one thousand zero', expected: 'NAN' },
+    { input: 'minus one thousand fifty-five point eleven', expected: 'NAN' },
+    { input: 'minus one thousand fifty-five point one hundred', expected: 'NAN' },
+    { input: 'minus one thousand fifty-five point one thousand', expected: 'NAN' },
+    { input: 'minus one thousand fifty-five point one million', expected: 'NAN' },
 
     // Big integers
     { input: 'one hundred twenty-three thousand four hundred fifty-six', expected: '123456' },
@@ -65,7 +71,7 @@ export const tests = [
     { input: 'ninety-eight thousand seven hundred sixty-five point four three two one', expected: '98765.4321' },
     {
         input: 'minus zero point zero one two three four five six seven eight nine eight seven six five four three two one seven nine eight seven eight nine seven eight nine seven four five six seven eight nine seven six five four five seven nine nine nine nine nine nine seven nine seven seven eight eight nine nine eight seven five four five seven eight nine seven nine eight seven eight four five four five six six six six six four one',
-        expected: '-0.0123456789876543217987897897456789765457999999797788998754578979878454566666410'
+        expected: '-0.012345678987654321798789789745678976545799999979778899875457897987845456666641'
     },
 
     // Big decimals positives and negatives
