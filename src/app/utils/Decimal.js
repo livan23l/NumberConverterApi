@@ -709,7 +709,10 @@ export class Decimal extends Base {
         const [intPart, decPart] = number.split('.');
 
         // Validate if the integer part of the number is too long
-        if (intPart.length > remaining[lang].scale.maximumDigits) return 'NTL';
+        const isNegative = (intPart.startsWith('-'));
+        const langMax = remaining[lang].scale.maximumDigits;
+        const maxDigits = (isNegative) ? langMax + 1 : langMax;
+        if (intPart.length > maxDigits) return 'NTL';
 
         // Return the number converted
         return getIntegerPartName(intPart) + getDecimalPartName(decPart);
