@@ -20,7 +20,7 @@ const getRandomNumber = (digits) => {
     if (randomDig(2) == '1') number = '-' + number;
 
     // Randomly choose if the number will have decimals
-    if (randomDig(2) == '10') {
+    if (randomDig(2) == '1') {
         number += '.';
         const decimals = Number(randomDig(maxDecimals)) + 1;
 
