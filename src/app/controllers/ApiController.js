@@ -140,10 +140,14 @@ export class ApiController extends Controller {
      * @param {object} warnings - The warnings object to add the new keys.
      */
     #addFinalWarnings(result, warnings) {
-        // Check if the data has '...' and add a warning
+        // Check if the data has the '...' warning
         if (result.data.endsWith('...')) {
             warnings['data'] = WarningsEnum.TOOMANYDECIMALS();
             result.data = result.data.replace(/\.\.\.$/, '');
+        }
+        // Check if the data has the 'NTL' (Number too long) warning
+        if (result.data == 'NTL') {
+            warnings['data'] = WarningsEnum.NTL();
         }
     }
 
