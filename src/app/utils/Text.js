@@ -481,13 +481,35 @@ export class Text extends Base {
                 minus: { symbol: '-', name: 'menos' },
                 punto: { symbol: '.', dec: true },
                 conn: { symbol: 'y', next: 'unitsForS|:uno', dec: true },
-                firstWordTypes: 'thousands|hundreds|tens|unitsForS|units'
+                firstWordTypes: 'thousands|hundreds|tens|unitsForS|units',
+                illionsOrder: [
+                    'millón', 'millones', 'billón', 'billones', 'trillón',
+                    'trillones', 'cuatrillón', 'cuatrillones', 'quintillón',
+                    'quintillones', 'sextillón', 'sextillones', 'septillón',
+                    'septillones', 'octillón', 'octillones', 'nonillón',
+                    'nonillones', 'decillón', 'decillones', 'undecillón',
+                    'undecillones', 'duodecillón', 'duodecillones',
+                    'tredecillón', 'tredecillones', 'cuatordecillón',
+                    'cuatordecillones', 'quindecillón', 'quindecillones',
+                    'sexdecillón', 'sexdecillones', 'septendecillón',
+                    'septendecillones', 'octodecillón', 'octodecillones',
+                    'novendecillón', 'novendecillones', 'vigintillón',
+                    'vigintillones'
+                ]
             },
             en: {
                 minus: { symbol: '-', name: 'minus' },
                 point: { symbol: '.', dec: true },
                 conn: { symbol: '-', next: 'unitsForS', dec: false },
-                firstWordTypes: 'tens|unitsForS|units'
+                firstWordTypes: 'tens|unitsForS|units',
+                illionsOrder: [
+                    'million', 'billion', 'trillion', 'quadrillion',
+                    'quintillion', 'sextillion', 'septillion', 'octillion',
+                    'nonillion', 'decillion', 'undecillion', 'duodecillion',
+                    'tredecillion', 'quattuordecillion', 'quindecillion',
+                    'sexdecillion', 'septendecillion', 'octodecillion',
+                    'novemdecillion', 'vigintillion'
+                ]
             }
         };
 
@@ -550,7 +572,7 @@ export class Text extends Base {
             }
             else if (IllionsKeys.includes(word)) {
                 // Validate the spanish singular of the '-illions'
-                if (word.endsWith('llón')) wordAttributes.type = 'illion';
+                if (word.endsWith('ón')) wordAttributes.type = 'illion';
                 else wordAttributes.type = 'illions';
 
                 wordAttributes.obj = Illions[word];
@@ -607,6 +629,7 @@ export class Text extends Base {
         const numberSplited = number.split(' ');
         let isDecimalPart = false;
         let thousandBefore = false;
+        let lastIllionIdx = Additionals.illionsOrder.length;
         let lastResult = { next: Additionals.firstWordTypes };
         let currentValue = '0';
         let finalValue = '0';
@@ -654,6 +677,12 @@ export class Text extends Base {
                     lang == 'es' && currentValue == '1' &&
                     wordRes.type.endsWith('s')
                 ) return false;
+
+                // Check that the current illion is less than the previous one
+                let illionIdx = Additionals.illionsOrder.indexOf(word);
+                if (word.endsWith('ón')) illionIdx++;  // Pluralize in Spanish
+                if (lastIllionIdx <= illionIdx) return false;  // Validation
+                lastIllionIdx = illionIdx;
 
                 currentValue = this._strMultiplication(
                     wordRes.val, Number(currentValue)
