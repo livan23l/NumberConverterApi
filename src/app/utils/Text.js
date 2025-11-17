@@ -479,7 +479,11 @@ export class Text extends Base {
         const additionals = {
             es: {
                 minus: { symbol: '-', name: 'menos' },
-                punto: { symbol: '.', dec: true },
+                punto: {
+                    symbol: '.',
+                    next: 'hundreds|tens|unitsForS|units',
+                    dec: false
+                },
                 conn: { symbol: 'y', next: 'unitsForS|:uno', dec: true },
                 firstWordTypes: 'thousands|hundreds|tens|unitsForS|units',
                 illionsOrder: [
@@ -499,7 +503,7 @@ export class Text extends Base {
             },
             en: {
                 minus: { symbol: '-', name: 'minus' },
-                point: { symbol: '.', dec: true },
+                point: { symbol: '.', next: 'unitsForS|units', dec: false },
                 conn: { symbol: '-', next: 'unitsForS', dec: false },
                 firstWordTypes: 'tens|unitsForS|units',
                 illionsOrder: [
@@ -628,6 +632,7 @@ export class Text extends Base {
         number = number.toLowerCase();  // Convert the number into lower case
         const numberSplited = number.split(' ');
         let isDecimalPart = false;
+        let spanishDecimalAdd = false;
         let thousandBefore = false;
         let lastIllionIdx = Additionals.illionsOrder.length;
         let lastResult = { next: Additionals.firstWordTypes };
@@ -645,13 +650,17 @@ export class Text extends Base {
          * @returns {void}
          */
         const updateFinalValue = () => {
-            // Update the final value based on the decimal flag
-            if (isDecimalPart) finalValue += currentValue;
-            else  finalValue = this._strIntAddition(finalValue, currentValue);
+            // Update values based on the decimal flag
+            if (isDecimalPart) {
+                finalValue += currentValue;
+                currentValue = '';
+            } else {
+                finalValue = this._strIntAddition(finalValue, currentValue);
+                currentValue = '0';
+            }
 
-            // Update the rest of the varaibles
+            // Update the thousand flag
             thousandBefore = false;
-            currentValue = '0';
         };
 
         /**
@@ -666,6 +675,9 @@ export class Text extends Base {
 
             // Check the value of the result
             if (wordRes.val == 'NAN') return false;
+
+            // Make the validations for the decimal part
+            if (isDecimalPart && !wordRes.dec) return false;
 
             // Update the last result
             lastResult = wordRes;
@@ -702,10 +714,37 @@ export class Text extends Base {
                 // Update the final value if the language is not spanish
                 if (lang != 'es') updateFinalValue();
             } else if (wordRes.type == 'hundreds' && lang == 'en') {
-                // Multiply the current value by houndred only for english
+                // Multiply the current value by houndred only for English
                 currentValue = this._strMultiplication(
                     wordRes.val, Number(currentValue)
                 ).intPart;
+            } else if (isDecimalPart) {
+                // Check if the language is English for a quick return
+                if (lang == 'en') {
+                    lastResult.next = 'unitsForS|units';
+                    currentValue += wordRes.val;
+                    return true;
+                }
+
+                // Make the validations for spanish decimals
+                const spanishAddTypes = ['hundreds', 'tens', 'conn'];
+                if (spanishAddTypes.includes(wordRes.type)) {
+                    // Fix the current value for the first addition
+                    if (currentValue == '') currentValue = '0';
+
+                    spanishDecimalAdd = true;
+                    currentValue = this._strIntAddition(
+                        currentValue, wordRes.val
+                    );
+                }
+                else if (spanishDecimalAdd) {
+                    currentValue = this._strIntAddition(
+                        currentValue, wordRes.val
+                    );
+                } else {
+                    lastResult.next = 'unitsForS|units';
+                    currentValue += wordRes.val;
+                }
             } else if (wordRes.type == 'point') {
                 // Add the current value to the final if it's different from '0'
                 if (currentValue != '0') updateFinalValue();
@@ -728,7 +767,7 @@ export class Text extends Base {
             const connSymb = Additionals.conn.symbol;
             const connIdx = word.indexOf(connSymb);
 
-            // Validate the words joined by the connector only for english
+            // Validate the words joined by the connector only for English
             if (lang == 'en' && connIdx != -1) {
                 // Get the words before and after the connector
                 const wordBef = word.slice(0, connIdx);
@@ -751,13 +790,13 @@ export class Text extends Base {
         }
 
         // Check if the current value has content
-        if (currentValue != '0') updateFinalValue();
+        if (!isDecimalPart && currentValue != '0') updateFinalValue();
+        else if (currentValue != '') updateFinalValue();
 
         // Check if the last word can be the last one
-        if (
-            (!isDecimalPart && !lastResult.next.split('|').includes('point')) ||
-            (isDecimalPart && !lastResult.dec)
-        ) return 'NAN';
+        if (!isDecimalPart && !lastResult.next.split('|').includes('point')) {
+            return 'NAN';
+        }
 
         // Check if the number is negative
         if (isNegative) finalValue = '-' + finalValue;
