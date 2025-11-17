@@ -1,4 +1,5 @@
 import { Base } from "./Base.js";
+import { Decimal } from "./Decimal.js";
 
 export class Text extends Base {
     static validChars = [
@@ -13,13 +14,50 @@ export class Text extends Base {
     static _canContainPeriod = false;
 
     /**
+     * Converts one written number into base 62 format. The number can be in two
+     * languages: English and Spanish. The written number can be negative and
+     * contain a decimal written part. This method will make two conversions,
+     * one from text to decimal and the second one from decimal to base 62.
+     * 
+     * @static
+     * @param {string} number - The written number.
+     * @param {"es"|"en"} lang - The language of the number.
+     * @param {string[]} customChars - The custom initial character order.
+     * @returns {string} The number in base 62 format.
+     */
+    static tobase62(number, lang, customChars) {
+        const decimalNumber = this.todecimal(number, lang);
+        if (decimalNumber == 'NaN') return decimalNumber;
+
+        return Decimal.tobase62(decimalNumber, customChars);
+    }
+
+    /**
+     * Converts one written number into hexadecimal format. The number can be in
+     * two languages: English and Spanish. The written number can be negative
+     * and contain a decimal written part. This method will make two conversions,
+     * one from text to decimal and the second one from decimal to hexadecimal.
+     * 
+     * @static
+     * @param {string} number - The written number.
+     * @param {"es"|"en"} lang - The language of the number.
+     * @returns {string} The number in hexadecimal format.
+     */
+    static tohexadecimal(number, lang) {
+        const decimalNumber = this.todecimal(number, lang);
+        if (decimalNumber == 'NaN') return decimalNumber;
+
+        return Decimal.tohexadecimal(decimalNumber);
+    }
+
+    /**
      * Converts one written number into decimal format. The number can be in two
      * languages: English and Spanish. The written number can be negative and
      * contain a decimal written part.
      * 
      * @static
      * @param {string} number - The written number.
-     * @param {string} lang - The language of the number.
+     * @param {"es"|"en"} lang - The language of the number.
      * @return {string} The number in decimal format.
      */
     static todecimal(number, lang) {
@@ -802,5 +840,61 @@ export class Text extends Base {
         if (isNegative) finalValue = '-' + finalValue;
 
         return finalValue;
+    }
+
+    /**
+     * Converts one written number into octal format. The number can be in two
+     * languages: English and Spanish. The written number can be negative and
+     * contain a decimal written part. This method will make two conversions,
+     * one from text to decimal and the second one from decimal to octal.
+     * 
+     * @static
+     * @param {string} number - The written number.
+     * @param {"es"|"en"} lang - The language of the number.
+     * @returns {string} The number in octal format.
+     */
+    static tooctal(number, lang) {
+        const decimalNumber = this.todecimal(number, lang);
+        if (decimalNumber == 'NaN') return decimalNumber;
+
+        return Decimal.tooctal(decimalNumber);
+    }
+
+    /**
+     * Converts one written number into binary format. The number can be in two
+     * languages: English and Spanish. The written number can be negative and
+     * contain a decimal written part. This method will make two conversions,
+     * one from text to decimal and the second one from decimal to binary.
+     * 
+     * @static
+     * @param {string} number - The written number.
+     * @param {"es"|"en"} lang - The language of the number.
+     * @returns {string} The number in binary format.
+     */
+    static tobinary(number, lang) {
+        const decimalNumber = this.todecimal(number, lang);
+        if (decimalNumber == 'NaN') return decimalNumber;
+
+        return Decimal.tobinary(decimalNumber);
+    }
+
+    /**
+     * Converts one written number into text format. The number can be in two
+     * languages: English and Spanish. The written number can be negative and
+     * contain a decimal written part. This method is intended to be able to
+     * change the language of one number. This method will make two conversions,
+     * one from text to decimal and the second one from decimal to text.
+     * 
+     * @static
+     * @param {string} number - The written number.
+     * @param {"es"|"en"} langOrigin - The language of the number.
+     * @param {"es"|"en"} langDestiny - The language of the number.
+     * @returns {string} The written number in the destiny language.
+     */
+    static totext(number, langOrigin, langDestiny) {
+        const decimalNumber = this.todecimal(number, langOrigin);
+        if (decimalNumber == 'NaN') return decimalNumber;
+
+        return Decimal.totext(decimalNumber, langDestiny);
     }
 }
