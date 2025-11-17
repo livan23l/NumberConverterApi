@@ -597,7 +597,7 @@ export class Text extends Base {
          */
         const getWordResult = (word, lastNext) => {
             // Define the result structure
-            const result = { val: 'NAN', next: '', type: '', dec: false };
+            const result = { val: 'NaN', next: '', type: '', dec: false };
 
             // Get the attributes of the current word and set the type
             const wordAttributes = getWordAttributes(word);
@@ -674,7 +674,7 @@ export class Text extends Base {
             const wordRes = getWordResult(word, lastResult.next);
 
             // Check the value of the result
-            if (wordRes.val == 'NAN') return false;
+            if (wordRes.val == 'NaN') return false;
 
             // Make the validations for the decimal part
             if (isDecimalPart && !wordRes.dec) return false;
@@ -774,19 +774,19 @@ export class Text extends Base {
                 const wordAft = word.slice(connIdx + 1);
 
                 // Get and validate the result of the word before
-                if (!getAndValidate(wordBef)) return 'NAN';
+                if (!getAndValidate(wordBef)) return 'NaN';
 
                 // Get and validate the result of the connector
-                if (!getAndValidate(connSymb)) return 'NAN';
+                if (!getAndValidate(connSymb)) return 'NaN';
 
                 // Get and validate the result of the word after
-                if (!getAndValidate(wordAft)) return 'NAN';
+                if (!getAndValidate(wordAft)) return 'NaN';
 
                 continue;
             }
 
             // Get and validate the result of the current word
-            if (!getAndValidate(word)) return 'NAN';
+            if (!getAndValidate(word)) return 'NaN';
         }
 
         // Check if the current value has content
@@ -795,7 +795,7 @@ export class Text extends Base {
 
         // Check if the last word can be the last one
         if (!isDecimalPart && !lastResult.next.split('|').includes('point')) {
-            return 'NAN';
+            return 'NaN';
         }
 
         // Check if the number is negative
