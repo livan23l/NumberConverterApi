@@ -687,7 +687,7 @@ export class Decimal extends Base {
             let name = '';
 
             // Check if the language is Spanish and the digits are three or less
-            if (lang == 'es' && decPart.length <= 3) {
+            if (lang == 'es' && decPart.length <= 3 && decPart[0] != '0') {
                 name += ' ' + getDigitsName(decPart);
             } else {
                 // Name each digit one by one
