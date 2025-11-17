@@ -146,8 +146,12 @@ export class ApiController extends Controller {
             result.data = result.data.replace(/\.\.\.$/, '');
         }
         // Check if the data has the 'NTL' (Number too long) warning
-        if (result.data == 'NTL') {
+        else if (result.data == 'NTL') {
             warnings['data'] = WarningsEnum.NTL();
+        }
+        // Check if the data has the 'NaN' (Not a Number) warning
+        else if (result.data == 'NaN') {
+            warnings['data'] = WarningsEnum.NaN();
         }
     }
 

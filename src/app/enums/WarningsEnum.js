@@ -8,6 +8,9 @@ export const WarningsEnum = {
     SEPARATION: () =>
         'The value sent did not have the specified separation.',
     NTL: () => 'The number is too long. The maximum supported scale is vigintillion.',
+    NaN: () =>
+        'The text you sent is not a valid number. ' +
+        'Please verify it for the language sent.',
 
     CHEXADECIMALVAL: value =>
         `\`${value}\` is not a valid hexadecimal number.`,
