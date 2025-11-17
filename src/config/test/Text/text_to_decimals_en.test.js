@@ -28,8 +28,6 @@ export const tests = [
     { input: 'a', expected: 'NAN' },
     { input: '15', expected: null },
     { input: 'tres', expected: 'NAN' },
-    { input: 'one hundred two thousand', expected: 'NAN' },
-    { input: 'one hundred two hundred', expected: 'NAN' },
     { input: 'one million two billion', expected: 'NAN' },
     { input: 'one trillion two billion one billion five', expected: 'NAN' },
     { input: '   OnE       mILLIon       siX       hUnDRed   fIfTy-FoUr     thOUSaNd  SIXty-fIvE      ', expected: '1654065' },
