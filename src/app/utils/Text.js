@@ -43,7 +43,7 @@ export class Text extends Base {
                 nueve: { num: '9', next: unitsNext.es, dec: true },
             },
             en: {
-                zero: { number: '0', next: 'point', decimal: true },
+                zero: { num: '0', next: 'point', dec: true },
                 one: { num: '1', next: unitsNext.en, dec: true },
                 two: { num: '2', next: unitsNext.en, dec: true },
                 three: { num: '3', next: unitsNext.en, dec: true },
@@ -81,7 +81,7 @@ export class Text extends Base {
                 quince: { num: '15', next: tensNext.es[0], dec: true },
                 'dieciséis': { num: '16', next: tensNext.es[0], dec: true },
                 diecisiete: { num: '17', next: tensNext.es[0], dec: true },
-                diecicho: { num: '18', next: tensNext.es[0], dec: true },
+                dieciocho: { num: '18', next: tensNext.es[0], dec: true },
                 diecinueve: { num: '19', next: tensNext.es[0], dec: true },
                 veinte: { num: '20', next: tensNext.es[0], dec: true },
                 'veintiún': { num: '21', next: tensNext.es[0], dec: true },
@@ -152,7 +152,7 @@ export class Text extends Base {
         // Generate relationships between names and numbers in thousands
         const thousandsNext = {
             es: 'illions|hundreds|tens|unitsForS|:uno|point',
-            en: 'illions|hundreds|tens|unitsForS|point'
+            en: 'tens|unitsForS|point'
         };
         const thousands = {
             es: {
@@ -166,7 +166,7 @@ export class Text extends Base {
         // Generate relationships between names and numbers in 'illions'
         const illionsNext = {
             es: 'illions|thousands|hundreds|tens|unitsForS|:uno|point',
-            en: 'illions|hundreds|tens|unitsForS|point'
+            en: 'tens|unitsForS|point'
         };
         const illions = {
             es: {
@@ -478,14 +478,16 @@ export class Text extends Base {
         // Set the name of the additional things (points and connectors)
         const additionals = {
             es: {
+                minus: { symbol: '-', name: 'menos' },
                 punto: { symbol: '.', dec: true },
                 conn: { symbol: 'y', next: 'unitsForS|:uno', dec: true },
-                firstWordTypes: 'thousands|hundreds|tens|units'
+                firstWordTypes: 'thousands|hundreds|tens|unitsForS|units'
             },
             en: {
+                minus: { symbol: '-', name: 'minus' },
                 point: { symbol: '.', dec: true },
                 conn: { symbol: '-', next: 'unitsForS', dec: false },
-                firstWordTypes: 'tens|units'
+                firstWordTypes: 'tens|unitsForS|units'
             }
         };
 
@@ -600,23 +602,18 @@ export class Text extends Base {
             return result;
         };
 
-        // Generate the first word with its types
+        // Make the conversion for all the words
+        number = number.toLowerCase();  // Convert the number into lower case
         const numberSplited = number.split(' ');
-        const firstWord = numberSplited[0];
-        const firstWordTypes = Additionals.firstWordTypes;
-
-        // Get the result of the first word
-        const firstWordResult = getWordResult(firstWord, firstWordTypes);
-
-        // Validate the value of the first word
-        if (firstWordResult.val == 'NAN') return 'NAN';
-
-        // Make the conversion for the rest of the words
         let isDecimalPart = false;
-        let thousandBefore = firstWordResult.type == 'thousands';
-        let lastResult = firstWordResult;
-        let currentValue = firstWordResult.val;
+        let thousandBefore = false;
+        let lastResult = { next: Additionals.firstWordTypes };
+        let currentValue = '0';
         let finalValue = '0';
+
+        // Validate if the number is negative
+        const isNegative = (numberSplited[0] == Additionals.minus.name);
+        if (isNegative) numberSplited.shift();
 
         /**
          * Updates the final value, the current value and the thousand before
@@ -625,8 +622,12 @@ export class Text extends Base {
          * @returns {void}
          */
         const updateFinalValue = () => {
+            // Update the final value based on the decimal flag
+            if (isDecimalPart) finalValue += currentValue;
+            else  finalValue = this._strIntAddition(finalValue, currentValue);
+
+            // Update the rest of the varaibles
             thousandBefore = false;
-            finalValue = this._strIntAddition(finalValue, currentValue);
             currentValue = '0';
         };
 
@@ -644,32 +645,46 @@ export class Text extends Base {
             if (wordRes.val == 'NAN') return false;
 
             // Update the last result
-            lastResult.next = wordRes.next;
+            lastResult = wordRes;
 
             // Update the current value
             if (wordRes.type.includes('illion')) {  // illions or illion
                 // Validation for spanish plural
-                if (currentValue == '1' && wordRes.type.endsWith('s')) {
-                    return false;
-                }
+                if (
+                    lang == 'es' && currentValue == '1' &&
+                    wordRes.type.endsWith('s')
+                ) return false;
 
                 currentValue = this._strMultiplication(
                     wordRes.val, Number(currentValue)
-                );
+                ).intPart;
                 updateFinalValue();
-            }
-            else if (wordRes.type == 'thousands') {
+            } else if (wordRes.type == 'thousands') {
                 // Validation for spanish loop in thousands
                 if (thousandBefore) return false;
+                thousandBefore = true;
 
                 // Validation for spanish in 'one thousand'
-                if (currentValue == '') currentValue = '1';
+                if (currentValue == '0') currentValue = '1';
                 currentValue = this._strMultiplication(
                     wordRes.val, Number(currentValue)
-                );
+                ).intPart;
 
+                // Update the final value if the language is not spanish
+                if (lang != 'es') updateFinalValue();
+            } else if (wordRes.type == 'hundreds' && lang == 'en') {
+                // Multiply the current value by houndred only for english
+                currentValue = this._strMultiplication(
+                    wordRes.val, Number(currentValue)
+                ).intPart;
+            } else if (wordRes.type == 'point') {
+                // Add the current value to the final if it's different from '0'
+                if (currentValue != '0') updateFinalValue();
+
+                // Add the point to the final value
+                currentValue = '.';
+                isDecimalPart = true;
                 updateFinalValue();
-                thousandBefore = true;
             } else {  // Is not one scale
                 currentValue = this._strIntAddition(currentValue, wordRes.val);
             }
@@ -677,7 +692,7 @@ export class Text extends Base {
             return true;
         };
 
-        for (let i = 1; i < numberSplited.length; i++) {
+        for (let i = 0; i < numberSplited.length; i++) {
             const word = numberSplited[i];
 
             // Check if the word has the current connector
@@ -714,6 +729,9 @@ export class Text extends Base {
             (!isDecimalPart && !lastResult.next.split('|').includes('point')) ||
             (isDecimalPart && !lastResult.dec)
         ) return 'NAN';
+
+        // Check if the number is negative
+        if (isNegative) finalValue = '-' + finalValue;
 
         return finalValue;
     }
