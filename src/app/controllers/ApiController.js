@@ -247,7 +247,7 @@ export class ApiController extends Controller {
         };
         if (currentClass.validate(value)) return validation;
 
-        const key = `${currentClass.name.toUpperCase()}VAL`;
+        const key = `C${currentClass.name.toUpperCase()}VAL`;
         validation.warning = WarningsEnum[key](from.value);
         validation.value = null;
         return validation;
