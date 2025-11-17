@@ -29,6 +29,7 @@ export const tests = [
     { input: '15', expected: null },
     { input: 'tres', expected: 'NAN' },
     { input: 'one million two billion', expected: 'NAN' },
+    { input: 'one trillion two billion one billion five', expected: 'NAN' },
     { input: '   OnE       mILLIon       siX       hUnDRed   fIfTy-FoUr     thOUSaNd  SIXty-fIvE      ', expected: '1654065' },
     { input: 'million', expected: 'NAN' },
     { input: 'thousand', expected: 'NAN' },
