@@ -21,6 +21,10 @@ import { tests as binTestsOct } from "./binary/binary_to_octal.test.js";
 import { tests as binTestsDec } from "./binary/binary_to_decimal.test.js";
 import { tests as binTestsHex } from "./binary/binary_to_hexadecimal.test.js";
 
+// Text Tests
+import { tests as textTestsDecEn } from "./Text/text_to_decimals_en.test.js";
+import { tests as textTestsDecEs } from "./Text/text_to_decimals_es.test.js";
+
 class Tester {
     static #url = 'http://localhost:3300/api/converter';
     static #body = {
@@ -136,14 +140,30 @@ class Tester {
         }
     }
 
+    static async runAllTextTests() {
+        try {
+            this.#body.from.type = 'text';
+            this.#body.from.format = {};
+            console.log('                        TEXT TESTS');
+            this.#body.from.format.lang = 'en';
+            await this.#executeTests(textTestsDecEn, 'decimal', 'To Decimal En');
+            this.#body.from.format.lang = 'es';
+            await this.#executeTests(textTestsDecEs, 'decimal', 'To Decimal Es');
+        } catch(err) {
+            console.log(err.message);
+        }
+    }
+
     static async runAllTests() {
         await this.runAllHexadecimalTests();
         console.log('\n');
         await this.runAllDecimalsTests();
         console.log('\n');
+        await this.runAllOctalTests();
+        console.log('\n');
         await this.runAllBinaryTests();
         console.log('\n');
-        await this.runAllOctalTests();
+        await this.runAllTextTests();
     }
 }
 
