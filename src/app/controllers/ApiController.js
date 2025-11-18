@@ -246,7 +246,7 @@ export class ApiController extends Controller {
         const currentClass = this.#getClassByType(from.type)
 
         // Get the standardized value
-        const cur0 = '0';//currentClass.getCurrentZero(from.format?.order);
+        const cur0 = currentClass.getCurrentZero(from.format?.order);
         const value = currentClass.standardizeValue(from.value, cur0);
 
         // Make the validation
@@ -374,10 +374,10 @@ export class ApiController extends Controller {
             warnings['validation'] = fromValidation.warning;
         }
         // Make the conversion if the types of from and to are different or
-        // both are base62 or text (to change the language or the order)
+        // both are base62, base64 or text (to change the language or the order)
         else if (data.from.type != data.to.type || (
             data.from.type == data.to.type &&
-            ['base62', 'text'].includes(data.from.type)
+            ['base62', 'base64', 'text'].includes(data.from.type)
         )) {
             result.data = this.#makeConversion(data.from, data.to);
 
