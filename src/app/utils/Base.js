@@ -69,24 +69,19 @@ export class Base {
 
     /**
      * Check whether the value is valid or not depending on the following flags:
-     * - `validChars`: Set the characters that are considered valid.
      * - `_canContainMinus`: Set if the value can starts with '-'.
      * - `_canContainPeriod`: Set if the value can contian one '.'.
      * 
      * @static
      * @param {string} value - The string with the current value
+     * @param {string[]} validChars - The characters that are considered valid.
      * @returns {boolean} The result of the validation
      */
-    static validate(value) {
+    static validate(value, validChars) {
         // Make the necessary validations if the number is negative
         if (value.startsWith('-')) {
             if (!this._canContainMinus) return false;
-
-            // Remove the 'minus' sign
-            value = value.slice(1);
-
-            // Check if there is antoher 'minus'
-            if (value.includes('-')) return false;
+            value = value.slice(1);  // Remove the 'minus' sign
         }
 
         // Make the necessary validations if the number is decimal
@@ -96,15 +91,12 @@ export class Base {
             // Remove the period
             const idxPeriod = value.indexOf('.');
             value = value.slice(0, idxPeriod) + value.slice(idxPeriod + 1);
-
-            // Check if there is another period
-            if (value.includes('.')) return false;
         }
 
         // Validate the rest of the characters
         for (let i = 0; i < value.length; i++) {
             const character = value[i];
-            if (!this.validChars.includes(character)) return false;
+            if (!validChars.includes(character)) return false;
         }
 
         return true;
@@ -531,10 +523,7 @@ export class Base {
      * orders.
      * 
      * @static
-     * @param {string|undefined} order - The custom order in the characters.
-     * @returns The character that represents zero.
+     * @returns {"0"} The character that represents zero in most bases.
      */
-    static getCurrentZero(order) {
-        return '0';
-    }
+    static getCurrentZero() { return '0'; }
 }
