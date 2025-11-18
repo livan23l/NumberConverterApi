@@ -187,6 +187,7 @@ export class Base62 extends Base {
      * 
      * @static
      * @param {string} number - The number to 'translate' in text format.
+     * @param {string[]} customChars - The custom initial character order.
      * @param {'en'|'es'} lang - The language to 'translate' the number.
      * @returns The number in text format in the sent language.
      */
