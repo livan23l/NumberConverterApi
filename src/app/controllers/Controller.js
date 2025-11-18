@@ -57,16 +57,16 @@ export class Controller {
         // Define the validations
         //--Simple
         const simpValidations = {
-            'obj': value => typeof value === 'object' && value !== null,
-            'str': value => typeof value === 'string',
-            'strnumber': value => typeof value === 'string' ||
+            obj: value => typeof value === 'object' && value !== null,
+            str: value => typeof value === 'string',
+            strnumber: value => typeof value === 'string' ||
                                   typeof value === 'number',
         };
 
         //--Comparisons
         const compValidations = {
-            'in': (value, array) => JSON.parse(array).includes(value),
-            'inLower': (value, array) => JSON.parse(array).includes(
+            in: (value, array) => JSON.parse(array).includes(value),
+            inLower: (value, array) => JSON.parse(array).includes(
                 value.toLowerCase()
             ),
         };
