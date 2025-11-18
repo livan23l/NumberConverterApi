@@ -25,7 +25,7 @@ export class Base64 extends Base {
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
         'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
     ];
-    static extraChars = ['+', '/'];
+    static extraCharacters = ['+', '/'];
 
     static binaryDigits = {
         0: '000000', 1: '000001', 2: '000010', 3: '000011', 4: '000100',
