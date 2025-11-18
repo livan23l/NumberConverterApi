@@ -246,7 +246,7 @@ export class ApiController extends Controller {
         const currentClass = this.#getClassByType(from.type)
 
         // Get the standardized value
-        const value = currentClass.standardizeValue(from.value);
+        const value = currentClass.standardizeValue(from.value, '0');
 
         // Make the validation
         const validation = {

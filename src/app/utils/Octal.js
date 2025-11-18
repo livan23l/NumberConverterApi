@@ -19,7 +19,12 @@ export class Octal extends Base {
      * @returns {string} The number in binary representation.
      */
     static #getBinaryDecimals(number) {
-        return this._base2GeneralTemplate(number, 'decimal', this.binaryDigits);
+        return this._base2GeneralTemplate(
+            number,
+            'decimal',
+            this.binaryDigits,
+            this.validChars
+        );
     }
 
     /**
@@ -31,7 +36,12 @@ export class Octal extends Base {
      * @returns {string} The number in binary representation.
      */
     static #getBinaryIntegers(number) {
-        return this._base2GeneralTemplate(number, 'integer', this.binaryDigits);
+        return this._base2GeneralTemplate(
+            number,
+            'integer',
+            this.binaryDigits,
+            this.validChars
+        );
     }
 
     /**

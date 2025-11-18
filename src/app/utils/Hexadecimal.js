@@ -11,8 +11,8 @@ export class Hexadecimal extends Base {
     static binaryDigits = {
         0: '0000', 1: '0001', 2: '0010', 3: '0011', 4: '0100',
         5: '0101', 6: '0110', 7: '0111', 8: '1000', 9: '1001',
-        A: '1010', B: '1011', C: '1100', D: '1101', E: '1110',
-        F: '1111'
+        10: '1010', 11: '1011', 12: '1100', 13: '1101', 14: '1110',
+        15: '1111'
     };
 
     /**
@@ -25,7 +25,12 @@ export class Hexadecimal extends Base {
      * @returns {string} The number in binary representation.
      */
     static #getBinaryDecimals(number) {
-        return this._base2GeneralTemplate(number, 'decimal', this.binaryDigits);
+        return this._base2GeneralTemplate(
+            number,
+            'decimal',
+            this.binaryDigits,
+            this.validChars
+        );
     }
 
     /**
@@ -38,7 +43,12 @@ export class Hexadecimal extends Base {
      * @returns {string} The number in binary representation.
      */
     static #getBinaryIntegers(number) {
-        return this._base2GeneralTemplate(number, 'integer', this.binaryDigits);
+        return this._base2GeneralTemplate(
+            number,
+            'integer',
+            this.binaryDigits,
+            this.validChars
+        );
     }
 
     /**

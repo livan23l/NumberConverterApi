@@ -5,6 +5,24 @@ export class Base {
     static _canContainPeriod = true;
 
     /**
+     * Returns a regular expression that removes leading and trailing zeros from
+     * a string. This function takes the character that identifies zero in a
+     * given base and escapes it if it's a special regular expression character.
+     * 
+     * @private
+     * @static
+     * @param {string} cur0 - The character that is the zero in the base.
+     * @param {"leading"|"trailing"} type - The type of regular expresion.
+     * @returns {RegExp} The regular expression to remove the 'type' zeros.
+     */
+    static _getRegexForZeros(cur0, type) {
+        const safe0 = cur0.replace(/\+/g, "\\$&");
+
+        if (type == 'leading') return new RegExp(`^${safe0}+`);
+        else if (type == 'trailing') return new RegExp(`${safe0}+$`);
+    }
+
+    /**
      * Standardize the value following this rules:
      * - Removes the leading zeros for the integer part.
      * - Removes the trailing zeros for the decimal part.
@@ -13,9 +31,10 @@ export class Base {
      * 
      * @static
      * @param {string} value - The value to be standardized.
+     * @param {string} cur0 - The current character that represents zero.
      * @returns {string} The standardized value.
      */
-    static standardizeValue(value) {
+    static standardizeValue(value, cur0) {
         // Remove the leading and trailing white spaces
         value = value.trim();
 
@@ -29,18 +48,21 @@ export class Base {
         if (hasNegSign) value = value.slice(1);
 
         // Remove the leading zeros
-        value = value.replace(/^0+/, '');
+        value = value.replace(this._getRegexForZeros(cur0, 'leading'), '');
 
         // Check if the value contains '.' to remove the trailing zeros
-        if (value.includes('.')) value = value.replace(/0+$/, '');
+        if (value.includes('.')) {
+            value = value.replace(this._getRegexForZeros(cur0, 'trailing'), '');
+        }
 
         // Check if the start or/and the end of the value is empty
-        if (value == '') value = '0';
-        if (value.startsWith('.')) value = '0' + value;
-        if (value.endsWith('.')) value += '0';
+        if (value == '') value = cur0;
+        if (value.startsWith('.')) value = cur0 + value;
+        if (value.endsWith('.')) value += cur0;
 
         // Add the negative sign if the value is not '0'
-        if (hasNegSign && value != '0' && value != '0.0') value = '-' + value;
+        const zeros = [cur0, `${cur0}.${cur0}`];
+        if (hasNegSign && !zeros.includes(value)) value = '-' + value;
 
         return value;
     }
@@ -196,7 +218,7 @@ export class Base {
      * methods `_strIntDivision` and `strFullDivision`. This returns an object
      * with the result and the remainder.
      * 
-     * @private
+     * @static
      * @param {number} divisor - The divisor number.
      * @param {number} lastRemainder - The remainder of the previous divisions.
      * @param {number} currentValue - The current value of the current division.
@@ -313,21 +335,28 @@ export class Base {
      * decimal parts of a number with a power of two base, based on the binary
      * representation of the original base.
      * 
+     * @static
      * @param {string} number - The number with a power of two base.
      * @param {'integer'|'decimal'} typeOfNumber - The sent part of the number.
-     * @param {object} binaryDigits - The binary representation of the base.
+     * @param {object} binDigits - The binary representation of the base.
+     * @param {string[]} baseChars - The valid characters of the number base.
      * @returns {string} The binary conversion of the number.
      */
-    static _base2GeneralTemplate(number, typeOfNumber, binaryDigits) {
+    static _base2GeneralTemplate(number, typeOfNumber, binDigits, baseChars) {
         // Make the conversion for each digit
         let res = '';
         for (const dig of number) {
-            res += binaryDigits[dig];
+            const digIdx = baseChars.indexOf(dig);
+            res += binDigits[digIdx];
         }
 
         // Remove the leading or trailing zeros
-        if (typeOfNumber == 'integer') res = res.replace(/^0+/, '');
-        else res = res.replace(/0+$/, '');
+        const cur0 = baseChars[0];
+        if (typeOfNumber == 'integer') {
+            res = res.replace(this._getRegexForZeros(cur0, 'leading'), '');
+        } else {
+            res = res.replace(this._getRegexForZeros(cur0, 'trailing'), '');
+        }
 
         // Check if the result is empty
         if (res == '') res = '0';
@@ -381,7 +410,8 @@ export class Base {
         }
 
         // Remove the trailing zeros
-        result = result.replace(/0+$/, '');
+        const zeroRegex = this._getRegexForZeros(cur0, 'trailing');
+        result = result.replace(zeroRegex, '');
         if (result == '') result = '0';
 
         return result;
@@ -425,7 +455,8 @@ export class Base {
         }
 
         // Remove the leading zeros
-        result = result.replace(/^0+/, '');
+        const zeroRegex = this._getRegexForZeros(cur0, 'leading');
+        result = result.replace(zeroRegex, '');
         if (result == '') result = '0';
 
         return result;
