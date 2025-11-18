@@ -52,9 +52,9 @@ export class Base64 extends Base {
      * @returns The character that represents zero.
      */
     static getCurrentZero(order, extraChars) {
-        if (order == undefined || order.startsWith('num')) return '0';
-        else if (order.startsWith('upper')) return 'A';
+        if (order == undefined || order.startsWith('upper')) return 'A';
         else if (order.startsWith('lower')) return 'a';
+        else if (order.startsWith('num')) return '0';
         else if (extraChars == undefined) return '+';
         else return extraChars[0];
     }
