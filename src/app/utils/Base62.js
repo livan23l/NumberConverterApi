@@ -20,6 +20,19 @@ export class Base62 extends Base {
     ];
 
     /**
+     * Returns the character that represents zero in the current base.
+     * 
+     * @static
+     * @param {string|undefined} order - The custom order in the characters.
+     * @returns The character that represents zero.
+     */
+    static getCurrentZero(order) {
+        if (order == undefined || order.startsWith('num')) return '0';
+        else if (order.startsWith('upper')) return 'A';
+        else return 'a';
+    }
+
+    /**
      * Converts the decimal part of a base 62 number to its base-decimal
      * representation.
      * 
@@ -63,15 +76,28 @@ export class Base62 extends Base {
         if (initialCharsOrder.length == 0) initialCharsOrder = this.validChars;
         if (finalCharsOrder.length == 0) finalCharsOrder = this.validChars;
 
+        // Check if the number is negative
+        const isNegative = number.startsWith('-');
+
         // Change each digit of the number for the new digits order
         let newNumber = '';
         for (const dig of number) {
+            // Check if the character is one special char
+            if (dig == '-') continue;
+            else if (dig == '.') {
+                newNumber += dig;
+                continue;
+            }
+
             // Find the index of the current digit
             const idx = initialCharsOrder.indexOf(dig);
 
             // Add the corresponding digit to the new number
             newNumber += finalCharsOrder[idx];
         }
+
+        // Add the negative sign if the number is negative
+        if (isNegative) newNumber = '-' + newNumber;
 
         return newNumber;
     }
