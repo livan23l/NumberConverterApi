@@ -16,7 +16,7 @@ export class Base {
      * @returns {RegExp} The regular expression to remove the 'type' zeros.
      */
     static _getRegexForZeros(cur0, type) {
-        const safe0 = cur0.replace(/\+/g, "\\$&");
+        const safe0 = cur0.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
         if (type == 'leading') return new RegExp(`^${safe0}+`);
         else if (type == 'trailing') return new RegExp(`${safe0}+$`);
