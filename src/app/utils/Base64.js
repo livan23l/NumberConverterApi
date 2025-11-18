@@ -9,6 +9,13 @@ export class Base64 extends Base {
         'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3',
         '4', '5', '6', '7', '8', '9', '+', '/'
     ];
+    static validCharsWithoutExtra = [
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+        'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b',
+        'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
+        'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3',
+        '4', '5', '6', '7', '8', '9'
+    ];
     static validNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
     static validUppers = [
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
@@ -168,7 +175,7 @@ export class Base64 extends Base {
      * @param {string} number - The original base 64 number.
      * @param {string[]} base64order - The initial character order.
      * @param {string[]} base62order - The final character order.
-     * @returns {string} The base 64 number with the final character order.
+     * @returns {string} The base 62 number with the final character order.
      */
     static tobase62(number, base64order, base62order) {
         const decimalNumber = this.todecimal(number, base64order);

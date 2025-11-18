@@ -14,6 +14,25 @@ export class Text extends Base {
     static _canContainPeriod = false;
 
     /**
+     * Converts one written number into base 64 format. The number can be in two
+     * languages: English and Spanish. The written number can be negative and
+     * contain a decimal written part. This method will make two conversions,
+     * one from text to decimal and the second one from decimal to base 64.
+     * 
+     * @static
+     * @param {string} number - The written number.
+     * @param {"es"|"en"} lang - The language of the number.
+     * @param {string[]} customChars - The custom initial character order.
+     * @returns {string} The number in base 64 format.
+     */
+    static tobase64(number, lang, customChars) {
+        const decimalNumber = this.todecimal(number, lang);
+        if (decimalNumber == 'NaN') return decimalNumber;
+
+        return Decimal.tobase64(decimalNumber, customChars);
+    }
+
+    /**
      * Converts one written number into base 62 format. The number can be in two
      * languages: English and Spanish. The written number can be negative and
      * contain a decimal written part. This method will make two conversions,

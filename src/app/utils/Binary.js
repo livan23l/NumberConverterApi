@@ -1,4 +1,5 @@
 import { Base } from './Base.js';
+import { Base64 } from './Base64.js';
 import { Decimal } from './Decimal.js';
 import { Hexadecimal } from './Hexadecimal.js';
 import { Octal } from './Octal.js';
@@ -121,6 +122,31 @@ export class Binary extends Base {
      */
     static #getBase10Integers(number, numberChars) {
         return this._base10IntegersTemplate(number, numberChars);
+    }
+
+    /**
+     * Makes the conversion from one binary number to the corresponding number
+     * in base 64. The binary number can be negative and can contain a decimal
+     * part. In this method it's possible to send one custom order in the valid
+     * characters.
+     * 
+     * @static
+     * @param {string} number - The binary number to convert in base 64.
+     * @param {string[]} customChars - A custom character order.
+     * @returns {string} The number in base 64 format.
+     */
+    static tobase64(number, customChars) {
+        const validChars = (customChars.length > 0)
+                    ? customChars
+                    : Base64.validChars;
+
+        return this._conversion(
+            number,
+            this.validChars,
+            validChars,
+            this.#getBase2Decimals,
+            this.#getBase2Integers
+        );
     }
 
     /**

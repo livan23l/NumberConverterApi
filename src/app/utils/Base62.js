@@ -61,6 +61,25 @@ export class Base62 extends Base {
     }
 
     /**
+     * Makes the conversion from one base 62 number to the corresponding number
+     * in base 64. The base 62 number can be negative and can contain a decimal
+     * part. In this method it's possible to send the original custom order in
+     * the valid characters and the final characters order in the new base. This
+     * method will make two conversions, one from base 62 to decimal and the
+     * second one from decimal to base 64.
+     * 
+     * @static
+     * @param {string} number - The original base 62 number.
+     * @param {string[]} base62order - The initial character order.
+     * @param {string[]} base64order - The final character order.
+     * @returns {string} The base 64 number with the final character order.
+     */
+    static tobase64(number, base62order, base64order) {
+        const decimalNumber = this.todecimal(number, base62order);
+        return Decimal.tobase64(decimalNumber, base64order);
+    }
+
+    /**
      * Converts a base 62 number to another base 62 number. This method is
      * intended to be able to change the order of the characters in a base 62
      * number.
