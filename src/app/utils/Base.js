@@ -524,4 +524,17 @@ export class Base {
 
         return result.join('');
     }
+
+    /**
+     * Returns the character that represents zero in the current base. This
+     * method acts as a template for bases that don't have variable character
+     * orders.
+     * 
+     * @static
+     * @param {string|undefined} order - The custom order in the characters.
+     * @returns The character that represents zero.
+     */
+    static getCurrentZero(order) {
+        return '0';
+    }
 }
