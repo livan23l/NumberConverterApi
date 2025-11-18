@@ -205,7 +205,7 @@ export class ApiController extends Controller {
             const orderList = order ? order.split('-') : [];
             for (const ord of orderList) {
                 switch(ord) {
-                    case 'int':
+                    case 'num':
                         newValidChars.push(...CBase62.validNumbers);
                         break;
                     case 'upper':
@@ -246,7 +246,8 @@ export class ApiController extends Controller {
         const currentClass = this.#getClassByType(from.type)
 
         // Get the standardized value
-        const value = currentClass.standardizeValue(from.value, '0');
+        const cur0 = '0';//currentClass.getCurrentZero(from.format?.order);
+        const value = currentClass.standardizeValue(from.value, cur0);
 
         // Make the validation
         const validation = {
@@ -272,11 +273,23 @@ export class ApiController extends Controller {
     #validateData(data) {
         // Define the valid values
         const validTypes = '["hexadecimal", "decimal", "octal", "binary", ' +
-                           '"base62", "text"]';
+                           '"base62", "base64", "text"]';
         const validLangs = '["en", "es"]';
-        const validOrders = '["int-lower-upper", "int-upper-lower", ' +
-                            '"lower-int-upper", "lower-upper-int", ' +
-                            '"upper-int-lower", "upper-lower-int"]';
+        const orders62 = '["num-lower-upper", "num-upper-lower", ' +
+                         '"lower-num-upper", "upper-num-lower", ' +
+                         '"lower-upper-num", "upper-lower-num"]';
+        const orders64 = '["upper-lower-num-extra", "upper-lower-extra-num", ' +
+                         '"upper-num-lower-extra", "upper-num-extra-lower", ' +
+                         '"upper-extra-lower-num", "upper-extra-num-lower", ' +
+                         '"lower-upper-num-extra", "lower-upper-extra-num", ' +
+                         '"lower-num-upper-extra", "lower-num-extra-upper", ' +
+                         '"lower-extra-upper-num", "lower-extra-num-upper", ' +
+                         '"num-upper-lower-extra", "num-upper-extra-lower", ' +
+                         '"num-lower-upper-extra", "num-lower-extra-upper", ' +
+                         '"num-extra-upper-lower", "num-extra-lower-upper", ' +
+                         '"extra-upper-lower-num", "extra-upper-num-lower", ' +
+                         '"extra-lower-upper-num", "extra-lower-num-upper", ' +
+                         '"extra-num-upper-lower", "extra-num-lower-upper"]';
         const validSeparations = '["comma", "period", "none"]';
 
         // Validate the data
@@ -286,19 +299,28 @@ export class ApiController extends Controller {
             'from.value':      'required|strnumber',
             'from.format.lang': 'condition:data.from.type=="text"|required|' +
                                 'str|in:' + validLangs,
-            'from.format.order': 'condition:data.from.type=="base62"|' +
-                                 'nullable|str|in:' + validOrders,
             'from.format.separation': 'condition:data.from.type!="text"|' +
                                       'nullable|str|in:' + validSeparations,
             'to':              'required|obj',
             'to.type':         'required|str|in:' + validTypes,
             'to.format.lang':  'condition:data.to.type=="text"|required|str|' +
                                'in:' + validLangs,
-            'to.format.order': 'condition:data.to.type=="base62"|nullable|' +
-                               'str|in:' + validOrders,
             'to.format.separation': 'condition:data.to.type!="text"|nullable|' +
                                     'str|in:' + validSeparations
         });
+
+        // Validate the corresponding orders for base 62 and base 64
+        if (data?.from?.type == 'base62' || data?.to?.type == 'base62') {
+            Object.assign(errors, this._validate(data, {
+                'from.format.order': 'nullable|str|in:' + orders62,
+                'to.format.order': 'nullable|str|in:' + orders62
+            }));
+        } else if (data?.from?.type == 'base64' || data?.to?.type == 'base64') {
+            Object.assign(errors, this._validate(data, {
+                'from.format.order': 'nullable|str|in:' + orders64,
+                'to.format.order': 'nullable|str|in:' + orders64
+            }));
+        }
 
         // Return the errors
         return errors;
