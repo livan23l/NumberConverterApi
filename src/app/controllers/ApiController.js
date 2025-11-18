@@ -1,5 +1,5 @@
 import { Controller } from './Controller.js';
-import { CHexadecimal, CDecimal, COctal, CBinary, CBase62, CText } from '../utils/converter.js';
+import { CHexadecimal, CDecimal, COctal, CBinary, CBase62, CText, CBase64 } from '../utils/converter.js';
 import { WarningsEnum } from '../enums/WarningsEnum.js';
 import { ErrorsEnum } from '../enums/ErrorsEnum.js';
 
@@ -169,6 +169,7 @@ export class ApiController extends Controller {
             case 'octal': return COctal;
             case 'binary': return CBinary;
             case 'base62': return CBase62;
+            case 'base64': return CBase64;
             case 'text': return CText;
         }
     }
@@ -189,32 +190,48 @@ export class ApiController extends Controller {
         const parameters = [from.value];
 
         /**
-         * Get the characters order when `from.type` or `to.type` is `base62`
-         * depending on the `format.order`. If the format order is not defined
-         * this function will return an empty array.
+         * Get the characters order when `from.type` or `to.type` is `base62` or
+         * `base64` depending on the `format.order`. If the format order is not
+         * defined this function will return an empty array.
          * 
          * @param {object} obj - The object `from` or `to`.
+         * @param {CBase62|CBase64} baseClass - The current corresponding class.
          * @returns {string[]} The array with the new characters order.
          */
-        const getCharsOrder = (obj) => {
+        const getOrd = (obj, baseClass) => {
             // Check if the format 'order' is defined
             const order = obj.format?.order;
 
             // Create the new valid chars in the sended order
             const newValidChars = [];
             const orderList = order ? order.split('-') : [];
+            const extraChars = obj.format?.extraCharacters;
             for (const ord of orderList) {
                 switch(ord) {
                     case 'num':
-                        newValidChars.push(...CBase62.validNumbers);
+                        newValidChars.push(...baseClass.validNumbers);
                         break;
                     case 'upper':
-                        newValidChars.push(...CBase62.validUppers);
+                        newValidChars.push(...baseClass.validUppers);
                         break;
                     case 'lower':
-                        newValidChars.push(...CBase62.validLowers);
+                        newValidChars.push(...baseClass.validLowers);
+                        break;
+                    case 'extra':
+                        if (extraChars) newValidChars.push(...extraChars);
+                        else newValidChars.push(...baseClass.extraCharacters);
+
                         break;
                 }
+            }
+
+            // Validate if there is extra chars defined and no custom order
+            if (
+                extraChars && newValidChars.length == 0 &&
+                baseClass.name == 'Base64'
+            ) {
+                newValidChars.push(...baseClass.validCharsWithoutExtra);
+                newValidChars.push(...extraChars);
             }
 
             return newValidChars;
@@ -222,11 +239,13 @@ export class ApiController extends Controller {
 
         // Add additional parameters depending on the formats
         //--From formats
-        if (from.type == 'base62') parameters.push(getCharsOrder(from));
+        if (from.type == 'base64') parameters.push(getOrd(from, CBase64));
+        else if (from.type == 'base62') parameters.push(getOrd(from, CBase62));
         else if (from.type == 'text') parameters.push(from.format.lang);
 
         //--To formats
-        if (to.type == 'base62') parameters.push(getCharsOrder(to));
+        if (to.type == 'base64') parameters.push(getOrd(to, CBase64));
+        else if (to.type == 'base62') parameters.push(getOrd(to, CBase62));
         else if (to.type == 'text') parameters.push(to.format.lang);
 
         // Return the conversion
@@ -254,7 +273,12 @@ export class ApiController extends Controller {
             warning: {},
             value
         };
-        if (currentClass.validate(value)) return validation;
+
+        const extraChars = from.format?.extraCharacters;
+        const validChars = (from.type == 'base64' && extraChars)
+            ? [...currentClass.validCharsWithoutExtra, ...extraChars]
+            : [...currentClass.validChars];
+        if (currentClass.validate(value, validChars)) return validation;
 
         const key = `C${currentClass.name.toUpperCase()}VAL`;
         validation.warning = WarningsEnum[key](from.value);
@@ -275,6 +299,7 @@ export class ApiController extends Controller {
         const validTypes = '["hexadecimal", "decimal", "octal", "binary", ' +
                            '"base62", "base64", "text"]';
         const validLangs = '["en", "es"]';
+        const validRemZer = '["leading", "trailing", "both", "none"]';
         const orders62 = '["num-lower-upper", "num-upper-lower", ' +
                          '"lower-num-upper", "upper-num-lower", ' +
                          '"lower-upper-num", "upper-lower-num"]';
@@ -301,12 +326,19 @@ export class ApiController extends Controller {
                                 'str|in:' + validLangs,
             'from.format.separation': 'condition:data.from.type!="text"|' +
                                       'nullable|str|in:' + validSeparations,
+            'from.format.extraCharacters': 'condition:data.from.type==' +
+                                           '"base64"|nullable|array|len:2|' +
+                                           'content:[unique-str-len:1-noAlNum]',
             'to':              'required|obj',
             'to.type':         'required|str|in:' + validTypes,
             'to.format.lang':  'condition:data.to.type=="text"|required|str|' +
                                'in:' + validLangs,
             'to.format.separation': 'condition:data.to.type!="text"|nullable|' +
-                                    'str|in:' + validSeparations
+                                    'str|in:' + validSeparations,
+            'to.format.extraCharacters': 'condition:data.to.type=="base64"|' +
+                                         'nullable|array|len:2|content:[' +
+                                         'unique-str-len:1-noAlNum]',
+            'to.format.removeZeros': 'nullable|str|in:' + validRemZer,
         });
 
         // Validate the corresponding orders for base 62 and base 64
