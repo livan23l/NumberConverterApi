@@ -22,14 +22,22 @@ export class Controller {
      * - 'required' -> If the field can be undefined or not.
      * - 'nullable' -> If the field can be null or not.
      * - 'str' -> Check if the field contains a valid string.
+     * - 'array' -> Check if the field contains a valid array.
      * - 'obj' -> Check if the field contains a valid object.
      * - 'strnumber' -> Check if the field contains a valid string or number.
+     * - 'noAlNum' -> Check that the field doesn't contain alphabetic or numeric
+     *                characters.
+     * - 'len:x' -> Check if the value has length x.
      * - 'in:[]' -> Check if the value is in the provided array.
      * - 'inLower:[]' -> Transform value to lower case and check if is in the
      *                   provided array.
+     * - 'content:[]' -> Validate the contents of one array or string using all
+     *                   the validations enclosed in square brackets.
      * 
      */
     _validate(data, validations) {
+        const errors = {};
+
         /**
          * Gets the current element in the data based on the element key.
          * If the element doesn't exists it will return undefined.
@@ -60,7 +68,9 @@ export class Controller {
             obj: value => typeof value === 'object' && value !== null,
             str: value => typeof value === 'string',
             strnumber: value => typeof value === 'string' ||
-                                  typeof value === 'number',
+                                typeof value === 'number',
+            array: value => Array.isArray(value),
+            noAlNum: value => !/[A-Za-z0-9]/.test(value),
         };
 
         //--Comparisons
@@ -69,6 +79,44 @@ export class Controller {
             inLower: (value, array) => JSON.parse(array).includes(
                 value.toLowerCase()
             ),
+            len: (value, longitude) => value.length == Number(longitude),
+            content: (value, validations, field) => {
+                // Standardize the validations
+                validations = validations.slice(1, -1);
+                validations = validations.replaceAll('-', '|');
+
+                // Validate all the elements of the value
+                for (let i = 0; i < value.length; i++) {
+                    const element = value[i];
+                    const elementKey = `${field}[${i}]`;
+
+                    // Make the 'unique' validations
+                    if (validations.startsWith('unique')) {
+                        const idx = value.indexOf(element);
+                        const lastIdx = value.lastIndexOf(element);
+
+                        if (idx != i || lastIdx != i) {
+                            const error = ErrorsEnum['UNIQUE'](elementKey);
+                            errors[elementKey] = error;
+                            return false;
+                        }
+
+                        // Remove the 'unique' validation
+                        validations = (validations.startsWith('unique|'))
+                            ? validations.slice(7)  // With the '|'
+                            : validations.slice(6);  // Onlye 'unique'
+                    }
+
+                    const error = validate(elementKey, element, validations);
+
+                    if (error) {
+                        errors[`${field}[${i}]`] = error;
+                        return false;
+                    }
+                }
+
+                return true;
+            }
         };
 
         /**
@@ -126,10 +174,11 @@ export class Controller {
 
                 //--Check if is a comparison validation
                 if (isComparison) {
-                    const [compType, compVal] = curValidation.split(':');
+                    let [compType, ...compVal] = curValidation.split(':');
+                    compVal = compVal.join(':');
                     validation.obj = compValidations;
                     validation.key = compType;
-                    params.push(compVal);
+                    params.push(compVal, field);
                     errorParams.push([value, compVal])
                 }
 
@@ -145,7 +194,6 @@ export class Controller {
             return null;
         };
 
-        const errors = {};
         for (const elementKey in validations) {
             // Get the current element
             const element = getElement(elementKey);
