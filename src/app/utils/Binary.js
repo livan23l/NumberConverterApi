@@ -24,7 +24,8 @@ export class Binary extends Base {
         // Get the cycles depending on the current base
         const cyclesPerBase = {
             8: 3,
-            16: 4
+            16: 4,
+            64: 6
         };
         const base = baseChars.length;
         const cycles = cyclesPerBase[base];
@@ -137,8 +138,8 @@ export class Binary extends Base {
      */
     static tobase64(number, customChars) {
         const validChars = (customChars.length > 0)
-                    ? customChars
-                    : Base64.validChars;
+                ? customChars
+                : Base64.validChars;
 
         return this._conversion(
             number,
