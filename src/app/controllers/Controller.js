@@ -27,6 +27,8 @@ export class Controller {
      * - 'strnumber' -> Check if the field contains a valid string or number.
      * - 'noAlNum' -> Check that the field doesn't contain alphabetic or numeric
      *                characters.
+     * - 'noPeriod' -> Check that the field doesn't contain a period.
+     * - 'noComma' -> Check that the field doesn't contain a comma.
      * - 'len:x' -> Check if the value has length x.
      * - 'in:[]' -> Check if the value is in the provided array.
      * - 'inLower:[]' -> Transform value to lower case and check if is in the
@@ -71,6 +73,8 @@ export class Controller {
                                 typeof value === 'number',
             array: value => Array.isArray(value),
             noAlNum: value => !/[A-Za-z0-9]/.test(value),
+            noPeriod: value => value !== '.',
+            noComma: value => value !== ',',
         };
 
         //--Comparisons

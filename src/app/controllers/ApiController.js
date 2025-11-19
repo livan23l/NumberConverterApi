@@ -328,7 +328,8 @@ export class ApiController extends Controller {
                                       'nullable|str|in:' + validSeparations,
             'from.format.extraCharacters': 'condition:data.from.type==' +
                                            '"base64"|nullable|array|len:2|' +
-                                           'content:[unique-str-len:1-noAlNum]',
+                                           'content:[unique-str-len:1-' +
+                                           'noAlNum-noPeriod-noComma]',
             'to':              'required|obj',
             'to.type':         'required|str|in:' + validTypes,
             'to.format.lang':  'condition:data.to.type=="text"|required|str|' +
@@ -337,7 +338,8 @@ export class ApiController extends Controller {
                                     'str|in:' + validSeparations,
             'to.format.extraCharacters': 'condition:data.to.type=="base64"|' +
                                          'nullable|array|len:2|content:[' +
-                                         'unique-str-len:1-noAlNum]',
+                                         'unique-str-len:1-noAlNum-noPeriod-' +
+                                         'noComma]',
             'to.format.removeZeros': 'nullable|str|in:' + validRemZer,
         });
 

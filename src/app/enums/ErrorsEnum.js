@@ -17,6 +17,10 @@ export const ErrorsEnum = {
                      'cannot be repeated.',
     NOALNUM: field => `The \`${field}\` element cannot contain alphabetic or ` +
                       'numeric characters.',
+    NOPERIOD: field => `The \`${field}\` element cannot contain the period ` +
+                       'symbol.',
+    NOCOMMA: field => `The \`${field}\` element cannot contain the comma `+
+                       'symbol.',
     STRNUMBER: field => `The \`${field}\` element must contain a valid ` +
                         'string or a valid number.',
     MINLEN: (field, value) => {
