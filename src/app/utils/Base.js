@@ -343,11 +343,10 @@ export class Base {
         }
 
         // Remove the leading or trailing zeros
-        const cur0 = baseChars[0];
         if (typeOfNumber == 'integer') {
-            res = res.replace(this._getRegexForZeros(cur0, 'leading'), '');
+            res = res.replace(this._getRegexForZeros('0', 'leading'), '');
         } else {
-            res = res.replace(this._getRegexForZeros(cur0, 'trailing'), '');
+            res = res.replace(this._getRegexForZeros('0', 'trailing'), '');
         }
 
         // Check if the result is empty
