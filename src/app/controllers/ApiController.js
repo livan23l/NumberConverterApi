@@ -344,15 +344,17 @@ export class ApiController extends Controller {
         });
 
         // Validate the corresponding orders for base 62 and base 64
-        if (data?.from?.type == 'base62' || data?.to?.type == 'base62') {
+        const highBases = ['base62', 'base64'];
+        if (highBases.includes(data?.from?.type)) {
+            const order = (data.from.type == 'base62') ? orders62 : orders64;
             Object.assign(errors, this._validate(data, {
-                'from.format.order': 'nullable|str|in:' + orders62,
-                'to.format.order': 'nullable|str|in:' + orders62
+                'from.format.order': 'nullable|str|in:' + order
             }));
-        } else if (data?.from?.type == 'base64' || data?.to?.type == 'base64') {
+        }
+        if (highBases.includes(data?.to?.type)) {
+            const order = (data.to.type == 'base62') ? orders62 : orders64;
             Object.assign(errors, this._validate(data, {
-                'from.format.order': 'nullable|str|in:' + orders64,
-                'to.format.order': 'nullable|str|in:' + orders64
+                'to.format.order': 'nullable|str|in:' + order
             }));
         }
 
