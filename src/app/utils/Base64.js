@@ -66,14 +66,15 @@ export class Base64 extends Base {
      * @static
      * @private
      * @param {string} number - The decimal part of a base 64 number.
+     * @param {string[]} numberChars - The valid characters of the number base.
      * @returns {string} The number in binary representation.
      */
-    static #getBinaryDecimals(number) {
+    static #getBinaryDecimals(number, numberChars) {
         return this._base2GeneralTemplate(
             number,
             'decimal',
             this.binaryDigits,
-            this.validChars
+            numberChars
         );
     }
 
@@ -83,14 +84,15 @@ export class Base64 extends Base {
      * @static
      * @private
      * @param {string} number - The integer part of a base 64 number.
+     * @param {string[]} numberChars - The valid characters of the number base.
      * @returns {string} The number in binary representation.
      */
-    static #getBinaryIntegers(number) {
+    static #getBinaryIntegers(number, numberChars) {
         return this._base2GeneralTemplate(
             number,
             'integer',
             this.binaryDigits,
-            this.validChars
+            numberChars
         );
     }
 
