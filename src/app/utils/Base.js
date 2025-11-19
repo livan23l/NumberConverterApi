@@ -493,14 +493,15 @@ export class Base {
         }
 
         // Check if the integer part is basically zero to return the result
-        if (intPart == '0' || intPart == '-0') {
-            // Set the corresponding zero in the final value
-            const cur0 = newChars[0];
-            const joinedNumber = cur0 + result.join('');
+        const cur0 = curChars[0]
+        if (intPart == cur0 || intPart == `-${cur0}`) {
+            // Set the corresponding new zero in the final value
+            const new0 = newChars[0];
+            const joinedNumber = new0 + result.join('');
             const finalNumber = ((isNegative) ? '-' : '') + joinedNumber;
 
             // Return the final number with one correction for '-0.0'
-            if (finalNumber == `-${cur0}.${cur0}`) return `${cur0}.${cur0}`;
+            if (finalNumber == `-${new0}.${new0}`) return `${new0}.${new0}`;
             else return finalNumber;
         }
 
