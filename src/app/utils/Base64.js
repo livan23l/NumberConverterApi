@@ -1,5 +1,6 @@
 import { Base } from "./Base.js";
 import { Decimal } from "./Decimal.js";
+import { Binary } from "./Binary.js";
 
 export class Base64 extends Base {
     static validChars = [
