@@ -18,6 +18,7 @@ export const tests = [
     { input: '0.75', expected: 'zero point seven five' },
     { input: '2.5', expected: 'two point five' },
     { input: '3.25', expected: 'three point two five' },
+    { input: '7.9420', expected: 'seven point nine four two' },
 
     // Negative decimals
     { input: '-0.5', expected: 'minus zero point five' },
