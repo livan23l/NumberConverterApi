@@ -401,8 +401,7 @@ export class Base {
         }
 
         // Remove the trailing zeros
-        const zeroRegex = this._getRegexForZeros(cur0, 'trailing');
-        result = result.replace(zeroRegex, '');
+        result = result.replace(this._getRegexForZeros('0', 'trailing'), '');
         if (result == '') result = '0';
 
         return result;
@@ -446,8 +445,7 @@ export class Base {
         }
 
         // Remove the leading zeros
-        const zeroRegex = this._getRegexForZeros(cur0, 'leading');
-        result = result.replace(zeroRegex, '');
+        result = result.replace(this._getRegexForZeros('0', 'leading'), '');
         if (result == '') result = '0';
 
         return result;
