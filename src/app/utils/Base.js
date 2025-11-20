@@ -14,7 +14,7 @@ export class Base {
      * @param {"leading"|"trailing"} type - The type of regular expresion.
      * @returns {RegExp} The regular expression to remove the 'type' zeros.
      */
-    static getRegexForZeros(cur0, type) {
+    static _getRegexForZeros(cur0, type) {
         const safe0 = cur0.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
         if (type == 'leading') return new RegExp(`^${safe0}+`);
@@ -22,36 +22,26 @@ export class Base {
     }
 
     /**
-     * Standardize the value following this rules:
-     * - Removes the leading zeros for the integer part.
-     * - Removes the trailing zeros for the decimal part.
-     * - Removes all whitespace if the property is true. Otherwise, it only
-     * removes leading and trailing spaces, keeping one for intermediate spaces.
+     * Removes leading and trailing zeros from a number based on the character
+     * that represents zero within the number. Returns the number without the
+     * zeros.
      * 
      * @static
-     * @param {string} value - The value to be standardized.
+     * @param {string} value - The value from which the zeros will be removed.
      * @param {string} cur0 - The current character that represents zero.
-     * @returns {string} The standardized value.
+     * @returns {string} The number without the zeros.
      */
-    static standardizeValue(value, cur0) {
-        // Remove the leading and trailing white spaces
-        value = value.trim();
-
-        // Check if the value will remove all the white spaces
-        value = (this._removeAllWhiteSpaces)
-            ? value.replace(/\s+/g, '')
-            : value.replace(/\s+/g, ' ');
-
-        // Check if the value starts with '-' to remove the leading zeros
-        const hasNegSign = value.startsWith('-');
-        if (hasNegSign) value = value.slice(1);
+    static removeZeros(value, cur0) {
+        // Check if the value is negative
+        const isNegative = value.startsWith('-');
+        if (isNegative) value = value.slice(1);  // Remove the negative sign
 
         // Remove the leading zeros
-        value = value.replace(this.getRegexForZeros(cur0, 'leading'), '');
+        value = value.replace(this._getRegexForZeros(cur0, 'leading'), '');
 
         // Check if the value contains '.' to remove the trailing zeros
         if (value.includes('.')) {
-            value = value.replace(this.getRegexForZeros(cur0, 'trailing'), '');
+            value = value.replace(this._getRegexForZeros(cur0, 'trailing'), '');
         }
 
         // Check if the start or/and the end of the value is empty
@@ -61,7 +51,53 @@ export class Base {
 
         // Add the negative sign if the value is not '0'
         const zeros = [cur0, `${cur0}.${cur0}`];
-        if (hasNegSign && !zeros.includes(value)) value = '-' + value;
+        if (isNegative && !zeros.includes(value)) value = '-' + value;
+
+        return value;
+    }
+
+    /**
+     * Removes all whitespace if the property is true. Otherwise, it only
+     * removes leading and trailing spaces, keeping one for intermediate spaces.
+     * 
+     * Additionally, modifies the 'from' structure by adding extra information
+     * if the request indicates that zeros should be preserved.
+     * 
+     * @static
+     * @param {object} from - The 'from' of the conversion request.
+     * @param {string} cur0 - The current character that represents zero.
+     * @param {string|undefined} preserveZeros - Indicates to preserve zeros.
+     * @returns {string} The standardized value.
+     */
+    static standardizeValue(from, cur0, preserveZeros) {
+        // Remove the leading and trailing white spaces
+        let value = from.value.trim();
+
+        // Check if the value will remove all the white spaces
+        value = (this._removeAllWhiteSpaces)
+            ? value.replace(/\s+/g, '')
+            : value.replace(/\s+/g, ' ');
+
+        // Check if the request indicates that zeros should be preserved
+        if (preserveZeros != undefined) {
+            // Check if the value is negative to temporary remove the sign
+            const isNegative = value.startsWith('-');
+            if (isNegative) value = value.slice(1);
+
+            // Add the extra information to count the zeros
+            from['extra'] = { zeros: [0, 0] };
+
+            // Add the trailing and leading zeros amount
+            const lRegex = this._getRegexForZeros(cur0, 'leading');
+            from.extra.zeros[0] = (value.match(lRegex) || [''])[0].length;
+
+            if (value.includes('.')) {
+                const tRegex = this._getRegexForZeros(cur0, 'trailing');
+                from.extra.zeros[1] = (value.match(tRegex) || [''])[0].length;
+            }
+
+            if (isNegative) value = '-' + value;
+        }
 
         return value;
     }
@@ -341,13 +377,6 @@ export class Base {
             res += binDigits[digIdx];
         }
 
-        // Remove the leading or trailing zeros
-        if (typeOfNumber == 'integer') {
-            res = res.replace(this.getRegexForZeros('0', 'leading'), '');
-        } else {
-            res = res.replace(this.getRegexForZeros('0', 'trailing'), '');
-        }
-
         // Check if the result is empty
         if (res == '') res = '0';
 
@@ -399,10 +428,6 @@ export class Base {
             currentMult = this._strFullDivision(currentMult, base);
         }
 
-        // Remove the trailing zeros
-        result = result.replace(this.getRegexForZeros('0', 'trailing'), '');
-        if (result == '') result = '0';
-
         return result;
     }
 
@@ -442,10 +467,6 @@ export class Base {
             const nextMult = this._strMultiplication(currentMult, base);
             currentMult = nextMult.intPart;
         }
-
-        // Remove the leading zeros
-        result = result.replace(this.getRegexForZeros('0', 'leading'), '');
-        if (result == '') result = '0';
 
         return result;
     }

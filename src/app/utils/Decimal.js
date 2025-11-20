@@ -731,6 +731,9 @@ export class Decimal extends Base {
             return signName + name;
         }
 
+        // Remove the leading and trailing zeros from the number
+        number = this.removeZeros(number, '0');
+
         // Generate the number
         const [intPart, decPart] = number.split('.');
 
