@@ -22,6 +22,8 @@ export const WarningsEnum = {
         `\`${value}\` is not a valid binary number.`,
     CBASE62VAL: value =>
         `\`${value}\` is not a valid number in base 62 format.`,
+    CBASE64VAL: value =>
+        `\`${value}\` is not a valid number in base 64 format.`,
     CTEXTVAL: value =>
         `\`${value}\` is not a valid number in text format.`,
 }

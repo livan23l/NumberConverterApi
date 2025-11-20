@@ -11,7 +11,7 @@ const getRandomNumber = (digits) => {
         let random = randomDig(10);
 
         // Validation for zero in the first position
-        while (random == '0' && k == 0 && digits > 1) random = randomDig(10);
+        while (random == '0' && k == 0) random = randomDig(10);
 
         number += random;
     }
@@ -25,6 +25,11 @@ const getRandomNumber = (digits) => {
         const decimals = Number(randomDig(maxDecimals)) + 1;
 
         for (let k = 0; k < decimals; k++) number += randomDig(10);
+
+        while (number.endsWith('0')) {
+            number = number.slice(0, number.length - 1);
+            number += randomDig(10);
+        }
     }
 
     return number;

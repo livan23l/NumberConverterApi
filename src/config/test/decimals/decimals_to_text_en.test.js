@@ -18,6 +18,7 @@ export const tests = [
     { input: '0.75', expected: 'zero point seven five' },
     { input: '2.5', expected: 'two point five' },
     { input: '3.25', expected: 'three point two five' },
+    { input: '7.9420', expected: 'seven point nine four two' },
 
     // Negative decimals
     { input: '-0.5', expected: 'minus zero point five' },
@@ -38,6 +39,7 @@ export const tests = [
     { input: '+14242141', expected: null },
     { input: '--1321312312', expected: null },
     { input: '0.5.1', expected: null },
+    { input: '1234567890123456789012345678901234567890123456789012345678901234567', expected: 'NTL' },
 
     // Big integers
     { input: '123456', expected: 'one hundred twenty-three thousand four hundred fifty-six' },

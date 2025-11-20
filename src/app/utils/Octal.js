@@ -19,7 +19,12 @@ export class Octal extends Base {
      * @returns {string} The number in binary representation.
      */
     static #getBinaryDecimals(number) {
-        return this._base2GeneralTemplate(number, 'decimal', this.binaryDigits);
+        return this._base2GeneralTemplate(
+            number,
+            'decimal',
+            this.binaryDigits,
+            this.validChars
+        );
     }
 
     /**
@@ -31,7 +36,12 @@ export class Octal extends Base {
      * @returns {string} The number in binary representation.
      */
     static #getBinaryIntegers(number) {
-        return this._base2GeneralTemplate(number, 'integer', this.binaryDigits);
+        return this._base2GeneralTemplate(
+            number,
+            'integer',
+            this.binaryDigits,
+            this.validChars
+        );
     }
 
     /**
@@ -60,6 +70,23 @@ export class Octal extends Base {
      */
     static #getBase10Integers(number, numberChars) {
         return this._base10IntegersTemplate(number, numberChars);
+    }
+
+    /**
+     * Makes the conversion from one octal number to the corresponding number in
+     * base 64. The octal number can be negative and can contain a decimal part.
+     * In this method it's possible to send one custom order in the valid
+     * characters. This method will make two conversions, one from octal to
+     * decimal and the second one from decimal to base 64.
+     * 
+     * @static
+     * @param {string} number - The octal number to convert in base 64.
+     * @param {string[]} customChars - A custom character order.
+     * @returns {string} The number in base 64 format.
+     */
+    static tobase64(number, customChars) {
+        const decimalNumber = this.todecimal(number);
+        return Decimal.tobase64(decimalNumber, customChars);
     }
 
     /**

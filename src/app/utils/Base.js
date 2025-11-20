@@ -5,66 +5,118 @@ export class Base {
     static _canContainPeriod = true;
 
     /**
-     * Standardize the value following this rules:
-     * - Removes the leading zeros for the integer part.
-     * - Removes the trailing zeros for the decimal part.
-     * - Removes all whitespace if the property is true. Otherwise, it only
-     * removes leading and trailing spaces, keeping one for intermediate spaces.
+     * Returns a regular expression that removes leading and trailing zeros from
+     * a string. This function takes the character that identifies zero in a
+     * given base and escapes it if it's a special regular expression character.
      * 
      * @static
-     * @param {string} value - The value to be standardized.
+     * @param {string} cur0 - The character that is the zero in the base.
+     * @param {"leading"|"trailing"} type - The type of regular expresion.
+     * @returns {RegExp} The regular expression to remove the 'type' zeros.
+     */
+    static _getRegexForZeros(cur0, type) {
+        const safe0 = cur0.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+        if (type == 'leading') return new RegExp(`^${safe0}+`);
+        else if (type == 'trailing') return new RegExp(`${safe0}+$`);
+    }
+
+    /**
+     * Removes leading and trailing zeros from a number based on the character
+     * that represents zero within the number. Returns the number without the
+     * zeros.
+     * 
+     * @static
+     * @param {string} value - The value from which the zeros will be removed.
+     * @param {string} cur0 - The current character that represents zero.
+     * @returns {string} The number without the zeros.
+     */
+    static removeZeros(value, cur0) {
+        // Check if the value is negative
+        const isNegative = value.startsWith('-');
+        if (isNegative) value = value.slice(1);  // Remove the negative sign
+
+        // Remove the leading zeros
+        value = value.replace(this._getRegexForZeros(cur0, 'leading'), '');
+
+        // Check if the value contains '.' to remove the trailing zeros
+        if (value.includes('.')) {
+            value = value.replace(this._getRegexForZeros(cur0, 'trailing'), '');
+        }
+
+        // Check if the start or/and the end of the value is empty
+        if (value == '') value = cur0;
+        if (value.startsWith('.')) value = cur0 + value;
+        if (value.endsWith('.')) value += cur0;
+
+        // Add the negative sign if the value is not '0'
+        const zeros = [cur0, `${cur0}.${cur0}`];
+        if (isNegative && !zeros.includes(value)) value = '-' + value;
+
+        return value;
+    }
+
+    /**
+     * Removes all whitespace if the property is true. Otherwise, it only
+     * removes leading and trailing spaces, keeping one for intermediate spaces.
+     * 
+     * Additionally, modifies the 'from' structure by adding extra information
+     * if the request indicates that zeros should be preserved.
+     * 
+     * @static
+     * @param {object} from - The 'from' of the conversion request.
+     * @param {string} cur0 - The current character that represents zero.
+     * @param {string|undefined} preserveZeros - Indicates to preserve zeros.
      * @returns {string} The standardized value.
      */
-    static standardizeValue(value) {
+    static standardizeValue(from, cur0, preserveZeros) {
         // Remove the leading and trailing white spaces
-        value = value.trim();
+        let value = from.value.trim();
 
         // Check if the value will remove all the white spaces
         value = (this._removeAllWhiteSpaces)
             ? value.replace(/\s+/g, '')
             : value.replace(/\s+/g, ' ');
 
-        // Check if the value starts with '-' to remove the leading zeros
-        const hasNegSign = value.startsWith('-');
-        if (hasNegSign) value = value.slice(1);
+        // Check if the request indicates that zeros should be preserved
+        if (preserveZeros != undefined) {
+            // Check if the value is negative to temporary remove the sign
+            const isNegative = value.startsWith('-');
+            if (isNegative) value = value.slice(1);
 
-        // Remove the leading zeros
-        value = value.replace(/^0+/, '');
+            // Add the extra information to count the zeros
+            from['extra'] = { zeros: [0, 0] };
 
-        // Check if the value contains '.' to remove the trailing zeros
-        if (value.includes('.')) value = value.replace(/0+$/, '');
+            // Add the trailing and leading zeros amount
+            const lRegex = this._getRegexForZeros(cur0, 'leading');
+            from.extra.zeros[0] = (value.match(lRegex) || [''])[0].length;
 
-        // Check if the start or/and the end of the value is empty
-        if (value == '') value = '0';
-        if (value.startsWith('.')) value = '0' + value;
-        if (value.endsWith('.')) value += '0';
+            if (value.includes('.')) {
+                const tRegex = this._getRegexForZeros(cur0, 'trailing');
+                from.extra.zeros[1] = (value.match(tRegex) || [''])[0].length;
+            }
 
-        // Add the negative sign if the value is not '0'
-        if (hasNegSign && value != '0' && value != '0.0') value = '-' + value;
+            if (isNegative) value = '-' + value;
+        }
 
         return value;
     }
 
     /**
      * Check whether the value is valid or not depending on the following flags:
-     * - `validChars`: Set the characters that are considered valid.
      * - `_canContainMinus`: Set if the value can starts with '-'.
      * - `_canContainPeriod`: Set if the value can contian one '.'.
      * 
      * @static
      * @param {string} value - The string with the current value
+     * @param {string[]} validChars - The characters that are considered valid.
      * @returns {boolean} The result of the validation
      */
-    static validate(value) {
+    static validate(value, validChars) {
         // Make the necessary validations if the number is negative
         if (value.startsWith('-')) {
             if (!this._canContainMinus) return false;
-
-            // Remove the 'minus' sign
-            value = value.slice(1);
-
-            // Check if there is antoher 'minus'
-            if (value.includes('-')) return false;
+            value = value.slice(1);  // Remove the 'minus' sign
         }
 
         // Make the necessary validations if the number is decimal
@@ -74,15 +126,12 @@ export class Base {
             // Remove the period
             const idxPeriod = value.indexOf('.');
             value = value.slice(0, idxPeriod) + value.slice(idxPeriod + 1);
-
-            // Check if there is another period
-            if (value.includes('.')) return false;
         }
 
         // Validate the rest of the characters
         for (let i = 0; i < value.length; i++) {
             const character = value[i];
-            if (!this.validChars.includes(character)) return false;
+            if (!validChars.includes(character)) return false;
         }
 
         return true;
@@ -196,7 +245,7 @@ export class Base {
      * methods `_strIntDivision` and `strFullDivision`. This returns an object
      * with the result and the remainder.
      * 
-     * @private
+     * @static
      * @param {number} divisor - The divisor number.
      * @param {number} lastRemainder - The remainder of the previous divisions.
      * @param {number} currentValue - The current value of the current division.
@@ -313,21 +362,20 @@ export class Base {
      * decimal parts of a number with a power of two base, based on the binary
      * representation of the original base.
      * 
+     * @static
      * @param {string} number - The number with a power of two base.
      * @param {'integer'|'decimal'} typeOfNumber - The sent part of the number.
-     * @param {object} binaryDigits - The binary representation of the base.
+     * @param {object} binDigits - The binary representation of the base.
+     * @param {string[]} baseChars - The valid characters of the number base.
      * @returns {string} The binary conversion of the number.
      */
-    static _base2GeneralTemplate(number, typeOfNumber, binaryDigits) {
+    static _base2GeneralTemplate(number, typeOfNumber, binDigits, baseChars) {
         // Make the conversion for each digit
         let res = '';
         for (const dig of number) {
-            res += binaryDigits[dig];
+            const digIdx = baseChars.indexOf(dig);
+            res += binDigits[digIdx];
         }
-
-        // Remove the leading or trailing zeros
-        if (typeOfNumber == 'integer') res = res.replace(/^0+/, '');
-        else res = res.replace(/0+$/, '');
 
         // Check if the result is empty
         if (res == '') res = '0';
@@ -380,10 +428,6 @@ export class Base {
             currentMult = this._strFullDivision(currentMult, base);
         }
 
-        // Remove the trailing zeros
-        result = result.replace(/0+$/, '');
-        if (result == '') result = '0';
-
         return result;
     }
 
@@ -423,10 +467,6 @@ export class Base {
             const nextMult = this._strMultiplication(currentMult, base);
             currentMult = nextMult.intPart;
         }
-
-        // Remove the leading zeros
-        result = result.replace(/^0+/, '');
-        if (result == '') result = '0';
 
         return result;
     }
@@ -471,14 +511,15 @@ export class Base {
         }
 
         // Check if the integer part is basically zero to return the result
-        if (intPart == '0' || intPart == '-0') {
-            // Set the corresponding zero in the final value
-            const cur0 = newChars[0];
-            const joinedNumber = cur0 + result.join('');
+        const cur0 = curChars[0]
+        if (intPart == cur0 || intPart == `-${cur0}`) {
+            // Set the corresponding new zero in the final value
+            const new0 = newChars[0];
+            const joinedNumber = new0 + result.join('');
             const finalNumber = ((isNegative) ? '-' : '') + joinedNumber;
 
             // Return the final number with one correction for '-0.0'
-            if (finalNumber == `-${cur0}.${cur0}`) return `${cur0}.${cur0}`;
+            if (finalNumber == `-${new0}.${new0}`) return `${new0}.${new0}`;
             else return finalNumber;
         }
 
@@ -493,4 +534,14 @@ export class Base {
 
         return result.join('');
     }
+
+    /**
+     * Returns the character that represents zero in the current base. This
+     * method acts as a template for bases that don't have variable character
+     * orders.
+     * 
+     * @static
+     * @returns {"0"} The character that represents zero in most bases.
+     */
+    static getCurrentZero() { return '0'; }
 }

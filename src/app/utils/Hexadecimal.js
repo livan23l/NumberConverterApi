@@ -11,8 +11,8 @@ export class Hexadecimal extends Base {
     static binaryDigits = {
         0: '0000', 1: '0001', 2: '0010', 3: '0011', 4: '0100',
         5: '0101', 6: '0110', 7: '0111', 8: '1000', 9: '1001',
-        A: '1010', B: '1011', C: '1100', D: '1101', E: '1110',
-        F: '1111'
+        10: '1010', 11: '1011', 12: '1100', 13: '1101', 14: '1110',
+        15: '1111'
     };
 
     /**
@@ -25,7 +25,12 @@ export class Hexadecimal extends Base {
      * @returns {string} The number in binary representation.
      */
     static #getBinaryDecimals(number) {
-        return this._base2GeneralTemplate(number, 'decimal', this.binaryDigits);
+        return this._base2GeneralTemplate(
+            number,
+            'decimal',
+            this.binaryDigits,
+            this.validChars
+        );
     }
 
     /**
@@ -38,7 +43,12 @@ export class Hexadecimal extends Base {
      * @returns {string} The number in binary representation.
      */
     static #getBinaryIntegers(number) {
-        return this._base2GeneralTemplate(number, 'integer', this.binaryDigits);
+        return this._base2GeneralTemplate(
+            number,
+            'integer',
+            this.binaryDigits,
+            this.validChars
+        );
     }
 
     /**
@@ -67,6 +77,23 @@ export class Hexadecimal extends Base {
      */
     static #getBase10Integers(number, numberChars) {
         return this._base10IntegersTemplate(number, numberChars);
+    }
+
+    /**
+     * Makes the conversion from one hexadecimal number to the corresponding
+     * number in base 64. The hexadecimal number can be negative and can contain
+     * a decimal part. In this method it's possible to send one custom order in
+     * the valid characters. This method will make two conversions, one from
+     * hexadecimal to decimal and the second one from decimal to base 64.
+     * 
+     * @static
+     * @param {string} number - The hexadecimal number to convert in base 64.
+     * @param {string[]} customChars - A custom character order.
+     * @returns {string} The number in base 64 format.
+     */
+    static tobase64(number, customChars) {
+        const decimalNumber = this.todecimal(number);
+        return Decimal.tobase64(decimalNumber, customChars);
     }
 
     /**

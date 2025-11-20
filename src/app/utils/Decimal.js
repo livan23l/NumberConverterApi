@@ -1,4 +1,5 @@
 import { Base } from "./Base.js";
+import { Base64 } from "./Base64.js";
 import { Base62 } from "./Base62.js";
 import { Hexadecimal } from "./Hexadecimal.js";
 import { Octal } from "./Octal.js";
@@ -85,6 +86,31 @@ export class Decimal extends Base {
         }
 
         return finalValue;
+    }
+
+    /**
+     * Makes the conversion from one decimal number to the corresponding number
+     * in base 64. The decimal number can be negative and can contain a decimal
+     * part. In this method it's possible to send one custom order in the valid
+     * characters.
+     * 
+     * @static
+     * @param {string} number - The decimal number to convert in base 64.
+     * @param {string[]} customChars - A custom character order.
+     * @returns {string} The number in base 64 format.
+     */
+    static tobase64(number, customChars) {
+        const validChars = (customChars.length > 0)
+            ? customChars
+            : Base64.validChars;
+
+        return this._conversion(
+            number,
+            this.validChars,
+            validChars,
+            this.#getDecimals,
+            this.#getIntegers,
+        );
     }
 
     /**
@@ -704,6 +730,9 @@ export class Decimal extends Base {
 
             return signName + name;
         }
+
+        // Remove the leading and trailing zeros from the number
+        number = this.removeZeros(number, '0');
 
         // Generate the number
         const [intPart, decPart] = number.split('.');

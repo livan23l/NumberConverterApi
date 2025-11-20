@@ -20,6 +20,19 @@ export class Base62 extends Base {
     ];
 
     /**
+     * Returns the character that represents zero in the current base.
+     * 
+     * @static
+     * @param {string|undefined} order - The custom order in the characters.
+     * @returns The character that represents zero.
+     */
+    static getCurrentZero(order) {
+        if (order == undefined || order.startsWith('num')) return '0';
+        else if (order.startsWith('upper')) return 'A';
+        else return 'a';
+    }
+
+    /**
      * Converts the decimal part of a base 62 number to its base-decimal
      * representation.
      * 
@@ -48,6 +61,25 @@ export class Base62 extends Base {
     }
 
     /**
+     * Makes the conversion from one base 62 number to the corresponding number
+     * in base 64. The base 62 number can be negative and can contain a decimal
+     * part. In this method it's possible to send the original custom order in
+     * the valid characters and the final characters order in the new base. This
+     * method will make two conversions, one from base 62 to decimal and the
+     * second one from decimal to base 64.
+     * 
+     * @static
+     * @param {string} number - The original base 62 number.
+     * @param {string[]} base62order - The initial character order.
+     * @param {string[]} base64order - The final character order.
+     * @returns {string} The base 64 number with the final character order.
+     */
+    static tobase64(number, base62order, base64order) {
+        const decimalNumber = this.todecimal(number, base62order);
+        return Decimal.tobase64(decimalNumber, base64order);
+    }
+
+    /**
      * Converts a base 62 number to another base 62 number. This method is
      * intended to be able to change the order of the characters in a base 62
      * number.
@@ -63,15 +95,28 @@ export class Base62 extends Base {
         if (initialCharsOrder.length == 0) initialCharsOrder = this.validChars;
         if (finalCharsOrder.length == 0) finalCharsOrder = this.validChars;
 
+        // Check if the number is negative
+        const isNegative = number.startsWith('-');
+
         // Change each digit of the number for the new digits order
         let newNumber = '';
         for (const dig of number) {
+            // Check if the character is one special char
+            if (dig == '-') continue;
+            else if (dig == '.') {
+                newNumber += dig;
+                continue;
+            }
+
             // Find the index of the current digit
             const idx = initialCharsOrder.indexOf(dig);
 
             // Add the corresponding digit to the new number
             newNumber += finalCharsOrder[idx];
         }
+
+        // Add the negative sign if the number is negative
+        if (isNegative) newNumber = '-' + newNumber;
 
         return newNumber;
     }
@@ -161,6 +206,7 @@ export class Base62 extends Base {
      * 
      * @static
      * @param {string} number - The number to 'translate' in text format.
+     * @param {string[]} customChars - The custom initial character order.
      * @param {'en'|'es'} lang - The language to 'translate' the number.
      * @returns The number in text format in the sent language.
      */

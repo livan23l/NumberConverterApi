@@ -1,9 +1,28 @@
 import { Controller } from './Controller.js';
-import { CHexadecimal, CDecimal, COctal, CBinary, CBase62, CText } from '../utils/converter.js';
+import { CHexadecimal, CDecimal, COctal, CBinary, CBase62, CText, CBase64 } from '../utils/converter.js';
 import { WarningsEnum } from '../enums/WarningsEnum.js';
 import { ErrorsEnum } from '../enums/ErrorsEnum.js';
 
 export class ApiController extends Controller {
+    /**
+     * Returns the correspongin class depending on the type of value.
+     * 
+     * @private
+     * @param {string} typeClass - The type of the value.
+     * @returns {CHexadecimal|CDecimal|COctal|CBinary|CBase62|CText}
+     */
+    #getClassByType(typeClass) {
+        switch (typeClass) {
+            case 'hexadecimal': return CHexadecimal;
+            case 'decimal': return CDecimal;
+            case 'octal': return COctal;
+            case 'binary': return CBinary;
+            case 'base62': return CBase62;
+            case 'base64': return CBase64;
+            case 'text': return CText;
+        }
+    }
+
     /**
      * Gets the corresponding characters according to the separation format in
      * the sent object.
@@ -136,8 +155,9 @@ export class ApiController extends Controller {
      * be added to the final response.
      * 
      * @private
-     * @param {object} result - The final result of the conversion-
+     * @param {object} result - The final result of the conversion.
      * @param {object} warnings - The warnings object to add the new keys.
+     * @returns {void}
      */
     #addFinalWarnings(result, warnings) {
         // Check if the data has the '...' warning
@@ -156,20 +176,50 @@ export class ApiController extends Controller {
     }
 
     /**
-     * Returns the correspongin class depending on the type of value.
+     * Remove leading and trailing zeros from the final conversion result. Then
+     * add back any zeros that were initially in the number, if indicated.
      * 
      * @private
-     * @param {string} typeClass - The type of the value.
-     * @returns {CHexadecimal|CDecimal|COctal|CBinary|CBase62|CText}
+     * @param {object} result - The final result of the conversion.
+     * @param {object} data - The request of the conversion.
+     * @returns {void}
      */
-    #getClassByType(typeClass) {
-        switch (typeClass) {
-            case 'hexadecimal': return CHexadecimal;
-            case 'decimal': return CDecimal;
-            case 'octal': return COctal;
-            case 'binary': return CBinary;
-            case 'base62': return CBase62;
-            case 'text': return CText;
+    #addFinalZeros(result, data) {
+        // Get the current class depending on the type of the destination
+        const to = data.to;
+        const currentClass = this.#getClassByType(to.type);
+
+        // Get the character that represents the zero in the destination base
+        const cur0 = currentClass.getCurrentZero(
+            to.format?.order,
+            to.format?.extraCharacters
+        );
+
+        // Remove the leading and trailing zeros in the result
+        result.data = currentClass.removeZeros(result.data, cur0);
+
+        // Check if the request indicates that the zeros must be preserved
+        const preserveZeros = to.format?.preserveZeros;
+        if (preserveZeros != undefined) {
+            const [leading, trailing] = data.from.extra.zeros;
+            const isNegative = result.data.startsWith('-');
+            let leadZerosStr = '';
+            let trailZerosStr = '';
+
+            // Add the leading zeros
+            if (preserveZeros == 'leading' || preserveZeros == 'both') {
+                for (let i = 0; i < leading; i++) leadZerosStr += cur0;
+            }
+
+            // Add the trailing zeros
+            if (preserveZeros == 'trailing' || preserveZeros == 'both') {
+                for (let i = 0; i < trailing; i++) trailZerosStr += cur0;
+            }
+
+            // Add the lading and trailing zeros
+            result.data = (isNegative)
+                ? '-' + leadZerosStr + result.data.slice(1) + trailZerosStr
+                : leadZerosStr + result.data + trailZerosStr;
         }
     }
 
@@ -189,32 +239,48 @@ export class ApiController extends Controller {
         const parameters = [from.value];
 
         /**
-         * Get the characters order when `from.type` or `to.type` is `base62`
-         * depending on the `format.order`. If the format order is not defined
-         * this function will return an empty array.
+         * Get the characters order when `from.type` or `to.type` is `base62` or
+         * `base64` depending on the `format.order`. If the format order is not
+         * defined this function will return an empty array.
          * 
          * @param {object} obj - The object `from` or `to`.
+         * @param {CBase62|CBase64} baseClass - The current corresponding class.
          * @returns {string[]} The array with the new characters order.
          */
-        const getCharsOrder = (obj) => {
+        const getOrd = (obj, baseClass) => {
             // Check if the format 'order' is defined
             const order = obj.format?.order;
 
             // Create the new valid chars in the sended order
             const newValidChars = [];
             const orderList = order ? order.split('-') : [];
+            const extraChars = obj.format?.extraCharacters;
             for (const ord of orderList) {
                 switch(ord) {
-                    case 'int':
-                        newValidChars.push(...CBase62.validNumbers);
+                    case 'num':
+                        newValidChars.push(...baseClass.validNumbers);
                         break;
                     case 'upper':
-                        newValidChars.push(...CBase62.validUppers);
+                        newValidChars.push(...baseClass.validUppers);
                         break;
                     case 'lower':
-                        newValidChars.push(...CBase62.validLowers);
+                        newValidChars.push(...baseClass.validLowers);
+                        break;
+                    case 'extra':
+                        if (extraChars) newValidChars.push(...extraChars);
+                        else newValidChars.push(...baseClass.extraCharacters);
+
                         break;
                 }
+            }
+
+            // Validate if there is extra chars defined and no custom order
+            if (
+                extraChars && newValidChars.length == 0 &&
+                baseClass.name == 'Base64'
+            ) {
+                newValidChars.push(...baseClass.validCharsWithoutExtra);
+                newValidChars.push(...extraChars);
             }
 
             return newValidChars;
@@ -222,11 +288,13 @@ export class ApiController extends Controller {
 
         // Add additional parameters depending on the formats
         //--From formats
-        if (from.type == 'base62') parameters.push(getCharsOrder(from));
+        if (from.type == 'base64') parameters.push(getOrd(from, CBase64));
+        else if (from.type == 'base62') parameters.push(getOrd(from, CBase62));
         else if (from.type == 'text') parameters.push(from.format.lang);
 
         //--To formats
-        if (to.type == 'base62') parameters.push(getCharsOrder(to));
+        if (to.type == 'base64') parameters.push(getOrd(to, CBase64));
+        else if (to.type == 'base62') parameters.push(getOrd(to, CBase62));
         else if (to.type == 'text') parameters.push(to.format.lang);
 
         // Return the conversion
@@ -239,21 +307,38 @@ export class ApiController extends Controller {
      * 
      * @private
      * @param {object} from - The from object with the type and the value.
+     * @param {string|undefined} preserveZeros - Indicates to preserve zeros.
      * @returns {object} The resulting value and warnings if any.
      */
-    #validateFrom(from) {
+    #validateFrom(from, preserveZeros) {
         // Get the current class depending on the type
-        const currentClass = this.#getClassByType(from.type)
+        const currentClass = this.#getClassByType(from.type);
+
+        // Get the character that represents the zero
+        const cur0 = currentClass.getCurrentZero(
+            from.format?.order,
+            from.format?.extraCharacters
+        );
 
         // Get the standardized value
-        const value = currentClass.standardizeValue(from.value);
+        const value = currentClass.standardizeValue(from, cur0, preserveZeros);
+
+        // Get the valid characters order based on the type
+        const extraChars = from.format?.extraCharacters;
+        const validChars = (from.type == 'base64' && extraChars)
+            ? [...currentClass.validCharsWithoutExtra, ...extraChars]
+            : [...currentClass.validChars];
 
         // Make the validation
         const validation = {
             warning: {},
             value
         };
-        if (currentClass.validate(value)) return validation;
+        if (currentClass.validate(value, validChars)) {
+            // Remove zeros from the value and return the validation
+            validation.value = currentClass.removeZeros(validation.value, cur0);
+            return validation;
+        }
 
         const key = `C${currentClass.name.toUpperCase()}VAL`;
         validation.warning = WarningsEnum[key](from.value);
@@ -272,12 +357,25 @@ export class ApiController extends Controller {
     #validateData(data) {
         // Define the valid values
         const validTypes = '["hexadecimal", "decimal", "octal", "binary", ' +
-                           '"base62", "text"]';
+                           '"base62", "base64", "text"]';
+        const orders62 = '["num-lower-upper", "num-upper-lower", ' +
+                         '"lower-num-upper", "upper-num-lower", ' +
+                         '"lower-upper-num", "upper-lower-num"]';
+        const orders64 = '["upper-lower-num-extra", "upper-lower-extra-num", ' +
+                         '"upper-num-lower-extra", "upper-num-extra-lower", ' +
+                         '"upper-extra-lower-num", "upper-extra-num-lower", ' +
+                         '"lower-upper-num-extra", "lower-upper-extra-num", ' +
+                         '"lower-num-upper-extra", "lower-num-extra-upper", ' +
+                         '"lower-extra-upper-num", "lower-extra-num-upper", ' +
+                         '"num-upper-lower-extra", "num-upper-extra-lower", ' +
+                         '"num-lower-upper-extra", "num-lower-extra-upper", ' +
+                         '"num-extra-upper-lower", "num-extra-lower-upper", ' +
+                         '"extra-upper-lower-num", "extra-upper-num-lower", ' +
+                         '"extra-lower-upper-num", "extra-lower-num-upper", ' +
+                         '"extra-num-upper-lower", "extra-num-lower-upper"]';
         const validLangs = '["en", "es"]';
-        const validOrders = '["int-lower-upper", "int-upper-lower", ' +
-                            '"lower-int-upper", "lower-upper-int", ' +
-                            '"upper-int-lower", "upper-lower-int"]';
         const validSeparations = '["comma", "period", "none"]';
+        const validPresZeros = '["leading", "trailing", "both", "none"]';
 
         // Validate the data
         const errors = this._validate(data, {
@@ -286,19 +384,40 @@ export class ApiController extends Controller {
             'from.value':      'required|strnumber',
             'from.format.lang': 'condition:data.from.type=="text"|required|' +
                                 'str|in:' + validLangs,
-            'from.format.order': 'condition:data.from.type=="base62"|' +
-                                 'nullable|str|in:' + validOrders,
             'from.format.separation': 'condition:data.from.type!="text"|' +
                                       'nullable|str|in:' + validSeparations,
+            'from.format.extraCharacters': 'condition:data.from.type==' +
+                                           '"base64"|nullable|array|len:2|' +
+                                           'content:[unique-str-len:1-' +
+                                           'noAlNum-noPeriod-noComma-noMinus]',
             'to':              'required|obj',
             'to.type':         'required|str|in:' + validTypes,
             'to.format.lang':  'condition:data.to.type=="text"|required|str|' +
                                'in:' + validLangs,
-            'to.format.order': 'condition:data.to.type=="base62"|nullable|' +
-                               'str|in:' + validOrders,
             'to.format.separation': 'condition:data.to.type!="text"|nullable|' +
-                                    'str|in:' + validSeparations
+                                    'str|in:' + validSeparations,
+            'to.format.extraCharacters': 'condition:data.to.type=="base64"|' +
+                                         'nullable|array|len:2|content:[' +
+                                         'unique-str-len:1-noAlNum-noPeriod-' +
+                                         'noComma-noMinus]',
+            'to.format.preserveZeros': 'condition:data.to.type!="text"|' +
+                                       'nullable|str|in:' + validPresZeros,
         });
+
+        // Validate the corresponding orders for base 62 and base 64
+        const highBases = ['base62', 'base64'];
+        if (highBases.includes(data?.from?.type)) {
+            const order = (data.from.type == 'base62') ? orders62 : orders64;
+            Object.assign(errors, this._validate(data, {
+                'from.format.order': 'nullable|str|in:' + order
+            }));
+        }
+        if (highBases.includes(data?.to?.type)) {
+            const order = (data.to.type == 'base62') ? orders62 : orders64;
+            Object.assign(errors, this._validate(data, {
+                'to.format.order': 'nullable|str|in:' + order
+            }));
+        }
 
         // Return the errors
         return errors;
@@ -338,8 +457,9 @@ export class ApiController extends Controller {
         // Remove the separation of the from value
         this.#unseparateValue(warnings, data.from);
 
-        // Validate the `from.value` depending on `from.type`
-        const fromValidation = this.#validateFrom(data.from);
+        // Make the validations of the request 'from'
+        const preserveZeros = data.to.format?.preserveZeros;
+        const fromValidation = this.#validateFrom(data.from, preserveZeros);
 
         // Create the result object with the standardized value
         const result = { data: fromValidation.value };
@@ -352,15 +472,20 @@ export class ApiController extends Controller {
             warnings['validation'] = fromValidation.warning;
         }
         // Make the conversion if the types of from and to are different or
-        // both are base62 or text (to change the language or the order)
+        // both are base62, base64 or text (to change the language or the order)
         else if (data.from.type != data.to.type || (
             data.from.type == data.to.type &&
-            ['base62', 'text'].includes(data.from.type)
+            ['base62', 'base64', 'text'].includes(data.from.type)
         )) {
             result.data = this.#makeConversion(data.from, data.to);
 
             // Add all the possible final warnings
             this.#addFinalWarnings(result, warnings);
+        }
+
+        // Add the final zeros to the result if the 'to.type' is not text
+        if (result.data != null && data.to.type != 'text') {
+            this.#addFinalZeros(result, data);
         }
 
         // Add the final separation to the result
