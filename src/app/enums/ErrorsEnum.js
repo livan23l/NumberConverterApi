@@ -20,7 +20,9 @@ export const ErrorsEnum = {
     NOPERIOD: field => `The \`${field}\` element cannot contain the period ` +
                        'symbol.',
     NOCOMMA: field => `The \`${field}\` element cannot contain the comma `+
-                       'symbol.',
+                      'symbol.',
+    NOMINUS: field => `The \`${field}\` element cannot contain '-' (negative ` +
+                      'sign).',
     STRNUMBER: field => `The \`${field}\` element must contain a valid ` +
                         'string or a valid number.',
     MINLEN: (field, value) => {
@@ -30,7 +32,7 @@ export const ErrorsEnum = {
                `character${plural}.`;
     },
     LEN: (field, comparison) => `The \`${field}\` element must have a length ` +
-                               `of '${comparison[1]}'.`,
+                                `of '${comparison[1]}'.`,
     IN: (field, comparison) => inError(field, comparison),
     INLOWER: (field, comparison) => inError(
         field,

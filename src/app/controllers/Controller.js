@@ -29,6 +29,7 @@ export class Controller {
      *                characters.
      * - 'noPeriod' -> Check that the field doesn't contain a period.
      * - 'noComma' -> Check that the field doesn't contain a comma.
+     * - 'noMinus' -> Check that the field doesn't contain a minus sign.
      * - 'len:x' -> Check if the value has length x.
      * - 'in:[]' -> Check if the value is in the provided array.
      * - 'inLower:[]' -> Transform value to lower case and check if is in the
@@ -75,6 +76,7 @@ export class Controller {
             noAlNum: value => !/[A-Za-z0-9]/.test(value),
             noPeriod: value => value !== '.',
             noComma: value => value !== ',',
+            noMinus: value => value !== '-',
         };
 
         //--Comparisons
