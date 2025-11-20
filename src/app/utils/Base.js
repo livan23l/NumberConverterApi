@@ -9,13 +9,12 @@ export class Base {
      * a string. This function takes the character that identifies zero in a
      * given base and escapes it if it's a special regular expression character.
      * 
-     * @private
      * @static
      * @param {string} cur0 - The character that is the zero in the base.
      * @param {"leading"|"trailing"} type - The type of regular expresion.
      * @returns {RegExp} The regular expression to remove the 'type' zeros.
      */
-    static _getRegexForZeros(cur0, type) {
+    static getRegexForZeros(cur0, type) {
         const safe0 = cur0.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
         if (type == 'leading') return new RegExp(`^${safe0}+`);
@@ -48,11 +47,11 @@ export class Base {
         if (hasNegSign) value = value.slice(1);
 
         // Remove the leading zeros
-        value = value.replace(this._getRegexForZeros(cur0, 'leading'), '');
+        value = value.replace(this.getRegexForZeros(cur0, 'leading'), '');
 
         // Check if the value contains '.' to remove the trailing zeros
         if (value.includes('.')) {
-            value = value.replace(this._getRegexForZeros(cur0, 'trailing'), '');
+            value = value.replace(this.getRegexForZeros(cur0, 'trailing'), '');
         }
 
         // Check if the start or/and the end of the value is empty
@@ -344,9 +343,9 @@ export class Base {
 
         // Remove the leading or trailing zeros
         if (typeOfNumber == 'integer') {
-            res = res.replace(this._getRegexForZeros('0', 'leading'), '');
+            res = res.replace(this.getRegexForZeros('0', 'leading'), '');
         } else {
-            res = res.replace(this._getRegexForZeros('0', 'trailing'), '');
+            res = res.replace(this.getRegexForZeros('0', 'trailing'), '');
         }
 
         // Check if the result is empty
@@ -401,7 +400,7 @@ export class Base {
         }
 
         // Remove the trailing zeros
-        result = result.replace(this._getRegexForZeros('0', 'trailing'), '');
+        result = result.replace(this.getRegexForZeros('0', 'trailing'), '');
         if (result == '') result = '0';
 
         return result;
@@ -445,7 +444,7 @@ export class Base {
         }
 
         // Remove the leading zeros
-        result = result.replace(this._getRegexForZeros('0', 'leading'), '');
+        result = result.replace(this.getRegexForZeros('0', 'leading'), '');
         if (result == '') result = '0';
 
         return result;
