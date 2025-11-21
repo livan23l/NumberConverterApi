@@ -400,8 +400,9 @@ export class ApiController extends Controller {
                                          'nullable|array|len:2|content:[' +
                                          'unique-str-len:1-noAlNum-noPeriod-' +
                                          'noComma-noMinus]',
-            'to.format.preserveZeros': 'condition:data.to.type!="text"|' +
-                                       'nullable|str|in:' + validPresZeros,
+            'to.format.preserveZeros': 'condition:data.from.type!="text"&' +
+                                       'data.to.type!="text"|nullable|str|' +
+                                       'in:' + validPresZeros,
         });
 
         // Validate the corresponding orders for base 62 and base 64
