@@ -851,7 +851,10 @@ export class Text extends Base {
         else if (currentValue != '') updateFinalValue();
 
         // Check if the last word can be the last one
-        if (!isDecimalPart && !lastResult.next.split('|').includes('point')) {
+        if (
+            (isDecimalPart && !lastResult.dec) ||
+            (!isDecimalPart && !lastResult.next.split('|').includes('point'))
+        ) {
             return 'NaN';
         }
 
