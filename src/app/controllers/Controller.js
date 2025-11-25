@@ -256,6 +256,7 @@ export class Controller {
     }
 
     /**
+     * Response the HTTP petition with one view (HTML).
      * 
      * @param {string} view - The name of the view without the '.html' with the
      * structure 'directory.filename'.
