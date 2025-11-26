@@ -1,66 +1,60 @@
-class Converter {
-    #from;
-    #to;
+class Home {
+    /**
+     * Manages the animation of the demo.
+     * 
+     * @private
+     * @returns {void}
+     */
+    #handleDemoAnimation() {
+        // Get the DOM elements
+        const $demoConnector = document.querySelector('#demo-connector');
+        const $dinamycInput = document.querySelector('#demo-dinamyc-input');
+        const $dinamycBase = $dinamycInput.querySelector('.demo__base');
+        const $dinamycValue = $dinamycInput.querySelector('.demo__value');
 
-    #invertElements() {
-        const temporalOption = this.#from.$select.value;
-        const temporalText = this.#from.$textarea.value;
+        // Set the list of bases and values
+        const cicles = [
+            ['Binary:', '1010'],
+            ['Octal:', '12'],
+            ['Hexadecimal:', 'A'],
+            ['Base 64:', 'K'],
+            ['Text:', 'ten'],
+        ];
+        let current_cicle = 1;
 
-        // Invert the values
-        //--From
-        this.#from.$select.value = this.#to.$select.value;
-        this.#from.lastSelectValue = this.#from.$select.value;
-        this.#from.$textarea.value = this.#to.$textarea.value;
-        //--To
-        this.#to.$select.value = temporalOption;
-        this.#to.lastSelectValue = this.#to.$select.value;
-        this.#to.$textarea.value = temporalText;
+        $demoConnector.addEventListener('animationend', () => {
+            // Stop the animation
+            $demoConnector.classList.remove('demo__connector--animated');
+
+            // Add an animation for the dynamic input
+            $dinamycInput.classList.add('demo__input--animated');
+        });
+
+        $dinamycInput.addEventListener('animationend', () => {
+            // Get the current base and value
+            const [base, value] = cicles[current_cicle++];
+            if (current_cicle == cicles.length) current_cicle = 0;
+
+            // Update the base and the value
+            $dinamycBase.innerText = base;
+            $dinamycValue.innerText = value;
+
+            // Restart the animation of the input and the connector
+            $dinamycInput.classList.remove('demo__input--animated');
+            $demoConnector.classList.add('demo__connector--animated');
+        });
     }
 
-    #changeSelectEvent() {
-        const handleChange = (changed, adverse) => {
-            if (changed.$select.value == adverse.$select.value) {
-                changed.$select.value = changed.lastSelectValue;
-                return this.#invertElements();
-            }
-
-            changed.lastSelectValue = changed.$select.value;
-        }
-
-        this.#from.$select.addEventListener('change', () => {
-            handleChange(this.#from, this.#to);
-        });
-        this.#to.$select.addEventListener('change', () => {
-            handleChange(this.#to, this.#from);
-        });
-    }
-
-    #changeBtnClickEvent() {
-        const $changeBtn = document.querySelector('#button-change');
-
-        $changeBtn.addEventListener('click', () => {
-            this.#invertElements();
-        });
-    }
-
+    /**
+     * Initializes the animations on the home page.
+     * 
+     * @constructor
+     * @returns {void}
+     */
     constructor() {
-        // Set attributes
-        this.#from = {
-            $select: document.querySelector('#select-from'),
-            $textarea: document.querySelector('#textarea-from'),
-        };
-        this.#to = {
-            $select: document.querySelector('#select-to'),
-            $textarea: document.querySelector('#textarea-to'),
-        };
-        this.#from.lastSelectValue = this.#from.$select.value;
-        this.#to.lastSelectValue = this.#to.$select.value;
-        this.validValues = ['decimal', 'binary', 'hexadecimal', 'octal', 'text'];
-
-        // Set the events
-        this.#changeBtnClickEvent();
-        this.#changeSelectEvent();
+        this.#handleDemoAnimation();
     }
 }
 
-new Converter();
+
+new Home;
