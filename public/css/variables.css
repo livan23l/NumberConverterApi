@@ -25,4 +25,5 @@
 /* Setting default styles */
 body {
     font-family: 'Outfit', Arial;
+    color: var(--text-primary);
 }
