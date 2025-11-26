@@ -10,8 +10,8 @@
     --text-code: #d0ffd8;
     --copy: #52EC80;
     --max-width: 46rem;
-    --media-screen: 36rem;
-    --small-screen: 22rem;
+    --large-screen: 36rem;
+    --medium-screen: 22rem;
 }
 
 /* Font load */
