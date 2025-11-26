@@ -50,7 +50,7 @@ class Code {
     }
 
     /**
-     * Initializes the Code class
+     * Initializes the Code class.
      * 
      * @constructor
      * @returns {void}
