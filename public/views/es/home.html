@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API de conversión numérica</title>
+  <base href="http://localhost:3300">
+  <meta name="description" content="Esta página proporciona una API para realizar conversiones de números en diferentes bases, así como de números a texto (número escrito). La documentación está disponible en inglés y español.">
+  <meta name="keywords" content="api, base62, convertidor-numérico, conversión-texto, conversión-octal, convertidor-base64, conversión-binaria, conversión-hexadecimal">
+  <link rel="shortcut icon" href="../img/favicon.webp">
+  <link rel="stylesheet" href="../css/app.css">
+  <link rel="stylesheet" href="../css/home.css">
+  <script type="module" src="../js/app.js"></script>
+  <script src="../js/Home.js" defer></script>
+</head>
+
+<body>
+  <main class="main">
+    <!-- Principal Section -->
+    <section class="principal">
+      <div class="principal__logo">
+        <h1 class="principal__title">
+          <img class="principal__img" src="img/favicon.webp" alt="Converter API logo">
+        </h1>
+
+        <p class="principal__features">
+          <span class="principal__feature">Precisa,</span>
+          <span class="principal__feature">modificable</span>
+          <span class="principal__feature">y siempre gratuita.</span>
+        </p>
+      </div>
+
+      <div class="principal__options">
+        <a class="principal__button" href="/es/converter">
+          <span>Modo web</span>
+          <svg class="principal__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M19.5 7a9 9 0 0 0 -7.5 -4a8.991 8.991 0 0 0 -7.484 4" />
+            <path d="M11.5 3a16.989 16.989 0 0 0 -1.826 4" />
+            <path d="M12.5 3a16.989 16.989 0 0 1 1.828 4" />
+            <path d="M19.5 17a9 9 0 0 1 -7.5 4a8.991 8.991 0 0 1 -7.484 -4" />
+            <path d="M11.5 21a16.989 16.989 0 0 1 -1.826 -4" />
+            <path d="M12.5 21a16.989 16.989 0 0 0 1.828 -4" />
+            <path d="M2 10l1 4l1.5 -4l1.5 4l1 -4" />
+            <path d="M17 10l1 4l1.5 -4l1.5 4l1 -4" />
+            <path d="M9.5 10l1 4l1.5 -4l1.5 4l1 -4" />
+          </svg>
+        </a>
+        <a class="principal__button" href="/es/documentation">
+          <span>Documentación</span>
+          <svg class="principal__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
+            <path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
+            <path d="M3 6l0 13" />
+            <path d="M12 6l0 13" />
+            <path d="M21 6l0 13" />
+          </svg>
+        </a>
+      </div>
+
+      <div class="divisor divisor--secondary divisor--down">
+        <svg class="divisor__svg divisor__svg--small" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+          <path class="divisor__shape" d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25"></path>
+          <path class="divisor__shape" d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5"></path>
+          <path class="divisor__shape" d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z"></path>
+        </svg>
+      </div>
+    </section>
+
+    <!-- About section -->
+    <section class="about">
+      <div class="about__content">
+        <h2 class="about__title">Acerca de la API</h2>
+        <div class="about__subcontent">
+          <p class="about__description">
+            Ofrecemos una API diseñada para realizar conversiones numéricas
+            fluidas entre diferentes bases numéricas, así como transformaciones
+            de números a texto. Nuestro servicio ofrece solicitudes altamente
+            personalizables y es completamente gratuito. Prueba nuestra
+            <a class="about__link" href="/es/converter">interfaz web</a>
+            o explora la <a class="about__link" href="/es/documentation">documentación</a>
+            para aprender a integrarlo en tus proyectos.
+          </p>
+
+          <div class="about__demo">
+            <div class="demo__input">
+              <p class="demo__base">Decimal:</p>
+              <p class="demo__value">10</p>
+            </div>
+            <p id="demo-connector" class="demo__connector demo__connector--animated"></p>
+            <div id="demo-dinamyc-input" class="demo__input">
+              <p class="demo__base">Binario:</p>
+              <p class="demo__value">1010</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Template section -->
+    <section class="template">
+      <div class="divisor divisor--secondary">
+        <svg class="divisor__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+          <path class="divisor__shape" d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25"></path>
+          <path class="divisor__shape" d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5"></path>
+          <path class="divisor__shape" d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z"></path>
+        </svg>
+      </div>
+
+      <div class="template__content">
+        <h2 class="template__title">Copiar y solicitar</h2>
+
+        <div class="template__request">
+          <!-- Url -->
+          <p class="template__url">
+            <span id="code-url" class="url__link">https://www.numberconverterapi.kodexiv.com/api/converter</span>
+            <span class="url__separator"></span>
+            <button class="url__copy" data-code-copy="code-url">
+              <svg class="url__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+              </svg>
+              <svg class="url__icon url__icon--hidden" style="color: var(--copy);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M5 12l5 5l10 -10" />
+              </svg>
+            </button>
+          </p>
+
+          <!-- Request -->
+          <div class="template__code">
+            <button class="code__copy" data-code-copy="code-request">
+              <svg class="code__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+              </svg>
+              <svg class="code__icon code__icon--hidden" style="color: var(--copy);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M5 12l5 5l10 -10" />
+              </svg>
+            </button>
+<pre id="code-request" class="code__json">
+"from": {
+    "value": "10",
+    "type": "decimal",
+    "format": {}
+},
+"to": {
+    "type": "binary",
+    "format": {}
+}</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <ul class="footer__content">
+      <li>
+        <a class="footer__paragraph" href="https://github.com/livan23l/NumberConverterApi" target="_blank" rel="noopener noreferrer">
+          <span>Ver proyecto</span>
+          <svg class="footer__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+          </svg>
+        </a>
+      </li>
+      <li class="footer__paragraph">
+        <a href="/es/contact">Contacto</a>
+      </li>
+    </ul>
+  </footer>
+</body>
+
+</html>

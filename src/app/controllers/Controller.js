@@ -288,6 +288,18 @@ export class Controller {
     }
 
     /**
+     * Response the HTTP petition with one redirection (301).
+     * 
+     * @param {string} route - The route to be redirected.
+     * @returns {void}
+     */
+    _redirect(route) {
+        this.#res.statusCode = 301;
+        this.#res.setHeader('Location', route);
+        this.#res.end();
+    }
+
+    /**
      * Initializes the Controller
      * 
      * @param {http.IncomingMessage} req - The server request

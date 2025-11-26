@@ -13,14 +13,26 @@ class Home {
         const $dinamycValue = $dinamycInput.querySelector('.demo__value');
 
         // Set the list of bases and values
-        const cicles = [
-            ['Binary:', '1010'],
-            ['Octal:', '12'],
-            ['Hexadecimal:', 'A'],
-            ['Base 64:', 'K'],
-            ['Text:', 'ten'],
-        ];
-        let current_cicle = 1;
+        const cicles = {
+            en: [
+                ['Binary:', '1010'],
+                ['Octal:', '12'],
+                ['Hexadecimal:', 'A'],
+                ['Base 64:', 'K'],
+                ['Text:', 'ten']
+            ],
+            es: [
+                ['Binario:', '1010'],
+                ['Octal:', '12'],
+                ['Hexadecimal:', 'A'],
+                ['Base 64:', 'K'],
+                ['Texto:', 'diez']
+            ]
+        };
+        const cicle = (window.location.pathname == '/en')
+            ? cicles.en
+            : cicles.es;
+        let currentCicle = 1;
 
         $demoConnector.addEventListener('animationend', () => {
             // Stop the animation
@@ -32,8 +44,8 @@ class Home {
 
         $dinamycInput.addEventListener('animationend', () => {
             // Get the current base and value
-            const [base, value] = cicles[current_cicle++];
-            if (current_cicle == cicles.length) current_cicle = 0;
+            const [base, value] = cicle[currentCicle++];
+            if (currentCicle == cicle.length) currentCicle = 0;
 
             // Update the base and the value
             $dinamycBase.innerText = base;
