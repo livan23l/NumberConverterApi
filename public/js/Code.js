@@ -34,7 +34,7 @@ class Code {
 
                 // Block the click event and show the check icon
                 btnBlockFlags[codeId] = true;
-                $btn.style.cursor = 'not-allowed';
+                $btn.style.cursor = 'default';
                 $copyIcon.classList.toggle(hiddenClass);
                 $checkIcon.classList.toggle(hiddenClass);
 
