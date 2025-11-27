@@ -37,6 +37,7 @@ class Menu {
                 const $defaultOption = document.querySelector(
                     `#${$btn.dataset.menuDefault}`
                 );
+                const changeEvent = $menu.dataset.changeEvent;
 
                 $menu.addEventListener('click', e => {
                     // Get the clicked option
@@ -57,6 +58,17 @@ class Menu {
 
                     // Hide the menu
                     $menu.classList.add(hiddenClass);
+
+                    // Check if exists one event when the option changes
+                    if (changeEvent) {
+                        // Get the change value of the selected option
+                        const value = $option.dataset.changeValue;
+
+                        // Dispatch the change event
+                        document.dispatchEvent(new CustomEvent(changeEvent, {
+                            detail: { value }
+                        }));
+                    }
                 });
             }
         });
