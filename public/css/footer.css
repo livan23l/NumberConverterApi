@@ -1,0 +1,43 @@
+/** Footer */
+.footer {
+    width: 100%;
+    padding-block: 0.5rem;
+    padding-inline: 1rem;
+    background-color: var(--secondary);
+    position: relative;
+    z-index: 10;
+    color: var(--text-secondary);
+}
+
+.footer__content {
+    max-width: var(--max-width);
+    margin-inline: auto;
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.5rem;
+    justify-content: space-evenly;
+    align-items: center;
+    list-style: none;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.footer__paragraph {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.footer__icon {
+    aspect-ratio: 1;
+    width: 1.5rem;
+}
+
+/** Styles for medium screens */
+@media (min-width: 22rem) {
+    .footer__content {
+        flex-flow: row wrap;
+        gap: 0;
+        font-size: 1.2rem;
+    }
+}
