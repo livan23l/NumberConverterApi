@@ -10,10 +10,8 @@
   <meta name="keywords" content="api, base62, number-converter, text-conversion, octal-converter, base64-converter, binary-conversion, hexadecimal-conversion">
   <link rel="shortcut icon" href="../../img/favicon.webp">
   <link rel="stylesheet" href="../../css/app.css">
-  <link rel="stylesheet" href="../../css/header.css">
   <link rel="stylesheet" href="../../css/converter.css">
   <script type="module" src="../../js/app.js"></script>
-  <script src="../../js/Header.js" defer></script>
   <script src="../../js/Converter.js" defer></script>
 </head>
 
@@ -40,7 +38,7 @@
 
         <!-- Languages -->
         <div class="header__list">
-          <button id="btn-languages-menu" class="header__default">
+          <button data-menu="languages-menu" class="header__default">
             <span class="header__label">English</span>
             <svg class="header__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -52,14 +50,10 @@
             </svg>
           </button>
 
-          <ul id="languages-menu" class="header__languages header__languages--hidden">
-            <li class="header__language header__language--selected">
-              <a href="/en/converter">English</a>
-            </li>
-            <li class="header__language">
-              <a href="/es/converter">Español</a>
-            </li>
-          </ul>
+          <div id="languages-menu" class="header__languages header__languages--hidden">
+            <a href="/en/converter" class="header__language header__language--selected">English</a>
+            <a href="/es/converter" class="header__language">Español</a>
+          </div>
         </div>
       </div>
     </div>
@@ -67,7 +61,8 @@
 
   <main class="main">
     <div class="main__content">
-      <div class="converter">
+      <!-- Converter section -->
+      <section class="converter">
         <!-- From -->
         <div class="converter__element">
           <p class="converter__title">From</p>
@@ -78,6 +73,8 @@
               <option class="selected__option" value="binary">Binary</option>
               <option class="selected__option" value="hexadecimal">Hexadecimal</option>
               <option class="selected__option" value="octal">Octal</option>
+              <option class="selected__option" value="base62">Base 62</option>
+              <option class="selected__option" value="base64">Base 64</option>
               <option class="selected__option" value="text">Text</option>
             </select>
             <div class="selected__arrows"></div>
@@ -102,6 +99,8 @@
               <option class="selected__option" value="binary" selected>Binary</option>
               <option class="selected__option" value="hexadecimal">Hexadecimal</option>
               <option class="selected__option" value="octal">Octal</option>
+              <option class="selected__option" value="base62">Base 62</option>
+              <option class="selected__option" value="base64">Base 64</option>
               <option class="selected__option" value="text">Text</option>
             </select>
             <div class="selected__arrows"></div>
@@ -109,7 +108,11 @@
 
           <textarea class="converter__textarea" id="textarea-to" disabled></textarea>
         </div>
-      </div>
+      </section>
+
+      <!-- API request section -->
+      <section class="request">
+      </section>
     </div>
   </main>
 
