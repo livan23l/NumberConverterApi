@@ -237,6 +237,22 @@ class Converter {
                     $toDefault.innerText, $fromDefault.innerText
                 ];
 
+                // Change the visibility of the parent dropdown menus
+                //--Get the parents
+                const $fromParent = $fromDefault.parentElement;
+                const $toParent = $toDefault.parentElement;
+
+                //--Check if the parents are hidden
+                const hideClass = $fromParent.dataset.hiddenClass;
+                const fromIsHidden = $fromParent.classList.contains(hideClass);
+                const toIsHidden = $toParent.classList.contains(hideClass);
+
+                //--If one is hidden and the other visible, the change
+                if (fromIsHidden != toIsHidden) {
+                    $fromParent.classList.toggle(hideClass);
+                    $toParent.classList.toggle(hideClass);
+                }
+
                 // Switch the 'selected' option
                 //--Get the 'selected' class
                 const selClass = $fromList.dataset.selectedClass;
@@ -264,8 +280,6 @@ class Converter {
 
             // Switch the values in the request
             switchRequestValues();
-
-            console.log(this.#request);
         });
     }
 
