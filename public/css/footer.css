@@ -1,7 +1,7 @@
 /** Footer */
 .footer {
     width: 100%;
-    padding-block: 0.5rem;
+    padding-block: 0.5rem 0.6rem;
     padding-inline: 1rem;
     background-color: var(--secondary);
     position: relative;
@@ -23,9 +23,23 @@
 }
 
 .footer__paragraph {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+
+.footer__paragraph::before {
+    content: "";
+    width: 107%;
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    translate: -50% 5px;
+}
+
+.footer__paragraph:hover::before {
+    border-bottom: 2px solid var(--text-secondary);
 }
 
 .footer__icon {
