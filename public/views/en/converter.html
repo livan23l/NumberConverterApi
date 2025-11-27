@@ -63,59 +63,135 @@
     <div class="main__content">
       <!-- Converter section -->
       <section class="converter">
-        <!-- From -->
-        <div class="converter__item">
-          <h2 class="element__title">From</h2>
+        <div class="converter__main">
+          <!-- From -->
+          <div class="converter__item">
+            <h2 class="converter__title">From</h2>
 
-          <div class="converter__element">
-            <div class="element__options">
-              <div class="element__dropdowns">
-                <!-- Languages -->
-                <div class="element__select element__select--hidden">
-                  <button class="select__default" data-menu="from-languages">English</button>
+            <div class="converter__element">
+              <div class="element__options">
+                <div class="element__dropdowns">
+                  <!-- Copy button -->
+                  <button class="converter__copy" data-code-copy="from-textarea" style="order: 3;">
+                    <svg class="copy__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                      <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                      <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+                    </svg>
+                    <svg class="copy__icon copy__icon--hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                      <path d="M5 12l5 5l10 -10" />
+                    </svg>
+                  </button>
 
-                  <div id="from-languages" class="select__menu select__menu--hidden">
-                    <p class="select__option select__option--selected" value="en">English</p>
-                    <p class="select__option" value="es">Spanish</p>
+                  <!-- Languages -->
+                  <div id="from-languages-dropdown" class="element__select element__select--hidden" style="order: 2;">
+                    <button id="from-languages-default" class="select__default" data-menu="from-languages" data-menu-default="from-languages-default">English</button>
+
+                    <div id="from-languages" class="select__menu select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeFromLanguage">
+                      <p id="from-en" class="select__option select__option--selected" data-change-value="en">English</p>
+                      <p id="from-es" class="select__option" data-change-value="es">Spanish</p>
+                    </div>
+                  </div>
+
+                  <!-- Bases -->
+                  <div class="element__select" style="order: 1;">
+                    <button id="from-options-default" class="select__default" data-menu="from-options" data-menu-default="from-options-default">Decimal</button>
+
+                    <div id="from-options" class="select__menu select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeFromType">
+                      <p id="from-binary" class="select__option" data-change-value="binary">Binary</p>
+                      <p id="from-octal" class="select__option" data-change-value="octal">Octal</p>
+                      <p id="from-decimal" class="select__option select__option--selected" data-change-value="decimal">Decimal</p>
+                      <p id="from-hexadecimal" class="select__option" data-change-value="hexadecimal">Hexadecimal</p>
+                      <p id="from-base62" class="select__option" data-change-value="base62">Base 62</p>
+                      <p id="from-base64" class="select__option" data-change-value="base64">Base 64</p>
+                      <p id="from-text" class="select__option" data-change-value="text">Text</p>
+                    </div>
                   </div>
                 </div>
 
-                <!-- Bases -->
-                <div class="element__select">
-                  <button id="from-options-default" class="select__default" data-menu="from-options" data-menu-default="from-options-default">Decimal</button>
-
-                  <div id="from-options" class="select__menu select__menu--hidden" data-selected-class="select__option--selected">
-                    <p class="select__option select__option--selected" value="decimal">Decimal</p>
-                    <p class="select__option" value="binary">Binary</p>
-                    <p class="select__option" value="hexadecimal">Hexadecimal</p>
-                    <p class="select__option" value="octal">Octal</p>
-                    <p class="select__option" value="base62">Base 62</p>
-                    <p class="select__option" value="base64">Base 64</p>
-                    <p class="select__option" value="text">Text</p>
-                  </div>
-                </div>
+                <!-- Settings -->
+                <button class="element__settings">
+                  <svg class="settings__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+                    <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                  </svg>
+                </button>
               </div>
 
-              <button class="element__settings">
-                <svg class="settings__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                  <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
-                  <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
-                </svg>
-              </button>
+              <textarea id="from-textarea" class="converter__textarea"></textarea>
             </div>
+          </div>
 
-            <textarea id="textarea-from" class="converter__textarea"></textarea>
+          <button id="converter-switch" class="converter__change">
+            <svg class="change__icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+            </svg>
+          </button>
+
+          <!-- To -->
+          <div class="converter__item">
+            <h2 class="converter__title">To</h2>
+
+            <div class="converter__element">
+              <div class="element__options">
+                <div class="element__dropdowns">
+                  <!-- Copy button -->
+                  <button class="converter__copy" data-code-copy="to-textarea" style="order: 3;">
+                    <svg class="copy__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                      <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                      <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+                    </svg>
+                    <svg class="copy__icon copy__icon--hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                      <path d="M5 12l5 5l10 -10" />
+                    </svg>
+                  </button>
+
+                  <!-- Languages -->
+                  <div id="to-languages-dropdown" class="element__select element__select--hidden" style="order: 2;">
+                    <button id="to-languages-default" class="select__default" data-menu="to-languages" data-menu-default="to-languages-default">English</button>
+
+                    <div id="to-languages" class="select__menu select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeToLanguage">
+                      <p id="to-en" class="select__option select__option--selected" data-change-value="en">English</p>
+                      <p id="to-es" class="select__option" data-change-value="es">Spanish</p>
+                    </div>
+                  </div>
+
+                  <!-- Bases -->
+                  <div class="element__select" style="order: 1;">
+                    <button id="to-options-default" class="select__default" data-menu="to-options" data-menu-default="to-options-default">Binary</button>
+
+                    <div id="to-options" class="select__menu select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeToType">
+                      <p id="to-binary" class="select__option select__option--selected" data-change-value="binary">Binary</p>
+                      <p id="to-octal" class="select__option" data-change-value="octal">Octal</p>
+                      <p id="to-decimal" class="select__option" data-change-value="decimal">Decimal</p>
+                      <p id="to-hexadecimal" class="select__option" data-change-value="hexadecimal">Hexadecimal</p>
+                      <p id="to-base62" class="select__option" data-change-value="base62">Base 62</p>
+                      <p id="to-base64" class="select__option" data-change-value="base64">Base 64</p>
+                      <p id="to-text" class="select__option" data-change-value="text">Text</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Settings -->
+                <button class="element__settings">
+                  <svg class="settings__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+                    <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                  </svg>
+                </button>
+              </div>
+
+              <textarea id="to-textarea" class="converter__textarea" disabled></textarea>
+            </div>
           </div>
         </div>
 
-        <button id="button-change" class="converter__change">
-          <svg class="converter__arrows" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
-          </svg>
-        </button>
-
-        <!-- To -->
+        <button id="converter-button" class="converter__request">Convert</button>
       </section>
 
       <!-- API request section -->

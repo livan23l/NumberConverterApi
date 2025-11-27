@@ -20,6 +20,17 @@
 .converter {
     width: 100%;
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    --shadow: -5px 5px 2px #000000B0;
+    --shadow-low: -4px 4px 1px #000000B0;
+}
+
+.converter__main {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 1.5rem;
@@ -27,44 +38,49 @@
 
 .converter__item {
     display: flex;
-    flex-flow: column;
+    flex-direction: column;
 }
 
-.element__title {
+.converter__title {
     width: fit-content;
     padding: 0.3rem 0.75rem;
     border: 2px solid var(--text-primary);
     border-bottom-style: none;
     border-radius: 5px 5px 0 0;
     background-color: var(--primary);
+    box-shadow: var(--shadow);
     position: relative;
     top: 2px;
-    font-size: 1.65rem;
+    font-size: 1.35rem;
     font-weight: 650;
 }
 
 .converter__element {
-    padding-block: 1rem 0.5rem;
+    padding-block: 0.75rem 0.5rem;
     padding-inline: 0.75rem;
     border: 2px solid var(--text-primary);
     border-radius: 0 10px 10px 10px;
     background-image: linear-gradient(var(--primary), var(--secondary));
-    box-shadow: 2px 2px 5px #00000060;
+    box-shadow: var(--shadow);
+    position: relative;
+    z-index: 10;
     display: flex;
     flex-flow: column nowrap;
-    gap: 0.25rem;
+    gap: 1rem;
 }
 
 .element__options {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    gap: 0.5rem;
 }
 
 .element__dropdowns {
     display: flex;
-    flex-flow: row-reverse;
-    gap: 0.75rem;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    gap: 0.5rem;
 }
 
 .element__select {
@@ -72,7 +88,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    font-size: 1.2rem;
+    font-size: 0.95rem;
     color: var(--text-accent);
 }
 
@@ -94,19 +110,19 @@
 .select__default::after,
 .select__default::before {
     content: "";
-    border: 0.5rem solid transparent;
+    border: 0.4rem solid transparent;
     position: absolute;
     right: 0.5rem;
 }
 
 .select__default::after {
     border-top-color: var(--text-accent);
-    bottom: -0.1rem;
+    bottom: 0;
 }
 
 .select__default::before {
     border-bottom-color: var(--text-accent);
-    top: -0.1rem;
+    top: 0;
 }
 
 .select__menu {
@@ -147,20 +163,36 @@
 
 .settings__icon {
     aspect-ratio: 1;
-    width: 1.8rem;
+    width: 1.55rem;
     color: var(--text-accent);
+}
+
+.converter__copy {
+    background-color: transparent;
+    border-style: none;
+    display: flex;
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.copy__icon {
+    aspect-ratio: 1;
+    width: 1.5rem;
+}
+
+.copy__icon--hidden {
+    display: none;
 }
 
 .converter__textarea {
     width: 100%;
-    height: 12rem;
-    margin-top: 1rem;
+    height: 6rem;
     padding: 0.35rem 0.5rem;
     border: 1.2px solid var(--text-primary);
-    border-radius: 2px;
-     background-color: var(--text-secondary);
-    font-size: 1.1rem;
-    font-weight: bold;
+    border-radius: 5px;
+    background-color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
     color: inherit;
     resize: none;
 }
@@ -172,15 +204,97 @@
 .converter__change {
     width: fit-content;
     height: fit-content;
-    padding: 0.25rem 0.45rem;
+    padding: 0.25rem 0.35rem;
     border-style: none;
     background-color: var(--accent);
-    box-shadow: 0 0 10px #00000040;
+    border: 1px solid var(--text-accent);
     border-radius: 5px;
+    box-shadow: var(--shadow-low);
     position: relative;
+    transition: scale 30ms ease-out;
 }
 
-.converter__arrows {
-    width: 2rem;
+.change__icon {
+    aspect-ratio: 1;
+    width: 1.65rem;
     color: var(--text-accent);
+}
+
+.converter__request {
+    width: fit-content;
+    padding: 0.3rem 0.5rem;
+    background-color: var(--accent);
+    border: 1px solid var(--text-accent);
+    border-radius: 5px;
+    box-shadow: var(--shadow-low);
+    font-size: 1rem;
+    transition: scale 30ms ease-out;
+}
+
+.converter__change:active,
+.converter__request:active {
+    scale: 0.95;
+}
+
+/** Styles for medium screens */
+@media (min-width: 22rem) {
+    .converter__title {
+        font-size: 1.65rem;
+    }
+
+    .converter__element {
+        padding-block: 1rem 0.5rem;
+    }
+
+    .element__options {
+        gap: 0.75rem;
+    }
+
+    .element__dropdowns {
+        gap: 0.75rem;
+    }
+
+    .element__select {
+        font-size: 1.2rem;
+    }
+
+    .select__default::after,
+    .select__default::before {
+        border: 0.5rem solid transparent;
+    }
+
+    .select__default::after {
+        bottom: -0.1rem;
+    }
+
+    .select__default::before {
+        top: -0.1rem;
+    }
+
+    .settings__icon {
+        width: 1.8rem;
+    }
+
+    .copy__icon {
+        width: 1.75rem;
+    }
+
+    .converter__textarea {
+        font-size: 1.1rem;
+    }
+
+    .change__icon {
+        width: 2rem;
+    }
+
+    .converter__request {
+        font-size: 1.25rem;
+    }
+}
+
+/** Styles for large screens */
+@media (min-width: 36rem) {
+    .converter__main {
+        flex-direction: row;
+    }
 }
