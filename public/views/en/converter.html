@@ -50,7 +50,7 @@
             </svg>
           </button>
 
-          <div id="languages-menu" class="header__languages header__languages--hidden">
+          <div id="languages-menu" class="header__languages header__languages--hidden" data-hidden-class="header__languages--hidden">
             <a href="/en/converter" class="header__language header__language--selected">English</a>
             <a href="/es/converter" class="header__language">Español</a>
           </div>
@@ -85,20 +85,20 @@
                   </button>
 
                   <!-- Languages -->
-                  <div id="from-languages-dropdown" class="element__select element__select--hidden" style="order: 2;">
+                  <div id="from-languages-dropdown" class="element__select element__select--hidden" data-hidden-class="element__select--hidden" style="order: 2;">
                     <button id="from-languages-default" class="select__default" data-menu="from-languages" data-menu-default="from-languages-default">English</button>
 
-                    <div id="from-languages" class="select__menu select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeFromLanguage">
+                    <div id="from-languages" class="select__menu select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeFromLanguage">
                       <p id="from-en" class="select__option select__option--selected" data-change-value="en">English</p>
                       <p id="from-es" class="select__option" data-change-value="es">Spanish</p>
                     </div>
                   </div>
 
                   <!-- Bases -->
-                  <div class="element__select" style="order: 1;">
+                  <div class="element__select" data-hidden-class="element__select--hidden" style="order: 1;">
                     <button id="from-options-default" class="select__default" data-menu="from-options" data-menu-default="from-options-default">Decimal</button>
 
-                    <div id="from-options" class="select__menu select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeFromType">
+                    <div id="from-options" class="select__menu select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeFromType">
                       <p id="from-binary" class="select__option" data-change-value="binary">Binary</p>
                       <p id="from-octal" class="select__option" data-change-value="octal">Octal</p>
                       <p id="from-decimal" class="select__option select__option--selected" data-change-value="decimal">Decimal</p>
@@ -151,20 +151,20 @@
                   </button>
 
                   <!-- Languages -->
-                  <div id="to-languages-dropdown" class="element__select element__select--hidden" style="order: 2;">
+                  <div id="to-languages-dropdown" class="element__select element__select--hidden" data-hidden-class="element__select--hidden" style="order: 2;">
                     <button id="to-languages-default" class="select__default" data-menu="to-languages" data-menu-default="to-languages-default">English</button>
 
-                    <div id="to-languages" class="select__menu select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeToLanguage">
+                    <div id="to-languages" class="select__menu select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeToLanguage">
                       <p id="to-en" class="select__option select__option--selected" data-change-value="en">English</p>
                       <p id="to-es" class="select__option" data-change-value="es">Spanish</p>
                     </div>
                   </div>
 
                   <!-- Bases -->
-                  <div class="element__select" style="order: 1;">
+                  <div class="element__select" data-hidden-class="element__select--hidden" style="order: 1;">
                     <button id="to-options-default" class="select__default" data-menu="to-options" data-menu-default="to-options-default">Binary</button>
 
-                    <div id="to-options" class="select__menu select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeToType">
+                    <div id="to-options" class="select__menu select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeToType">
                       <p id="to-binary" class="select__option select__option--selected" data-change-value="binary">Binary</p>
                       <p id="to-octal" class="select__option" data-change-value="octal">Octal</p>
                       <p id="to-decimal" class="select__option" data-change-value="decimal">Decimal</p>
