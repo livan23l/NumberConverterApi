@@ -19,9 +19,7 @@ class Menu {
             const $menu = document.querySelector(`#${$btn.dataset.menu}`);
 
             // Get the hidden class of the current menu
-            const hiddenClass = [...$menu.classList].find(
-                c => c.endsWith('--hidden')
-            );
+            const hiddenClass = $menu.dataset.hiddenClass;
 
             // Add the menu and its hidden class to the menus array
             menus.push([$menu, hiddenClass]);
