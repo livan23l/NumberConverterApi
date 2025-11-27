@@ -77,15 +77,18 @@
 }
 
 .header__languages {
+    width: 100%;
+    min-width: fit-content;
     border: 1px solid var(--text-primary);
     border-radius: 3px;
     position: absolute;
-    top: 110%;
+    top: 115%;
     right: 0;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
     font-size: 1rem;
     color: var(--text-primary);
-    list-style: none;
 }
 
 .header__languages--hidden {
