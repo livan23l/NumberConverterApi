@@ -82,6 +82,7 @@
     border: 1px solid var(--text-primary);
     border-radius: 3px;
     position: absolute;
+    z-index: 20;
     top: 115%;
     right: 0;
     display: flex;
