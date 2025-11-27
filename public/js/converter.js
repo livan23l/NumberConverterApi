@@ -1,6 +1,11 @@
 class Converter {
     #request;
 
+    /**
+     * Make the HTTP petition to the API with the current internal request.
+     * 
+     * @returns {Promise} The promise of the API response
+     */
     #makeRequest() {
         // const url = 'https://www.numberconverterapi.kodexiv.com/api/converter';
         const url = 'http://localhost:3300/api/converter';
@@ -11,22 +16,121 @@ class Converter {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: this.#request
+                body: JSON.stringify(this.#request)
             })
                 .then(response => response.json())
-                .then(data => {
-                    resolve(data.data);
+                .then(res => {
+                    resolve(res);
                 }).catch(err => {
                     reject(new Error(err.message));
                 });
         });
     }
 
+    /**
+     * Performs the conversion depending on the internal request and show the
+     * warnings and errors.
+     * 
+     * @private
+     * @returns {void}
+     */
     #handleConversion() {
+        // Get the DOM elements
         const $convertBtn = document.querySelector('#converter-button');
+        const $toTextarea = document.querySelector('#to-textarea');
 
         $convertBtn.addEventListener('click', () => {
-            console.log(this.#request);
+            this.#makeRequest()
+                .then((response) => {
+                    const data = response.data;
+                    const badData = ['NTL', 'NaN'];
+
+                    console.log(response);
+                    if (typeof data == 'string' && !badData.includes(data)) {
+                        this.#request.to.value = data;
+                        $toTextarea.value = data;
+                    }
+                });
+        });
+    }
+
+    /**
+     * Handle the global changes events in the dropdowns for the inputs 'from'
+     * and 'to'. This method changes the following attributes:
+     * - type.
+     * - value.
+     * - language.
+     * - separation.
+     * - extra characters.
+     * - preserve zeros.
+     * 
+     * @private
+     * @returns {void}
+     */
+    #handleChangeEvents() {
+        const $toTextarea = document.querySelector('#to-textarea');
+
+        /**
+         * Handles the change event for the types in the 'from' and the 'to'
+         * lists.
+         * 
+         * @param {Event} e - The custom event.
+         * @param {"from"|"to"} type - The type to which the event belongs.
+         * @returns {void}
+         */
+        const handleTypeChange = (e, type) => {
+            const value = e.detail.value;
+
+            // Get the corresponding language dropdown
+            const langId = `#${type}-languages-dropdown`
+            const langHiddenClass = 'element__select--hidden';
+            const $langs = document.querySelector(langId);
+
+            // Show or hide the language menu based on the value
+            if (value == 'text') $langs.classList.remove(langHiddenClass);
+            else $langs.classList.add(langHiddenClass);
+
+            // Change the type in the request
+            this.#request[type].type = value;
+
+            // Check if the changed type if 'to' to clean the textearea
+            if (type == 'to') $toTextarea.value = '';
+        };
+
+        /**
+         * Handles the change event for the languages in the 'from' and the 'to'
+         * lists.
+         * 
+         * @param {Event} e - The custom event.
+         * @param {"from"|"to"} type - The type to which the event belongs.
+         * @returns {void}
+         */
+        const handleLangChange = (e, type) => {
+            const language = e.detail.value;
+
+            // Change the language in the request
+            this.#request[type].format.lang = language;
+
+            // Check if the changed type if 'to' to clean the textearea
+            if (type == 'to') $toTextarea.value = '';
+        }
+
+        // Add the event listeners
+        //--Types
+        document.addEventListener('changeFromType', e => {
+            handleTypeChange(e, 'from')
+        });
+        document.addEventListener('changeToType', e => {
+            handleTypeChange(e, 'to')
+        });
+
+        //--Languages
+        document.addEventListener('changeFromLanguage', e => {
+            handleLangChange(e, 'from')
+        });
+
+        document.addEventListener('changeToLanguage', e => {
+            handleLangChange(e, 'to')
         });
     }
 
@@ -77,8 +181,11 @@ class Converter {
          */
         const switchRequestValues = () => {
             // Values
+            const newToValue = (this.#request.to.value != '')
+                ? this.#request.from.value
+                : '';
             [this.#request.from.value, this.#request.to.value] = [
-                this.#request.to.value, this.#request.from.value
+                this.#request.to.value, newToValue
             ];
 
             // Types
@@ -113,9 +220,11 @@ class Converter {
         // Switch all the elements
         $switchBtn.addEventListener('click', () => {
             // Switch the content in the textareas
+            const newToValue = (toElements['$textArea'].value != '')
+                ? fromElements['$textArea'].value
+                : '';
             [fromElements['$textArea'].value, toElements['$textArea'].value] = [
-                toElements['$textArea'].value,
-                fromElements['$textArea'].value
+                toElements['$textArea'].value, newToValue
             ];
 
             // Switch all the dropdown menus
@@ -155,78 +264,18 @@ class Converter {
 
             // Switch the values in the request
             switchRequestValues();
+
+            console.log(this.#request);
         });
     }
 
     /**
-     * Handle the global changes events in the dropdowns for the inputs 'from'
-     * and 'to'. This method changes the following attributes:
-     * - type.
-     * - value.
-     * - language.
-     * - separation.
-     * - extra characters.
-     * - preserve zeros.
+     * Handle the action of writting in the 'from' textarea. This method adds
+     * the written text in the `request.from.value`.
      * 
      * @private
      * @returns {void}
      */
-    #handleChangeEvents() {
-        /**
-         * Handles the change event for the types in the 'from' and the 'to'
-         * lists.
-         * 
-         * @param {Event} e - The custom event.
-         * @param {"from"|"to"} type - The type to which the event belongs.
-         * @returns {void}
-         */
-        const handleTypeChange = (e, type) => {
-            const value = e.detail.value;
-
-            // Get the corresponding language dropdown
-            const langId = `#${type}-languages-dropdown`
-            const langHiddenClass = 'element__select--hidden';
-            const $langs = document.querySelector(langId);
-
-            // Show or hide the language menu based on the value
-            if (value == 'text') $langs.classList.remove(langHiddenClass);
-            else $langs.classList.add(langHiddenClass);
-
-            // Change the type in the request
-            this.#request[type].type = value;
-        };
-
-        /**
-         * Handles the change event for the languages in the 'from' and the 'to'
-         * lists.
-         * 
-         * @param {Event} e - The custom event.
-         * @param {"from"|"to"} type - The type to which the event belongs.
-         * @returns {void}
-         */
-        const handleLangChange = (e, type) => {
-            const value = e.detail.value;
-        }
-
-        // Add the event listeners
-        //--Types
-        document.addEventListener('changeFromType', e => {
-            handleTypeChange(e, 'from')
-        });
-        document.addEventListener('changeToType', e => {
-            handleTypeChange(e, 'to')
-        });
-
-        //--Languages
-        document.addEventListener('changeFromLanguage', e => {
-            handleLangChange(e, 'from')
-        });
-
-        document.addEventListener('changeToLanguage', e => {
-            handleLangChange(e, 'to')
-        });
-    }
-
     #handleWritting() {
         // Get the textareas
         const $fromTextarea = document.querySelector('#from-textarea');
@@ -260,8 +309,8 @@ class Converter {
                 type: 'decimal',
                 format: {
                     lang: currentLang,
-                    separation: 'none',
-                    extraCharacters: ['', '']
+                    separation: null,
+                    extraCharacters: null
                 }
             },
             to: {
@@ -269,17 +318,17 @@ class Converter {
                 type: 'binary',
                 format: {
                     lang: currentLang,
-                    separation: 'none',
-                    extraCharacters: ['', ''],
-                    preserveZeros: 'none'
+                    separation: null,
+                    extraCharacters: null,
+                    preserveZeros: null
                 }
             }
         };
 
         // Set custom events
         this.#handleWritting();
-        this.#handleChangeEvents();
         this.#handleSwitch();
+        this.#handleChangeEvents();
         this.#handleConversion();
     }
 }
