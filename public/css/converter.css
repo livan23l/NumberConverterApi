@@ -1,4 +1,22 @@
-/* Converters styles */
+/** Main styles */
+.main {
+    width: 100%;
+    padding-inline: 1rem;
+    padding-block: 3rem 5rem;
+    background-color: var(--primary);
+    background-image:
+        linear-gradient(0deg, var(--secondary) 1px, transparent 1px),
+        linear-gradient(90deg, var(--secondary) 1px, transparent 1px);
+    background-size: 30px 30px;
+    background-position: 10px 10px;
+}
+
+.main__content {
+    max-width: var(--max-width);
+    margin-inline: auto;
+}
+
+/** Converters styles */
 .converter {
     width: 100%;
     display: flex;

@@ -12,4 +12,12 @@ export class MainController extends Controller {
     homeEs() {
         return this._view('es.home');
     }
+
+    converterEn() {
+        return this._view('en.converter');
+    }
+
+    converterEs() {
+        return this._view('es.converter');
+    }
 }
