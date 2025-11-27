@@ -260,7 +260,7 @@
 
     .select__default::after,
     .select__default::before {
-        border: 0.5rem solid transparent;
+        border-width: 0.5rem;
     }
 
     .select__default::after {
@@ -296,5 +296,9 @@
 @media (min-width: 36rem) {
     .converter__main {
         flex-direction: row;
+    }
+
+    .converter__textarea {
+        font-size: 1.2rem;
     }
 }
