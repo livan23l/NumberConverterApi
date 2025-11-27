@@ -93,8 +93,8 @@ class Converter {
             // Change the type in the request
             this.#request[type].type = value;
 
-            // Check if the changed type if 'to' to clean the textearea
-            if (type == 'to') $toTextarea.value = '';
+            // Clean the textearea of the 'to' part
+            $toTextarea.value = '';
         };
 
         /**
@@ -111,8 +111,8 @@ class Converter {
             // Change the language in the request
             this.#request[type].format.lang = language;
 
-            // Check if the changed type if 'to' to clean the textearea
-            if (type == 'to') $toTextarea.value = '';
+            // Clean the textearea of the 'to' part
+            $toTextarea.value = '';
         }
 
         // Add the event listeners
