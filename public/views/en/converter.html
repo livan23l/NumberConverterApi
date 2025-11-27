@@ -64,23 +64,49 @@
       <!-- Converter section -->
       <section class="converter">
         <!-- From -->
-        <div class="converter__element">
-          <p class="converter__title">From</p>
+        <div class="converter__item">
+          <h2 class="element__title">From</h2>
 
-          <div class="selected">
-            <select class="selected__element" id="select-from">
-              <option class="selected__option" value="decimal" selected>Decimal</option>
-              <option class="selected__option" value="binary">Binary</option>
-              <option class="selected__option" value="hexadecimal">Hexadecimal</option>
-              <option class="selected__option" value="octal">Octal</option>
-              <option class="selected__option" value="base62">Base 62</option>
-              <option class="selected__option" value="base64">Base 64</option>
-              <option class="selected__option" value="text">Text</option>
-            </select>
-            <div class="selected__arrows"></div>
+          <div class="converter__element">
+            <div class="element__options">
+              <div class="element__dropdowns">
+                <!-- Languages -->
+                <div class="element__select element__select--hidden">
+                  <button class="select__default" data-menu="from-languages">English</button>
+
+                  <div id="from-languages" class="select__menu select__menu--hidden">
+                    <p class="select__option select__option--selected" value="en">English</p>
+                    <p class="select__option" value="es">Spanish</p>
+                  </div>
+                </div>
+
+                <!-- Bases -->
+                <div class="element__select">
+                  <button id="from-options-default" class="select__default" data-menu="from-options" data-menu-default="from-options-default">Decimal</button>
+
+                  <div id="from-options" class="select__menu select__menu--hidden" data-selected-class="select__option--selected">
+                    <p class="select__option select__option--selected" value="decimal">Decimal</p>
+                    <p class="select__option" value="binary">Binary</p>
+                    <p class="select__option" value="hexadecimal">Hexadecimal</p>
+                    <p class="select__option" value="octal">Octal</p>
+                    <p class="select__option" value="base62">Base 62</p>
+                    <p class="select__option" value="base64">Base 64</p>
+                    <p class="select__option" value="text">Text</p>
+                  </div>
+                </div>
+              </div>
+
+              <button class="element__settings">
+                <svg class="settings__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+                  <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                </svg>
+              </button>
+            </div>
+
+            <textarea id="textarea-from" class="converter__textarea"></textarea>
           </div>
-
-          <textarea class="converter__textarea" id="textarea-from"></textarea>
         </div>
 
         <button id="button-change" class="converter__change">
@@ -90,24 +116,6 @@
         </button>
 
         <!-- To -->
-        <div class="converter__element">
-          <p class="converter__title">To</p>
-
-          <div class="selected">
-            <select class="selected__element" id="select-to">
-              <option class="selected__option" value="decimal">Decimal</option>
-              <option class="selected__option" value="binary" selected>Binary</option>
-              <option class="selected__option" value="hexadecimal">Hexadecimal</option>
-              <option class="selected__option" value="octal">Octal</option>
-              <option class="selected__option" value="base62">Base 62</option>
-              <option class="selected__option" value="base64">Base 64</option>
-              <option class="selected__option" value="text">Text</option>
-            </select>
-            <div class="selected__arrows"></div>
-          </div>
-
-          <textarea class="converter__textarea" id="textarea-to" disabled></textarea>
-        </div>
       </section>
 
       <!-- API request section -->

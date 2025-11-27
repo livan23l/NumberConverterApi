@@ -23,8 +23,6 @@ class Menu {
                 c => c.endsWith('--hidden')
             );
 
-            console.log('Hidden class', hiddenClass)
-
             // Add the menu and its hidden class to the menus array
             menus.push([$menu, hiddenClass]);
 
@@ -32,6 +30,35 @@ class Menu {
             $btn.addEventListener('click', () => {
                 $menu.classList.toggle(hiddenClass);
             });
+
+            // Add the click event to the menu if it has 'selected' class
+            if ($menu.hasAttribute('data-selected-class')) {
+                const selectedClass = $menu.dataset.selectedClass;
+                const $defaultOption = document.querySelector(
+                    `#${$btn.dataset.menuDefault}`
+                );
+
+                $menu.addEventListener('click', e => {
+                    // Get the clicked option
+                    const $option = e.target;
+
+                    // Check if the option is selected
+                    if ($option.classList.contains(selectedClass)) return;
+
+                    // Get the selected option
+                    const $selOpt = $menu.querySelector(`.${selectedClass}`);
+
+                    // Switch the 'selected' classes
+                    $selOpt.classList.remove(selectedClass);
+                    $option.classList.add(selectedClass);
+
+                    // Change the text in the default option label
+                    $defaultOption.innerText = $option.innerText;
+
+                    // Hide the menu
+                    $menu.classList.add(hiddenClass);
+                });
+            }
         });
 
         // Add a general event when the user clicks outside of a menu
