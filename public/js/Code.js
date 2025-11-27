@@ -29,8 +29,13 @@ class Code {
                 const hiddenClass = $copyIcon.classList[0] + '--hidden';
                 const $checkIcon = $btn.querySelector(`svg.${hiddenClass}`)
 
+                // Get the text inside the container
+                const text = ($codeContainer.tagName == 'TEXTAREA')
+                    ? $codeContainer.value
+                    : $codeContainer.innerText;
+
                 // Copy the code in the clipboard
-                navigator.clipboard.writeText($codeContainer.innerText);
+                navigator.clipboard.writeText(text);
 
                 // Block the click event and show the check icon
                 btnBlockFlags[codeId] = true;
