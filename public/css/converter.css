@@ -9,11 +9,45 @@
         linear-gradient(90deg, var(--secondary) 1px, transparent 1px);
     background-size: 30px 30px;
     background-position: 10px 10px;
+    position: relative;
 }
 
 .main__content {
     max-width: var(--max-width);
     margin-inline: auto;
+}
+
+.main__alert {
+    max-width: 30rem;
+    padding: 0.65rem 0.75rem;
+    border-radius: 10px;
+    position: absolute;
+    top: 1rem;
+    left: 50%;
+    translate: -50% 0;
+    font-size: 1.25rem;
+    font-weight: 500;
+    transition: top 220ms ease-out,
+                translate 220ms ease-out,
+                scale 220ms ease-in,
+                visibility 220ms ease-in;
+}
+
+.main__alert--hidden {
+    top: 0;
+    translate: -50% -100%;
+    scale: 0;
+    visibility: hidden;
+}
+
+.main__alert--error {
+    background-color: var(--error);
+    color: var(--text-error);
+}
+
+.main__alert--warning {
+    background-color: var(--warning);
+    color: var(--text-warning);
 }
 
 /** Converters styles */

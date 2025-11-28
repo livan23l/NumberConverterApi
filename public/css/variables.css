@@ -9,6 +9,10 @@
     --code: #252525;
     --text-code: #d0ffd8;
     --copy: #52EC80;
+    --error: #990303;
+    --text-error: #FFE7E7;
+    --text-warning: #FFEBAB;
+    --warning: #887126;
     --max-width: 48rem;
     --large-screen: 36rem;
     --medium-screen: 22rem;

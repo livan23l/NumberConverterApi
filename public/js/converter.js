@@ -28,6 +28,92 @@ class Converter {
     }
 
     /**
+     * This method sets the events for the conversion alert to show or hide it
+     * with a specific message and type. Internally, it handles the sampling of
+     * multiple alerts, hiding and then showing it again.
+     * 
+     * @private
+     * @returns {void}
+     */
+    #handleAlert() {
+        // Get the alert and define the name of the classes
+        const $alert = document.querySelector('#alert');
+        const alertErrorClass = 'main__alert--error';
+        const alertWarningClass = 'main__alert--warning';
+        const alertHiddenClass = 'main__alert--hidden';
+        let alertVisible = false;
+        let showAlertAgain = false;
+        let lastTimeoutId = null;
+        const lastAttributes = {
+            type: '',
+            message: ''
+        };
+
+        // Define the custom event listener to show the alert
+        $alert.addEventListener('showAlert', e => {
+            lastAttributes.type = e.detail.type;
+            lastAttributes.message = e.detail.message;
+
+            // Check if the alert is visible to hide the alert and show it again
+            if (alertVisible) {
+                showAlertAgain = true;
+                $alert.dispatchEvent(new CustomEvent('hideAlert'));
+                return;
+            }
+
+            // Get the corresponding class
+            const alertClass = (e.detail.type == 'error')
+                ? alertErrorClass
+                : alertWarningClass;
+
+            // Set the class and the message
+            $alert.classList.add(alertClass);
+            $alert.innerText = e.detail.message;
+
+            // Show the alert
+            alertVisible = true;
+            $alert.classList.remove(alertHiddenClass);
+
+            // Set a time out to hide the alert
+            lastTimeoutId = setTimeout(() => {
+                $alert.dispatchEvent(new CustomEvent('hideAlert'));
+            }, 5000);
+        });
+
+        // Define the custom event listener to hide the alert
+        $alert.addEventListener('hideAlert', () => {
+            // Clear the last timeout
+            clearTimeout(lastTimeoutId);
+
+            // Hide the alert
+            alertVisible = false;
+            $alert.classList.add(alertHiddenClass);
+        });
+
+        // Define the custom event to show the alert after it has been hidden
+        $alert.addEventListener('transitionend', e => {
+            // Check the transition end when it's the 'top' property (the end)
+            if (e.propertyName != 'top') return;
+
+            // Check if the transition is the 'show' transition
+            if (alertVisible) return;
+
+            // Remove the danger and warning classes
+            $alert.classList.remove(alertErrorClass);
+            $alert.classList.remove(alertWarningClass);
+
+            // Check if the alert is not specified to be shown
+            if (!showAlertAgain) return;
+
+            // Dispatch the event to show the alert
+            showAlertAgain = false;
+            $alert.dispatchEvent(new CustomEvent('showAlert', {
+                detail: lastAttributes
+            }));
+        });
+    }
+
+    /**
      * Performs the conversion depending on the internal request and show the
      * warnings and errors.
      * 
@@ -38,18 +124,51 @@ class Converter {
         // Get the DOM elements
         const $convertBtn = document.querySelector('#converter-button');
         const $toTextarea = document.querySelector('#to-textarea');
+        const $alert = document.querySelector('#alert');
 
         $convertBtn.addEventListener('click', () => {
             this.#makeRequest()
-                .then((response) => {
+                .then(response => {
+                    console.log(response);
+
+                    // Check if the response has errors
+                    if (response.errors != undefined) {
+                        const firstError = Object.keys(response.errors)[0];
+                        $alert.dispatchEvent(new CustomEvent('showAlert', {
+                            detail: {
+                                type: 'error',
+                                message: response.errors[firstError]
+                            }
+                        }));
+                        return;
+                    }
+
+                    // Check if the response has warnings
+                    if (response.warnings) {
+                        const firstWarning = Object.keys(response.warnings)[0];
+                        $alert.dispatchEvent(new CustomEvent('showAlert', {
+                            detail: {
+                                type: 'warning',
+                                message: response.warnings[firstWarning]
+                            }
+                        }));
+                    } else $alert.dispatchEvent(new CustomEvent('hideAlert'));
+
+                    // Update the data if is valid
                     const data = response.data;
                     const badData = ['NTL', 'NaN'];
-
-                    console.log(response);
                     if (typeof data == 'string' && !badData.includes(data)) {
                         this.#request.to.value = data;
                         $toTextarea.value = data;
                     }
+                })
+                .catch(() => {
+                    $alert.dispatchEvent(new CustomEvent('showAlert', {
+                        detail: {
+                            type: 'error',
+                            message: 'Internal error, please try again later.'
+                        }
+                    }));
                 });
         });
     }
@@ -302,6 +421,9 @@ class Converter {
         $fromTextarea.addEventListener('change', e => {
             const newValue = e.target.value;
             this.#request.from.value = newValue;
+
+            // Clear the 'to' textarea after each change
+            $toTextarea.value = '';
         });
     }
 
@@ -323,7 +445,7 @@ class Converter {
                 type: 'decimal',
                 format: {
                     lang: currentLang,
-                    separation: null,
+                    separation: 'none',
                     extraCharacters: null
                 }
             },
@@ -332,9 +454,9 @@ class Converter {
                 type: 'binary',
                 format: {
                     lang: currentLang,
-                    separation: null,
+                    separation: 'none',
                     extraCharacters: null,
-                    preserveZeros: null
+                    preserveZeros: 'none'
                 }
             }
         };
@@ -344,6 +466,7 @@ class Converter {
         this.#handleSwitch();
         this.#handleChangeEvents();
         this.#handleConversion();
+        this.#handleAlert()
     }
 }
 
