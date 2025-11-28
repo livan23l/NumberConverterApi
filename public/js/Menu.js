@@ -37,8 +37,12 @@ class Menu {
 
             // Toggle the visivility of the menu when the button is clicked
             $btn.addEventListener('click', () => {
+                const action = $menu.classList.contains(hiddenClass)
+                    ? 'open'
+                    : 'hidde';
                 closeMenus();
-                $menu.classList.toggle(hiddenClass);
+                if (action == 'open') $menu.classList.remove(hiddenClass);
+                else $menu.classList.add(hiddenClass);
             });
 
             // Add the click event to the menu if it has 'selected' class
