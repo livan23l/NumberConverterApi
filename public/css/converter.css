@@ -52,7 +52,7 @@
 
 .main__modal {
     max-height: 90vh;
-    width: 16rem;
+    width: 12rem;
     padding: 0.5rem 1rem 0.75rem;
     background-color: var(--secondary);
     border: 1px solid var(--text-secondary);
@@ -84,7 +84,7 @@
 
 .modal__icon {
     aspect-ratio: 1;
-    width: 1.85rem;
+    width: 1.45rem;
     color: var(--text-secondary);
 }
 
@@ -92,7 +92,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 2rem;
+    gap: 1.45rem;
 }
 
 .modal__item--hidden {
@@ -100,7 +100,7 @@
 }
 
 .modal__title {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 650;
 }
 
@@ -122,12 +122,12 @@
 }
 
 .modal__subtitle {
-    font-size: 1.33rem;
+    font-size: 1.1rem;
     font-weight: normal;
 }
 
 .modal__text {
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-style: italic;
 }
 
@@ -156,7 +156,7 @@
     border: 1px solid var(--text-primary);
     border-radius: 5px;
     text-align: center;
-    font-size: 1.25rem;
+    font-size: 1.05rem;
     color: var(--text-primary);
 }
 
@@ -291,7 +291,10 @@
     z-index: 20;
     top: 115%;
     left: 0;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
+    font-size: inherit;
 }
 
 .select__menu--right {
@@ -308,7 +311,11 @@
 .select__option {
     padding: 0.35rem 0.5rem;
     background-color: var(--accent);
+    border-style: none;
     cursor: pointer;
+    font-size: inherit;
+    font-weight: normal;
+    text-align: start;
 }
 
 .select__option--selected {
@@ -404,6 +411,36 @@
 
 /** Styles for medium screens */
 @media (min-width: 22rem) {
+    /** Main */
+    .main__modal {
+        width: 16rem;
+    }
+
+    .modal__icon {
+        width: 1.85rem;
+    }
+
+    .modal__item {
+        gap: 2rem;
+    }
+
+    .modal__title {
+        font-size: 1.5rem;
+    }
+
+    .modal__subtitle {
+        font-size: 1.33rem;
+    }
+
+    .modal__text {
+        font-size: 1.25rem;
+    }
+
+    .modal__character {
+        font-size: 1.25rem;
+    }
+
+    /** Converter */
     .converter__title {
         font-size: 1.65rem;
     }
@@ -460,10 +497,12 @@
 
 /** Styles for large screens */
 @media (min-width: 36rem) {
+    /** Main */
     .converter__main {
         flex-direction: row;
     }
 
+    /** Converter */
     .converter__textarea {
         font-size: 1.2rem;
     }
