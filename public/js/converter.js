@@ -2,32 +2,6 @@ class Converter {
     #request;
 
     /**
-     * Make the HTTP petition to the API with the current internal request.
-     * 
-     * @returns {Promise} The promise of the API response
-     */
-    #makeRequest() {
-        // const url = 'https://www.numberconverterapi.kodexiv.com/api/converter';
-        const url = 'http://localhost:3300/api/converter';
-
-        return new Promise((resolve, reject) => {
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(this.#request)
-            })
-                .then(response => response.json())
-                .then(res => {
-                    resolve(res);
-                }).catch(err => {
-                    reject(new Error(err.message));
-                });
-        });
-    }
-
-    /**
      * This method sets the events for the conversion alert to show or hide it
      * with a specific message and type. Internally, it handles the sampling of
      * multiple alerts, hiding and then showing it again.
@@ -114,6 +88,32 @@ class Converter {
     }
 
     /**
+     * Make the HTTP petition to the API with the current internal request.
+     * 
+     * @returns {Promise} The promise of the API response
+     */
+    #makeRequest() {
+        // const url = 'https://www.numberconverterapi.kodexiv.com/api/converter';
+        const url = 'http://localhost:3300/api/converter';
+
+        return new Promise((resolve, reject) => {
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(this.#request)
+            })
+                .then(response => response.json())
+                .then(res => {
+                    resolve(res);
+                }).catch(err => {
+                    reject(new Error(err.message));
+                });
+        });
+    }
+
+    /**
      * Performs the conversion depending on the internal request and show the
      * warnings and errors.
      * 
@@ -170,6 +170,135 @@ class Converter {
                         }
                     }));
                 });
+        });
+    }
+
+    #handleConfiguration() {
+        // Get the DOM elements
+        const configButtons = {
+            from: document.querySelector('#from-settings-button'),
+            to: document.querySelector('#to-settings-button'),
+            close: document.querySelector('#modal-close'),
+            backdrop: document.querySelector('#modal-backdrop')
+        };
+        const $modal = document.querySelector('#modal');
+        const $modalBackdrop = configButtons.backdrop;
+        const modEl = {
+            fromItem: document.querySelector('#from-settings'),
+            fromOpt: {
+                empty: document.querySelector('#from-empty-configurations'),
+                sep: document.querySelector('#from-separation-option'),
+                ord62: document.querySelector('#from-order62-option'),
+                ord64: document.querySelector('#from-order64-option'),
+                extra: document.querySelector('#from-extra-option')
+            },
+            toItem: document.querySelector('#to-settings'),
+            toOpt: {
+                empty: document.querySelector('#to-empty-configurations'),
+                sep: document.querySelector('#to-separation-option'),
+                ord62: document.querySelector('#to-order62-option'),
+                ord64: document.querySelector('#to-order64-option'),
+                extra: document.querySelector('#to-extra-option'),
+                presZer: document.querySelector('#to-preserve-option')
+            }
+        };
+
+        // Functions to handle the opening and closing of the modal
+        const itemClass = 'modal__item--hidden';
+        const optClass = 'modal__option--hidden';
+
+        /**
+         * Handles the opening of the settings. This method shows the
+         * corresponding options depending on the request type.
+         * 
+         * @param {"from"|"to"} type - The type of settings to show.
+         * @returns {void}
+         */
+        const handleOpening = type => {
+            // Show the current item
+            modEl[`${type}Item`].classList.remove(itemClass);
+
+            // Show the corresponding options
+            //--If request type is text only show the empty option
+            if (this.#request[type].type == 'text') {
+                modEl[`${type}Opt`].empty.classList.remove(optClass);
+                return;
+            }
+
+            //--Show the separation
+            modEl[`${type}Opt`].sep.classList.remove(optClass);
+
+            //--If type is 'to' show the preserve zeros
+            if (type == 'to') {
+                modEl[`${type}Opt`].presZer.classList.remove(optClass);
+            }
+
+            //--If request type is base 62 show the order option
+            if (this.#request[type].type == 'base62') {
+                modEl[`${type}Opt`].ord62.classList.remove(optClass);
+                return;
+            }
+
+            //--If request type is base 64 show the order and extra options
+            if (this.#request[type].type == 'base64') {
+                modEl[`${type}Opt`].ord64.classList.remove(optClass);
+                modEl[`${type}Opt`].extra.classList.remove(optClass);
+                return;
+            }
+        };
+
+        /**
+         * Handles the closing of the modal. This method hides all the options
+         * and items in the modal.
+         * 
+         * @return {void}
+         */
+        const handleClosing = () => {
+            // Hide the items
+            modEl.fromItem.classList.add(itemClass);
+            modEl.toItem.classList.add(itemClass);
+
+            // Hide all the options
+            Object.keys(modEl.fromOpt).forEach(key => {
+                const $opt = modEl.fromOpt[key];
+                $opt.classList.add(optClass);
+            });
+            Object.keys(modEl.toOpt).forEach(key => {
+                const $opt = modEl.toOpt[key];
+                $opt.classList.add(optClass);
+            });
+        }
+
+        // Add the 'open' and 'close' events for all the buttons
+        const modalClass = 'main__modal--hidden';
+        const backClass = 'main__backdrop--hidden';
+        Object.keys(configButtons).forEach(key => {
+            const type = (key == 'from')
+                ? 'from'
+                : (
+                    (key == 'to')
+                    ? 'to'
+                    : 'close'
+            );
+            const $btn = configButtons[key];
+
+            $btn.addEventListener('click', () => {
+                // Check if the modal is opening
+                if ($modal.classList.contains(modalClass)) handleOpening(type);
+
+                // Show or hide
+                $modal.classList.toggle(modalClass);
+                $modalBackdrop.classList.toggle(backClass);
+            });
+        });
+
+        // Handle the closing after the modal transition
+        $modal.addEventListener('transitionend', e => {
+            // Check if the property is the last one
+            if (e.propertyName != 'scale') return;
+
+            // Check if the modal is closed to handle the closing
+            if ($modalBackdrop.classList.contains(backClass)) handleClosing();
         });
     }
 
@@ -446,6 +575,7 @@ class Converter {
                 format: {
                     lang: currentLang,
                     separation: 'none',
+                    order: null,
                     extraCharacters: null
                 }
             },
@@ -455,8 +585,9 @@ class Converter {
                 format: {
                     lang: currentLang,
                     separation: 'none',
-                    extraCharacters: null,
-                    preserveZeros: 'none'
+                    preserveZeros: 'none',
+                    order: null,
+                    extraCharacters: null
                 }
             }
         };
@@ -465,8 +596,9 @@ class Converter {
         this.#handleWritting();
         this.#handleSwitch();
         this.#handleChangeEvents();
+        this.#handleConfiguration();
         this.#handleConversion();
-        this.#handleAlert()
+        this.#handleAlert();
     }
 }
 

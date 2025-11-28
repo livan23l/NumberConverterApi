@@ -50,6 +50,132 @@
     color: var(--text-warning);
 }
 
+.main__modal {
+    max-height: 90vh;
+    width: 16rem;
+    padding: 0.5rem 1rem 0.75rem;
+    background-color: var(--secondary);
+    border: 1px solid var(--text-secondary);
+    border-radius: 10px;
+    position: fixed;
+    z-index: 50;
+    top: 15%;
+    left: 50%;
+    translate: -50% -15%;
+    color: var(--text-secondary);
+    overflow-y: auto;
+    transition: top 200ms ease-in, scale 220ms ease-out, visibility 220ms ease-out;
+}
+
+.main__modal--hidden {
+    top: -20%;
+    scale: 0;
+    visibility: hidden;
+}
+
+.modal__close {
+    background-color: transparent;
+    border-style: none;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    display: flex;
+}
+
+.modal__icon {
+    aspect-ratio: 1;
+    width: 1.85rem;
+    color: var(--text-secondary);
+}
+
+.modal__item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2rem;
+}
+
+.modal__item--hidden {
+    display: none;
+}
+
+.modal__title {
+    font-size: 1.5rem;
+    font-weight: 650;
+}
+
+.modal__content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.modal__option {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.modal__option--hidden {
+    display: none;
+}
+
+.modal__subtitle {
+    font-size: 1.33rem;
+    font-weight: normal;
+}
+
+.modal__text {
+    font-size: 1.25rem;
+    font-style: italic;
+}
+
+.modal__set {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.modal__set--vertical {
+    width: fit-content;
+    flex-direction: column;
+    gap: 0;
+}
+
+.modal__separator {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-accent);
+}
+
+.modal__character {
+    width: 1.5rem;
+    padding: 0.1rem 0.25rem;
+    background-color: var(--primary);
+    border: 1px solid var(--text-primary);
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1.25rem;
+    color: var(--text-primary);
+}
+
+.modal__character:focus {
+    outline-style: none;
+}
+
+.main__backdrop {
+    position: fixed;
+    z-index: 49;
+    inset: 0;
+    background-color: #000000D0;
+    cursor: alias;
+}
+
+.main__backdrop--hidden {
+    display: none;
+}
+
 /** Converters styles */
 .converter {
     width: 100%;
@@ -84,7 +210,6 @@
     background-color: var(--primary);
     box-shadow: var(--shadow);
     position: relative;
-    top: 2px;
     font-size: 1.35rem;
     font-weight: 650;
 }
@@ -167,6 +292,12 @@
     top: 115%;
     left: 0;
     overflow: hidden;
+}
+
+.select__menu--right {
+    top: auto;
+    left: 103%;
+    bottom: 0;
 }
 
 .select__menu--hidden {
