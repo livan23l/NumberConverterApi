@@ -13,6 +13,17 @@ class Menu {
         const $menuBtns = document.querySelectorAll('[data-menu]');
         const menus = [];
 
+        /**
+         * Close all the menus in the page.
+         * 
+         * @returns {void}
+         */
+        const closeMenus = () => {
+            menus.forEach(([$menu, hiddenClass]) => {
+                $menu.classList.add(hiddenClass);
+            });
+        };
+
         // Add the events for all the menu buttons
         $menuBtns.forEach($btn => {
             // Get the corresponding menu
@@ -26,6 +37,7 @@ class Menu {
 
             // Toggle the visivility of the menu when the button is clicked
             $btn.addEventListener('click', () => {
+                closeMenus();
                 $menu.classList.toggle(hiddenClass);
             });
 
@@ -82,9 +94,7 @@ class Menu {
             if (menus.some(([$menu]) => $menu.contains(target))) return;
 
             // Close all the menus
-            menus.forEach(([$menu, hiddenClass]) => {
-                $menu.classList.add(hiddenClass);
-            });
+            closeMenus();
         });
     }
 
