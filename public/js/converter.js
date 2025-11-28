@@ -173,6 +173,13 @@ class Converter {
         });
     }
 
+    /**
+     * Shows or hides the corresponding settings modal depending on the user
+     * action.
+     * 
+     * @private
+     * @returns {void}
+     */
     #handleConfiguration() {
         // Get the DOM elements
         const configButtons = {
@@ -319,66 +326,101 @@ class Converter {
         const $toTextarea = document.querySelector('#to-textarea');
 
         /**
-         * Handles the change event for the types in the 'from' and the 'to'
-         * lists.
+         * Handles all the change events for the types, languages, separations,
+         * orders, and zero preservations in the 'from' and the 'to' types.
          * 
          * @param {Event} e - The custom event.
+         * @param {"type"|"lang"|"separation"|"order"|"preserve"} eventType - 
+         * The corresponding type of event that will be handled.
          * @param {"from"|"to"} type - The type to which the event belongs.
          * @returns {void}
          */
-        const handleTypeChange = (e, type) => {
+        const handleChange = (e, eventType, type) => {
             const value = e.detail.value;
 
-            // Get the corresponding language dropdown
-            const langId = `#${type}-languages-dropdown`
-            const langHiddenClass = 'element__select--hidden';
-            const $langs = document.querySelector(langId);
-
-            // Show or hide the language menu based on the value
-            if (value == 'text') $langs.classList.remove(langHiddenClass);
-            else $langs.classList.add(langHiddenClass);
-
-            // Change the type in the request
-            this.#request[type].type = value;
-
             // Clean the textearea of the 'to' part
             $toTextarea.value = '';
+
+            // Make the corresponding actions based on the event type
+            switch(eventType) {
+                case 'type':
+                    this.#request[type].type = value;
+
+                    // Get the corresponding language dropdown
+                    const langId = `#${type}-languages-dropdown`
+                    const langClass = 'element__select--hidden';
+                    const $langs = document.querySelector(langId);
+
+                    // Show or hide the language menu based on the value
+                    if (value == 'text') $langs.classList.remove(langClass);
+                    else $langs.classList.add(langClass);
+
+                    break;
+                case 'lang':
+                    this.#request[type].format.lang = value;
+                    break;
+                case 'separation':
+                    this.#request[type].format.separation = value;
+                    break;
+                case 'order':
+                    // Set the default order depending on the type
+                    const defOrd = (this.#request[type].type == 'base62')
+                        ? 'num-upper-lower'  // Base 62
+                        : 'upper-lower-int-extra';  // Base 64
+
+                    // Get the separated current order
+                    const curOrd = this.#request[type].format.order ?? defOrd;
+                    const sepOrd = curOrd.split('-');
+
+                    // Change the corresponding order
+                    const idx = Number(value[0]) - 1;
+                    sepOrd[idx] = value.replace(`${value[0]}-`, '');
+
+                    // Update the order
+                    this.#request[type].format.order = sepOrd.join('-');
+                    break;
+                case 'preserve':
+                    this.#request[type].format.preserveZeros = value;
+                    break;
+            }
         };
-
-        /**
-         * Handles the change event for the languages in the 'from' and the 'to'
-         * lists.
-         * 
-         * @param {Event} e - The custom event.
-         * @param {"from"|"to"} type - The type to which the event belongs.
-         * @returns {void}
-         */
-        const handleLangChange = (e, type) => {
-            const language = e.detail.value;
-
-            // Change the language in the request
-            this.#request[type].format.lang = language;
-
-            // Clean the textearea of the 'to' part
-            $toTextarea.value = '';
-        }
 
         // Add the event listeners
         //--Types
         document.addEventListener('changeFromType', e => {
-            handleTypeChange(e, 'from')
+            handleChange(e, 'type', 'from')
         });
         document.addEventListener('changeToType', e => {
-            handleTypeChange(e, 'to')
+            handleChange(e, 'type', 'to')
         });
 
         //--Languages
         document.addEventListener('changeFromLanguage', e => {
-            handleLangChange(e, 'from')
+            handleChange(e, 'lang', 'from')
+        });
+        document.addEventListener('changeToLanguage', e => {
+            handleChange(e, 'lang', 'to')
         });
 
-        document.addEventListener('changeToLanguage', e => {
-            handleLangChange(e, 'to')
+        //--Separations
+        document.addEventListener('changeFromSeparation', e => {
+            handleChange(e, 'separation', 'from')
+        });
+        document.addEventListener('changeToSeparation', e => {
+            handleChange(e, 'separation', 'to')
+        });
+
+        //--Orders
+        document.addEventListener('changeFromOrder', e => {
+            handleChange(e, 'order', 'from')
+        });
+        document.addEventListener('changeToOrder', e => {
+            handleChange(e, 'order', 'to')
+        });
+
+        //--Preserve zeros
+        document.addEventListener('changeToPreserve', e => {
+            handleChange(e, 'preserve', 'to')
         });
     }
 
@@ -406,6 +448,38 @@ class Converter {
                     document.querySelector('#from-languages-default'),
                     document.querySelector('#from-languages')
                 ],
+                [
+                    document.querySelector('#from-separation-default'),
+                    document.querySelector('#from-separation')
+                ],
+                [
+                    document.querySelector('#from-base62-order1-default'),
+                    document.querySelector('#from-base62-order1')
+                ],
+                [
+                    document.querySelector('#from-base62-order2-default'),
+                    document.querySelector('#from-base62-order2')
+                ],
+                [
+                    document.querySelector('#from-base62-order3-default'),
+                    document.querySelector('#from-base62-order3')
+                ],
+                [
+                    document.querySelector('#from-base64-order1-default'),
+                    document.querySelector('#from-base64-order1')
+                ],
+                [
+                    document.querySelector('#from-base64-order2-default'),
+                    document.querySelector('#from-base64-order2')
+                ],
+                [
+                    document.querySelector('#from-base64-order3-default'),
+                    document.querySelector('#from-base64-order3')
+                ],
+                [
+                    document.querySelector('#from-base64-order4-default'),
+                    document.querySelector('#from-base64-order4')
+                ],
             ],
         }
         const toElements = {
@@ -418,6 +492,38 @@ class Converter {
                 [
                     document.querySelector('#to-languages-default'),
                     document.querySelector('#to-languages')
+                ],
+                [
+                    document.querySelector('#to-separation-default'),
+                    document.querySelector('#to-separation')
+                ],
+                [
+                    document.querySelector('#to-base62-order1-default'),
+                    document.querySelector('#to-base62-order1')
+                ],
+                [
+                    document.querySelector('#to-base62-order2-default'),
+                    document.querySelector('#to-base62-order2')
+                ],
+                [
+                    document.querySelector('#to-base62-order3-default'),
+                    document.querySelector('#to-base62-order3')
+                ],
+                [
+                    document.querySelector('#to-base64-order1-default'),
+                    document.querySelector('#to-base64-order1')
+                ],
+                [
+                    document.querySelector('#to-base64-order2-default'),
+                    document.querySelector('#to-base64-order2')
+                ],
+                [
+                    document.querySelector('#to-base64-order3-default'),
+                    document.querySelector('#to-base64-order3')
+                ],
+                [
+                    document.querySelector('#to-base64-order4-default'),
+                    document.querySelector('#to-base64-order4')
                 ],
             ],
         }
