@@ -47,11 +47,15 @@ class Menu {
 
             // Add the click event to the menu if it has 'selected' class
             if ($menu.hasAttribute('data-selected-class')) {
+                // Get the classes and attributes
                 const selectedClass = $menu.dataset.selectedClass;
+                const optionClass = selectedClass.replace(/--selected$/, '');
+                const changeEvent = $menu.dataset.changeEvent;
+
+                // Get the current default option
                 const $defaultOption = document.querySelector(
                     `#${$btn.dataset.menuDefault}`
                 );
-                const changeEvent = $menu.dataset.changeEvent;
 
                 $menu.addEventListener('click', e => {
                     // Get the clicked option
@@ -59,6 +63,9 @@ class Menu {
 
                     // Check if the option is selected
                     if ($option.classList.contains(selectedClass)) return;
+
+                    // Check the clicked element is an option
+                    if (!$option.classList.contains(optionClass)) return;
 
                     // Get the selected option
                     const $selOpt = $menu.querySelector(`.${selectedClass}`);
