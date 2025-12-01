@@ -32,8 +32,8 @@ class Converter {
                 NTL: 'The number is too long. The maximum supported scale is ' +
                      'vigintillion.',
                 int: 'Internal error, please try again later.',
-                unk: 'An unknown error has occurred. Please try refreshing ' +
-                     'the page or try again in a few minutes.',
+                unk: 'An unknown error has occurred. Refresh the page or try ' +
+                     'again in a few minutes.',
             },
             es: {
                 emp: 'No se ha enviado ningún valor.',
@@ -54,8 +54,8 @@ class Converter {
                 NTL: 'El número es demasiado largo. La escala máxima ' +
                      'admitida es vigintillón.',
                 int: 'Error interno, inténtelo de nuevo más tarde.',
-                unk: 'Ha sucedido un error desconocido. Intenta recargar ' +
-                     'la página o inténtalo en unos minutos.',
+                unk: 'Ha sucedido un error desconocido. Recarga la página ' +
+                     'o inténtalo en unos minutos.',
             }
         };
         const curMessages = messages[this.#lang];
