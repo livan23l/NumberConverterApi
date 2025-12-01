@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Convertidor web - convertidor en línea</title>
+  <base href="http://localhost:3300">
+  <meta name="description" content="Esta página proporciona una API para realizar conversiones de números en diferentes bases, así como de números a texto (número escrito). La documentación está disponible en inglés y español.">
+  <meta name="keywords" content="api, base62, convertidor-numérico, conversión-texto, conversión-octal, convertidor-base64, conversión-binaria, conversión-hexadecimal">
+  <link rel="shortcut icon" href="../../img/favicon.webp">
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/converter.css">
+  <script type="module" src="../../js/app.js"></script>
+  <script src="../../js/Converter.js" defer></script>
+</head>
+
+<body>
+  <header class="header">
+    <div class="header__content">
+      <a class="header__anchor header__anchor--nohover" href="/es/converter">
+        <h1 class="header__title">Convertidor web</h1>
+      </a>
+
+      <div class="header__submenu">
+        <!-- Documentation -->
+        <a class="header__anchor" href="/es/documentation">
+          <span class="header__label">Documentación</span>
+          <svg class="header__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
+            <path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
+            <path d="M3 6l0 13" />
+            <path d="M12 6l0 13" />
+            <path d="M21 6l0 13" />
+          </svg>
+        </a>
+
+        <!-- Languages -->
+        <div class="header__list">
+          <button data-menu="languages-menu" class="header__default">
+            <span class="header__label">Español</span>
+            <svg class="header__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+              <path d="M4 5h7" />
+              <path d="M7 4c0 4.846 0 7 .5 8" />
+              <path d="M10 8.5c0 2.286 -2 4.5 -3.5 4.5s-2.5 -1.135 -2.5 -2c0 -2 1 -3 3 -3s5 .57 5 2.857c0 1.524 -.667 2.571 -2 3.143" />
+              <path d="M12 20l4 -9l4 9" />
+              <path d="M19.1 18h-6.2" />
+            </svg>
+          </button>
+
+          <div id="languages-menu" class="header__languages header__languages--hidden" data-hidden-class="header__languages--hidden">
+            <a href="/es/" class="header__language header__language--selected">Español</a>
+            <a href="/en/" class="header__language">English</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="main__content">
+      <!-- Converter section -->
+      <section class="converter">
+        <div class="converter__main">
+          <!-- From -->
+          <div class="converter__item">
+            <h2 class="converter__title">Desde</h2>
+
+            <div class="converter__element">
+              <div class="element__options">
+                <div class="element__dropdowns">
+                  <!-- Copy button -->
+                  <button class="converter__copy" data-code-copy="from-textarea">
+                    <svg class="copy__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                      <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                      <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+                    </svg>
+                    <svg class="copy__icon copy__icon--hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                      <path d="M5 12l5 5l10 -10" />
+                    </svg>
+                  </button>
+
+                  <!-- Languages -->
+                  <div id="from-languages-dropdown" class="element__select element__select--hidden" data-hidden-class="element__select--hidden" style="order: 2;">
+                    <button id="from-languages-default" class="select__default" data-menu="from-languages" data-menu-default="from-languages-default">Español</button>
+
+                    <div id="from-languages" class="select__menu select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeFromLanguage">
+                      <button id="from-es" class="select__option select__option--selected" data-change-value="es">Español</button>
+                      <button id="from-en" class="select__option" data-change-value="en">Inglés</button>
+                    </div>
+                  </div>
+
+                  <!-- Bases -->
+                  <div class="element__select" data-hidden-class="element__select--hidden" style="order: 1;">
+                    <button id="from-options-default" class="select__default" data-menu="from-options" data-menu-default="from-options-default">Decimal</button>
+
+                    <div id="from-options" class="select__menu select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeFromType">
+                      <button id="from-binary" class="select__option" data-change-value="binary">Binario</button>
+                      <button id="from-octal" class="select__option" data-change-value="octal">Octal</button>
+                      <button id="from-decimal" class="select__option select__option--selected" data-change-value="decimal">Decimal</button>
+                      <button id="from-hexadecimal" class="select__option" data-change-value="hexadecimal">Hexadecimal</button>
+                      <button id="from-base62" class="select__option" data-change-value="base62">Base 62</button>
+                      <button id="from-base64" class="select__option" data-change-value="base64">Base 64</button>
+                      <button id="from-text" class="select__option" data-change-value="text">Texto</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Settings -->
+                <button id="from-settings-button" class="element__settings">
+                  <svg class="settings__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+                    <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                  </svg>
+                </button>
+              </div>
+
+              <textarea id="from-textarea" class="converter__textarea"></textarea>
+            </div>
+          </div>
+
+          <button id="converter-switch" class="converter__change">
+            <svg class="change__icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+            </svg>
+          </button>
+
+          <!-- To -->
+          <div class="converter__item">
+            <h2 class="converter__title">Hacia</h2>
+
+            <div class="converter__element">
+              <div class="element__options">
+                <div class="element__dropdowns">
+                  <!-- Copy button -->
+                  <button class="converter__copy" data-code-copy="to-textarea">
+                    <svg class="copy__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                      <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                      <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+                    </svg>
+                    <svg class="copy__icon copy__icon--hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                      <path d="M5 12l5 5l10 -10" />
+                    </svg>
+                  </button>
+
+                  <!-- Languages -->
+                  <div id="to-languages-dropdown" class="element__select element__select--hidden" data-hidden-class="element__select--hidden" style="order: 2;">
+                    <button id="to-languages-default" class="select__default" data-menu="to-languages" data-menu-default="to-languages-default">Español</button>
+
+                    <div id="to-languages" class="select__menu select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeToLanguage">
+                      <button id="to-es" class="select__option select__option--selected" data-change-value="es">Español</button>
+                      <button id="to-en" class="select__option" data-change-value="en">Inglés</button>
+                    </div>
+                  </div>
+
+                  <!-- Bases -->
+                  <div class="element__select" data-hidden-class="element__select--hidden" style="order: 1;">
+                    <button id="to-options-default" class="select__default" data-menu="to-options" data-menu-default="to-options-default">Binario</button>
+
+                    <div id="to-options" class="select__menu select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeToType">
+                      <button id="to-binary" class="select__option select__option--selected" data-change-value="binary">Binario</button>
+                      <button id="to-octal" class="select__option" data-change-value="octal">Octal</button>
+                      <button id="to-decimal" class="select__option" data-change-value="decimal">Decimal</button>
+                      <button id="to-hexadecimal" class="select__option" data-change-value="hexadecimal">Hexadecimal</button>
+                      <button id="to-base62" class="select__option" data-change-value="base62">Base 62</button>
+                      <button id="to-base64" class="select__option" data-change-value="base64">Base 64</button>
+                      <button id="to-text" class="select__option" data-change-value="text">Texto</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Settings -->
+                <button id="to-settings-button" class="element__settings">
+                  <svg class="settings__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+                    <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                  </svg>
+                </button>
+              </div>
+
+              <textarea id="to-textarea" class="converter__textarea" disabled></textarea>
+            </div>
+          </div>
+        </div>
+
+        <button id="converter-button" class="converter__request">Convertir</button>
+      </section>
+
+      <!-- API request section -->
+      <section class="request">
+        <h2 class="request__title">Solicitud en tiempo real</h2>
+
+        <div class="request__code">
+            <button class="code__copy" data-code-copy="code-request">
+              <svg class="code__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+              </svg>
+              <svg class="code__icon code__icon--hidden" style="color: var(--copy);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M5 12l5 5l10 -10" />
+              </svg>
+            </button>
+<pre id="code-request" class="code__json">
+{
+  "from": {
+    "value": "",
+    "type": "decimal",
+    "format": {
+      "separation": "none"
+    }
+  },
+  "to": {
+    "type": "binary",
+    "format": {
+      "separation": "none",
+      "preserveZeros": "none"
+    }
+  }
+}</pre>
+        </div>
+      </section>
+
+      <!-- Modals and alerts -->
+      <div id="alert" class="main__alert main__alert--hidden"></div>
+      <div id="modal" class="main__modal main__modal--hidden">
+        <!-- Close button -->
+        <button id="modal-close" class="modal__close">
+          <svg class="modal__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M12 2c5.523 0 10 4.477 10 10s-4.477 10 -10 10s-10 -4.477 -10 -10s4.477 -10 10 -10m3.6 5.2a1 1 0 0 0 -1.4 .2l-2.2 2.933l-2.2 -2.933a1 1 0 1 0 -1.6 1.2l2.55 3.4l-2.55 3.4a1 1 0 1 0 1.6 1.2l2.2 -2.933l2.2 2.933a1 1 0 0 0 1.6 -1.2l-2.55 -3.4l2.55 -3.4a1 1 0 0 0 -.2 -1.4" />
+          </svg>
+        </button>
+
+        <!-- From settings -->
+        <div id="from-settings" class="modal__item modal__item--hidden">
+          <h3 class="modal__title">Configuraciones 'desde'</h3>
+
+          <div class="modal__content">
+            <!-- Emtpy configurations-->
+            <div id="from-empty-configurations" class="modal__option modal__option--hidden">
+              <p class="modal__text">No hay configuraciones disponibles. Cambia el tipo de datos para desbloquear nuevas configuraciones.</p>
+            </div>
+
+            <!-- Separation -->
+            <div id="from-separation-option" class="modal__option modal__option--hidden">
+              <h4 class="modal__subtitle">Separación</h4>
+              <div id="from-separation-dropdown" class="element__select" data-hidden-class="element__select--hidden">
+                <button id="from-separation-default" class="select__default" data-menu="from-separation" data-menu-default="from-separation-default">Ninguna</button>
+
+                <div id="from-separation" class="select__menu select__menu--right select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeFromSeparation">
+                  <button id="from-separation-none" class="select__option select__option--selected" data-change-value="none">Ninguna</button>
+                  <button id="from-comma" class="select__option" data-change-value="comma">Coma</button>
+                  <button id="from-period" class="select__option" data-change-value="period">Punto</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Base 62 order -->
+            <div id="from-order62-option" class="modal__option modal__option--hidden">
+              <h4 class="modal__subtitle">Orden</h4>
+
+              <div class="modal__set modal__set--vertical">
+                <!-- First order -->
+                <div id="from-base62-order1-dropdown" class="element__select" data-hidden-class="element__select--hidden">
+                  <button id="from-base62-order1-default" class="select__default" data-menu="from-base62-order1" data-menu-default="from-base62-order1-default">Número</button>
+                  <div id="from-base62-order1" class="select__menu select__menu--right select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeFromOrder">
+                    <button id="from-base62-order1-none" class="select__option select__option--selected" data-change-value="1-num">Número</button>
+                    <button id="from-base62-order1-upper" class="select__option" data-change-value="1-upper">Mayúscula</button>
+                    <button id="from-base62-order1-lower" class="select__option" data-change-value="1-lower">Minúscula</button>
+                  </div>
+                </div>
+                <p class="modal__separator">-</p>
+                <!-- Second order -->
+                <div id="from-base62-order2-dropdown" class="element__select" data-hidden-class="element__select--hidden">
+                  <button id="from-base62-order2-default" class="select__default" data-menu="from-base62-order2" data-menu-default="from-base62-order2-default">Mayúscula</button>
+                  <div id="from-base62-order2" class="select__menu select__menu--right select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeFromOrder">
+                    <button id="from-base62-order2-none" class="select__option" data-change-value="2-num">Número</button>
+                    <button id="from-base62-order2-upper" class="select__option select__option--selected" data-change-value="2-upper">Mayúscula</button>
+                    <button id="from-base62-order2-lower" class="select__option" data-change-value="2-lower">Minúscula</button>
+                  </div>
+                </div>
+                <p class="modal__separator">-</p>
+                <!-- Third order -->
+                <div id="from-base62-order3-dropdown" class="element__select" data-hidden-class="element__select--hidden">
+                  <button id="from-base62-order3-default" class="select__default" data-menu="from-base62-order3" data-menu-default="from-base62-order3-default">Minúscula</button>
+                  <div id="from-base62-order3" class="select__menu select__menu--right select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeFromOrder">
+                    <button id="from-base62-order3-none" class="select__option" data-change-value="3-num">Número</button>
+                    <button id="from-base62-order3-upper" class="select__option" data-change-value="3-upper">Mayúscula</button>
+                    <button id="from-base62-order3-lower" class="select__option select__option--selected" data-change-value="3-lower">Minúscula</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Base 64 order -->
+            <div id="from-order64-option" class="modal__option modal__option--hidden">
+              <h4 class="modal__subtitle">Orden</h4>
+
+              <div class="modal__set modal__set--vertical">
+                <!-- First order -->
+                <div id="from-base64-order1-dropdown" class="element__select" data-hidden-class="element__select--hidden">
+                  <button id="from-base64-order1-default" class="select__default" data-menu="from-base64-order1" data-menu-default="from-base64-order1-default">Mayúscula</button>
+                  <div id="from-base64-order1" class="select__menu select__menu--right select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeFromOrder">
+                    <button id="from-base64-order1-none" class="select__option" data-change-value="1-num">Número</button>
+                    <button id="from-base64-order1-upper" class="select__option select__option--selected" data-change-value="1-upper">Mayúscula</button>
+                    <button id="from-base64-order1-lower" class="select__option" data-change-value="1-lower">Minúscula</button>
+                    <button id="from-base64-order1-extra" class="select__option" data-change-value="1-extra">Extra</button>
+                  </div>
+                </div>
+                <p class="modal__separator">-</p>
+                <!-- Second order -->
+                <div id="from-base64-order2-dropdown" class="element__select" data-hidden-class="element__select--hidden">
+                  <button id="from-base64-order2-default" class="select__default" data-menu="from-base64-order2" data-menu-default="from-base64-order2-default">Minúscula</button>
+                  <div id="from-base64-order2" class="select__menu select__menu--right select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeFromOrder">
+                    <button id="from-base64-order2-none" class="select__option" data-change-value="2-num">Número</button>
+                    <button id="from-base64-order2-upper" class="select__option" data-change-value="2-upper">Mayúscula</button>
+                    <button id="from-base64-order2-lower" class="select__option select__option--selected" data-change-value="2-lower">Minúscula</button>
+                    <button id="from-base64-order2-extra" class="select__option" data-change-value="2-extra">Extra</button>
+                  </div>
+                </div>
+                <p class="modal__separator">-</p>
+                <!-- Third order -->
+                <div id="from-base64-order3-dropdown" class="element__select" data-hidden-class="element__select--hidden">
+                  <button id="from-base64-order3-default" class="select__default" data-menu="from-base64-order3" data-menu-default="from-base64-order3-default">Número</button>
+                  <div id="from-base64-order3" class="select__menu select__menu--right select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeFromOrder">
+                    <button id="from-base64-order3-none" class="select__option select__option--selected" data-change-value="3-num">Número</button>
+                    <button id="from-base64-order3-upper" class="select__option" data-change-value="3-upper">Mayúscula</button>
+                    <button id="from-base64-order3-lower" class="select__option" data-change-value="3-lower">Minúscula</button>
+                    <button id="from-base64-order3-extra" class="select__option" data-change-value="3-extra">Extra</button>
+                  </div>
+                </div>
+                <p class="modal__separator">-</p>
+                <!-- Fourth order -->
+                <div id="from-base64-order4-dropdown" class="element__select" data-hidden-class="element__select--hidden">
+                  <button id="from-base64-order4-default" class="select__default" data-menu="from-base64-order4" data-menu-default="from-base64-order4-default">Extra</button>
+                  <div id="from-base64-order4" class="select__menu select__menu--right select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeFromOrder">
+                    <button id="from-base64-order4-none" class="select__option" data-change-value="4-num">Número</button>
+                    <button id="from-base64-order4-upper" class="select__option" data-change-value="4-upper">Mayúscula</button>
+                    <button id="from-base64-order4-lower" class="select__option" data-change-value="4-lower">Minúscula</button>
+                    <button id="from-base64-order4-extra" class="select__option select__option--selected" data-change-value="4-extra">Extra</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Extra characters -->
+            <div id="from-extra-option" class="modal__option modal__option--hidden">
+              <h4 class="modal__subtitle">Caracteres extra</h4>
+
+              <div class="modal__set">
+                <p class="modal__separator">[</p>
+                <input id="from-extra1" class="modal__character" type="text" value="+" minlength="1" maxlength="1" autocomplete="off">
+                <input id="from-extra2" class="modal__character" type="text" value="/" minlength="1" maxlength="1" autocomplete="off">
+                <p class="modal__separator">]</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- To settings-->
+        <div id="to-settings" class="modal__item modal__item--hidden">
+          <h3 class="modal__title">Configuraciones 'hacia'</h3>
+
+          <div class="modal__content">
+            <!-- Emtpy configurations-->
+            <div id="to-empty-configurations" class="modal__option modal__option--hidden">
+              <p class="modal__text">No hay configuraciones disponibles. Cambia el tipo de datos para desbloquear nuevas configuraciones.</p>
+            </div>
+
+            <!-- Separation -->
+            <div id="to-separation-option" class="modal__option modal__option--hidden">
+              <h4 class="modal__subtitle">Separación</h4>
+              <div id="to-separation-dropdown" class="element__select" data-hidden-class="element__select--hidden">
+                <button id="to-separation-default" class="select__default" data-menu="to-separation" data-menu-default="to-separation-default">Ninguna</button>
+
+                <div id="to-separation" class="select__menu select__menu--right select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeToSeparation">
+                  <button id="to-separation-none" class="select__option select__option--selected" data-change-value="none">Ninguna</button>
+                  <button id="to-comma" class="select__option" data-change-value="comma">Coma</button>
+                  <button id="to-period" class="select__option" data-change-value="period">Punto</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Base 62 order -->
+            <div id="to-order62-option" class="modal__option modal__option--hidden">
+              <h4 class="modal__subtitle">Orden</h4>
+
+              <div class="modal__set modal__set--vertical">
+                <!-- First order -->
+                <div id="to-base62-order1-dropdown" class="element__select" data-hidden-class="element__select--hidden">
+                  <button id="to-base62-order1-default" class="select__default" data-menu="to-base62-order1" data-menu-default="to-base62-order1-default">Número</button>
+                  <div id="to-base62-order1" class="select__menu select__menu--right select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeToOrder">
+                    <button id="to-base62-order1-none" class="select__option select__option--selected" data-change-value="1-num">Número</button>
+                    <button id="to-base62-order1-upper" class="select__option" data-change-value="1-upper">Mayúscula</button>
+                    <button id="to-base62-order1-lower" class="select__option" data-change-value="1-lower">Minúscula</button>
+                  </div>
+                </div>
+                <p class="modal__separator">-</p>
+                <!-- Second order -->
+                <div id="to-base62-order2-dropdown" class="element__select" data-hidden-class="element__select--hidden">
+                  <button id="to-base62-order2-default" class="select__default" data-menu="to-base62-order2" data-menu-default="to-base62-order2-default">Mayúscula</button>
+                  <div id="to-base62-order2" class="select__menu select__menu--right select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeToOrder">
+                    <button id="to-base62-order2-none" class="select__option" data-change-value="2-num">Número</button>
+                    <button id="to-base62-order2-upper" class="select__option select__option--selected" data-change-value="2-upper">Mayúscula</button>
+                    <button id="to-base62-order2-lower" class="select__option" data-change-value="2-lower">Minúscula</button>
+                  </div>
+                </div>
+                <p class="modal__separator">-</p>
+                <!-- Third order -->
+                <div id="to-base62-order3-dropdown" class="element__select" data-hidden-class="element__select--hidden">
+                  <button id="to-base62-order3-default" class="select__default" data-menu="to-base62-order3" data-menu-default="to-base62-order3-default">Minúscula</button>
+                  <div id="to-base62-order3" class="select__menu select__menu--right select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeToOrder">
+                    <button id="to-base62-order3-none" class="select__option" data-change-value="3-num">Número</button>
+                    <button id="to-base62-order3-upper" class="select__option" data-change-value="3-upper">Mayúscula</button>
+                    <button id="to-base62-order3-lower" class="select__option select__option--selected" data-change-value="3-lower">Minúscula</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Base 64 order -->
+            <div id="to-order64-option" class="modal__option modal__option--hidden">
+              <h4 class="modal__subtitle">Orden</h4>
+
+              <div class="modal__set modal__set--vertical">
+                <!-- First order -->
+                <div id="to-base64-order1-dropdown" class="element__select" data-hidden-class="element__select--hidden">
+                  <button id="to-base64-order1-default" class="select__default" data-menu="to-base64-order1" data-menu-default="to-base64-order1-default">Mayúscula</button>
+                  <div id="to-base64-order1" class="select__menu select__menu--right select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeToOrder">
+                    <button id="to-base64-order1-none" class="select__option" data-change-value="1-num">Número</button>
+                    <button id="to-base64-order1-upper" class="select__option select__option--selected" data-change-value="1-upper">Mayúscula</button>
+                    <button id="to-base64-order1-lower" class="select__option" data-change-value="1-lower">Minúscula</button>
+                    <button id="to-base64-order1-extra" class="select__option" data-change-value="1-extra">Extra</button>
+                  </div>
+                </div>
+                <p class="modal__separator">-</p>
+                <!-- Second order -->
+                <div id="to-base64-order2-dropdown" class="element__select" data-hidden-class="element__select--hidden">
+                  <button id="to-base64-order2-default" class="select__default" data-menu="to-base64-order2" data-menu-default="to-base64-order2-default">Minúscula</button>
+                  <div id="to-base64-order2" class="select__menu select__menu--right select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeToOrder">
+                    <button id="to-base64-order2-none" class="select__option" data-change-value="2-num">Número</button>
+                    <button id="to-base64-order2-upper" class="select__option" data-change-value="2-upper">Mayúscula</button>
+                    <button id="to-base64-order2-lower" class="select__option select__option--selected" data-change-value="2-lower">Minúscula</button>
+                    <button id="to-base64-order2-extra" class="select__option" data-change-value="2-extra">Extra</button>
+                  </div>
+                </div>
+                <p class="modal__separator">-</p>
+                <!-- Third order -->
+                <div id="to-base64-order3-dropdown" class="element__select" data-hidden-class="element__select--hidden">
+                  <button id="to-base64-order3-default" class="select__default" data-menu="to-base64-order3" data-menu-default="to-base64-order3-default">Número</button>
+                  <div id="to-base64-order3" class="select__menu select__menu--right select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeToOrder">
+                    <button id="to-base64-order3-none" class="select__option select__option--selected" data-change-value="3-num">Número</button>
+                    <button id="to-base64-order3-upper" class="select__option" data-change-value="3-upper">Mayúscula</button>
+                    <button id="to-base64-order3-lower" class="select__option" data-change-value="3-lower">Minúscula</button>
+                    <button id="to-base64-order3-extra" class="select__option" data-change-value="3-extra">Extra</button>
+                  </div>
+                </div>
+                <p class="modal__separator">-</p>
+                <!-- Fourth order -->
+                <div id="to-base64-order4-dropdown" class="element__select" data-hidden-class="element__select--hidden">
+                  <button id="to-base64-order4-default" class="select__default" data-menu="to-base64-order4" data-menu-default="to-base64-order4-default">Extra</button>
+                  <div id="to-base64-order4" class="select__menu select__menu--right select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeToOrder">
+                    <button id="to-base64-order4-none" class="select__option" data-change-value="4-num">Número</button>
+                    <button id="to-base64-order4-upper" class="select__option" data-change-value="4-upper">Mayúscula</button>
+                    <button id="to-base64-order4-lower" class="select__option" data-change-value="4-lower">Minúscula</button>
+                    <button id="to-base64-order4-extra" class="select__option select__option--selected" data-change-value="4-extra">Extra</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Extra characters -->
+            <div id="to-extra-option" class="modal__option modal__option--hidden">
+              <h4 class="modal__subtitle">Caracteres extra</h4>
+
+              <div class="modal__set">
+                <p class="modal__separator">[</p>
+                <input id="to-extra1" class="modal__character" type="text" value="+" minlength="1" maxlength="1" autocomplete="off">
+                <input id="to-extra2" class="modal__character" type="text" value="/" minlength="1" maxlength="1" autocomplete="off">
+                <p class="modal__separator">]</p>
+              </div>
+            </div>
+
+            <!-- Preserve zeros -->
+            <div id="to-preserve-option" class="modal__option modal__option--hidden">
+              <h4 class="modal__subtitle">Preservar ceros</h4>
+              <div id="to-preserve-dropdown" class="element__select" data-hidden-class="element__select--hidden">
+                <button id="to-preserve-default" class="select__default" data-menu="to-preserve" data-menu-default="to-preserve-default">Ninguno</button>
+
+                <div id="to-preserve" class="select__menu select__menu--right select__menu--hidden" data-hidden-class="select__menu--hidden" data-selected-class="select__option--selected" data-change-event="changeToPreserve">
+                  <button id="to-preserve-none" class="select__option select__option--selected" data-change-value="none">Ninguno</button>
+                  <button id="to-leading" class="select__option" data-change-value="leading">Iniciales</button>
+                  <button id="to-trailing" class="select__option" data-change-value="trailing">Finales</button>
+                  <button id="to-both" class="select__option" data-change-value="both">Ambos</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="modal-backdrop" class="main__backdrop main__backdrop--hidden"></div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <ul class="footer__content">
+      <li>
+        <a class="footer__paragraph" href="https://github.com/livan23l/NumberConverterApi" target="_blank" rel="noopener noreferrer">
+          <span>Ver proyecto</span>
+          <svg class="footer__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+          </svg>
+        </a>
+      </li>
+      <li class="footer__paragraph">
+        <a href="/es/contact">Contacto</a>
+      </li>
+    </ul>
+  </footer>
+</body>
+
+</html>
