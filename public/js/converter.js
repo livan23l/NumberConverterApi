@@ -3,6 +3,97 @@ class Converter {
     #request;
 
     /**
+     * Set a custom message based on the error or warning message received from
+     * the API. This message is more concise and user-friendly.
+     * 
+     * @param {string} alertKey - The key of the error/warning in the object.
+     * @param {object} alertObject - The object with the errors/warnings.
+     * @returns {string} The final custom message.
+     */
+    #getAlertMessage(alertKey, alertObject) {
+        const curMessage = alertObject[alertKey];
+        let finalMessage = '';
+        const messages =  {
+            en: {
+                emp: 'No value has been sent.',
+                inv: 'The current value is not valid on the selected base.',
+                sepInv: 'The value sent does not meet the selected separation.',
+                fromOrd: "The order entered in the 'from' section is not " +
+                         'valid.',
+                toOrd: "The order entered in the 'to' section is not valid.",
+                fromExt: "The extra characters entered in the 'from' field " +
+                         'are not valid.',
+                toExt: "The extra characters entered in the 'to' field " +
+                       'are not valid.',
+                NotAN: 'Invalid number. Check the language and punctuation.',
+                NTL: 'The number is too long. The maximum supported scale is ' +
+                     'vigintillion.',
+                unk: 'An unknown error has occurred. Please try refreshing ' +
+                     'the page or try again in a few minutes.',
+            },
+            es: {
+                emp: 'No se ha enviado ningún valor.',
+                inv: 'El valor actual no es válido en la base seleccionada.',
+                sepInv: 'El valor enviado no cumple con la separación '+
+                        'seleccioanda.',
+                fromOrd: "El orden ingresado en el apartado 'desde' no es " +
+                         'válido.',
+                toOrd: "El orden ingresado en el apartado 'hacia' no es " +
+                       'válido.',
+                fromExt: 'Los caracteres extra ingresados en el apartado ' +
+                         "'desde' no son válidos.",
+                toExt: 'Los caracteres extra ingresados en el apartado ' +
+                       "'hacia' no son válidos.",
+                NotAN: 'Número inválido. Verifica el idioma y la puntuación.',
+                NTL: 'El número es demasiado largo. La escala máxima ' +
+                     'admitida es vigintillón.',
+                unk: 'Ha sucedido un error desconocido. Intenta recargar ' +
+                     'la página o inténtalo en unos minutos.',
+            }
+        };
+        const curMessages = messages[this.#lang];
+
+        switch (alertKey) {
+            case 'data':
+                if (curMessage.startsWith('The number is too long.')) {
+                    finalMessage = curMessages.NTL;
+                    break;
+                } else if (curMessage.startsWith('The text you sent')) {
+                    finalMessage = curMessages.NotAN;
+                    break;
+                }
+                finalMessage = curMessages.unk;
+                break;
+            case 'validation':
+                finalMessage = curMessages.inv;
+                break;
+            case 'from.value':
+                finalMessage = curMessages.emp;
+                break;
+            case 'from.format.separation':
+                finalMessage = curMessages.sepInv;
+                break;
+            case 'from.format.order':
+                finalMessage = curMessages.fromOrd;
+                break;
+            case 'to.format.order':
+                finalMessage = curMessages.toOrd;
+                break;
+            default:
+                if (alertKey.startsWith('from.format.extraCharacters')) {
+                    finalMessage = curMessages.fromExt;
+                    break;
+                } else if (alertKey.startsWith('to.format.extraCharacters')) {
+                    finalMessage = curMessages.toExt;
+                    break;
+                }
+                finalMessage = alertKey;
+        }
+
+        return finalMessage;
+    }
+
+    /**
      * This method sets the events for the conversion alert to show or hide it
      * with a specific message and type. Internally, it handles the sampling of
      * multiple alerts, hiding and then showing it again.
@@ -138,7 +229,9 @@ class Converter {
                         $alert.dispatchEvent(new CustomEvent('showAlert', {
                             detail: {
                                 type: 'error',
-                                message: response.errors[firstError]
+                                message: this.#getAlertMessage(
+                                    firstError, response.errors
+                                )
                             }
                         }));
                         return;
@@ -150,7 +243,9 @@ class Converter {
                         $alert.dispatchEvent(new CustomEvent('showAlert', {
                             detail: {
                                 type: 'warning',
-                                message: response.warnings[firstWarning]
+                                message: this.#getAlertMessage(
+                                    firstWarning, response.warnings
+                                )
                             }
                         }));
                     } else $alert.dispatchEvent(new CustomEvent('hideAlert'));
