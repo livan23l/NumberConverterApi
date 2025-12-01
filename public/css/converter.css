@@ -411,6 +411,60 @@
     scale: 0.95;
 }
 
+/** Request styles */
+.request {
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.request__title {
+    font-size: 1.6rem;
+    text-align: center;
+}
+
+.request__code {
+    max-width: 30rem;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    background-color: var(--code);
+    border-radius: 5px;
+    position: relative;
+    color: var(--text-code);
+}
+
+.code__copy {
+    background-color: transparent;
+    border-style: none;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.55rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: inherit;
+}
+
+.code__icon {
+    aspect-ratio: 1;
+    width: 1.25rem;
+}
+
+.code__icon--hidden {
+    display: none;
+}
+
+.code__json {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 1rem;
+    letter-spacing: 0.05rem;
+    word-spacing: 0.25rem;
+    line-height: 1.3rem;
+}
+
 /** Styles for medium screens */
 @media (min-width: 22rem) {
     /** Main */
@@ -495,6 +549,28 @@
     .converter__request {
         font-size: 1.25rem;
     }
+
+    /** Request */
+    .request {
+        margin-top: 2rem;
+    }
+
+    .request__title {
+        font-size: 2rem;
+    }
+
+    .request__code {
+        border-radius: 10px;
+    }
+
+    .code__icon {
+        width: 1.5rem;
+    }
+
+    .code__json {
+        font-size: 1.15rem;
+        line-height: 1.55rem;
+    }
 }
 
 /** Styles for large screens */
@@ -507,5 +583,19 @@
     /** Converter */
     .converter__textarea {
         font-size: 1.2rem;
+    }
+
+    /** Request */
+    .request {
+        margin-top: 2.45rem;
+    }
+
+    .request__title {
+        font-size: 2.3rem;
+    }
+
+    .code__json {
+        font-size: 1.3rem;
+        line-height: 1.65rem;
     }
 }

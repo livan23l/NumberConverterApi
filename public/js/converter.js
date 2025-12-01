@@ -6,6 +6,7 @@ class Converter {
      * Set a custom message based on the error or warning message received from
      * the API. This message is more concise and user-friendly.
      * 
+     * @private
      * @param {string} alertKey - The key of the error/warning in the object.
      * @param {object} alertObject - The object with the errors/warnings.
      * @returns {string} The final custom message.
@@ -191,6 +192,7 @@ class Converter {
     /**
      * Make the HTTP petition to the API with the current internal request.
      * 
+     * @private
      * @returns {Promise} The promise of the API response
      */
     #makeRequest() {
@@ -415,6 +417,81 @@ class Converter {
     }
 
     /**
+     * This method updates the real-time DOM request with the corresponding
+     * types, values and formats.
+     * 
+     * @private
+     * @returns {void}
+     */
+    #updateDOMRequest() {
+        // Get the real time DOM request
+        const $request = document.querySelector('#code-request');
+
+        // Define the current formats to show
+        const formats = { from: {}, to: {} };
+
+        // Add separation or language depending on the type
+        if (this.#request.from.type != 'text') {
+            formats.from.separation = this.#request.from.format.separation;
+        } else {
+            formats.from.lang = this.#request.from.format.lang;
+        }
+
+        // Add separation and preserve zeros or language depending on the type
+        if (this.#request.to.type != 'text') {
+            formats.to.separation = this.#request.to.format.separation;
+            formats.to.preserveZeros = this.#request.to.format.preserveZeros;
+        } else {
+            formats.to.lang = this.#request.to.format.lang;
+        }
+
+        /**
+         * Establishes the formats that the 'from' or 'to' elements will have in
+         * case the type is 'base62' or 'base64'.
+         * 
+         * @param {"from"|"to"} type - The type to which formats will be added.
+         * @returns {void}
+         */
+        const addBaseFormats = (type) => {
+            // Get the default order
+            const defOrd = (this.#request[type]['type'] == 'base62')
+                ? 'num-upper-lower'
+                : 'upper-lower-num-extra';
+
+            // Define the order
+            const order = this.#request[type].format.order ?? defOrd;
+
+            // Add the order
+            formats[type].order = order;
+
+            // Check if base is base 64 to add the extra characters
+            if (this.#request[type]['type'] == 'base64') {
+                const extra = this.#request[type].format.extraCharacters;
+                formats[type].extraCharacters = extra;
+            }
+        };
+
+        // Add the order and extra characters if type is 'base 62' or 'base 64'
+        if (this.#request.from.type.startsWith('base')) addBaseFormats('from');
+        if (this.#request.to.type.startsWith('base')) addBaseFormats('to');
+
+        // Generate the request to show
+        const rtRequest = {
+            from: {
+                value: this.#request.from.value,
+                type: this.#request.from.type,
+                format: { ...formats.from },
+            },
+            to: {
+                type: this.#request.to.type,
+                format: {...formats.to },
+            }
+        };
+
+        $request.innerHTML = JSON.stringify(rtRequest, null, 2);
+    }
+
+    /**
      * Handle the global changes events in the dropdowns for the inputs 'from'
      * and 'to'. This method changes the following attributes:
      * - type.
@@ -498,6 +575,9 @@ class Converter {
                     this.#request[type].format.preserveZeros = value;
                     break;
             }
+
+            // Update the real time request
+            this.#updateDOMRequest();
         };
 
         // Add the event listeners
@@ -780,6 +860,9 @@ class Converter {
 
             // Switch the values in the request
             switchRequestValues();
+
+            // Update the DOM real-time request
+            this.#updateDOMRequest();
         });
     }
 
@@ -815,6 +898,9 @@ class Converter {
 
             // Clear the 'to' textarea after each change
             to['$textarea'].value = '';
+
+            // Update the real time request
+            this.#updateDOMRequest();
         });
 
         /**
@@ -833,6 +919,9 @@ class Converter {
 
             // Set the new value
             this.#request[type].format.extraCharacters[id - 1] = value;
+
+            // Update the real time request
+            this.#updateDOMRequest();
         };
 
         // Set the events for changing the extra characters
