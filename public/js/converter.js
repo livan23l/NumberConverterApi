@@ -17,6 +17,8 @@ class Converter {
             en: {
                 emp: 'No value has been sent.',
                 inv: 'The current value is not valid on the selected base.',
+                dec: 'The result had too many decimals. These were truncated ' +
+                     'to only twenty-five characters.',
                 sepInv: 'The value sent does not meet the selected separation.',
                 fromOrd: "The order entered in the 'from' section is not " +
                          'valid.',
@@ -28,12 +30,15 @@ class Converter {
                 NotAN: 'Invalid number. Check the language and punctuation.',
                 NTL: 'The number is too long. The maximum supported scale is ' +
                      'vigintillion.',
+                int: 'Internal error, please try again later.',
                 unk: 'An unknown error has occurred. Please try refreshing ' +
                      'the page or try again in a few minutes.',
             },
             es: {
                 emp: 'No se ha enviado ningún valor.',
                 inv: 'El valor actual no es válido en la base seleccionada.',
+                dec: 'El resultado tenía demasiados decimales. Estos fueron ' +
+                     'truncados a solo veinticinco caracteres.',
                 sepInv: 'El valor enviado no cumple con la separación '+
                         'seleccioanda.',
                 fromOrd: "El orden ingresado en el apartado 'desde' no es " +
@@ -47,6 +52,7 @@ class Converter {
                 NotAN: 'Número inválido. Verifica el idioma y la puntuación.',
                 NTL: 'El número es demasiado largo. La escala máxima ' +
                      'admitida es vigintillón.',
+                int: 'Error interno, inténtelo de nuevo más tarde.',
                 unk: 'Ha sucedido un error desconocido. Intenta recargar ' +
                      'la página o inténtalo en unos minutos.',
             }
@@ -54,15 +60,19 @@ class Converter {
         const curMessages = messages[this.#lang];
 
         switch (alertKey) {
+            case 'internal':
+                finalMessage = curMessages.int;
+                break;
             case 'data':
                 if (curMessage.startsWith('The number is too long.')) {
                     finalMessage = curMessages.NTL;
-                    break;
                 } else if (curMessage.startsWith('The text you sent')) {
                     finalMessage = curMessages.NotAN;
-                    break;
+                } else if (curMessage.startsWith('The result had too many')) {
+                    finalMessage = curMessages.dec;
+                } else {
+                    finalMessage = curMessages.unk;
                 }
-                finalMessage = curMessages.unk;
                 break;
             case 'validation':
                 finalMessage = curMessages.inv;
@@ -82,12 +92,11 @@ class Converter {
             default:
                 if (alertKey.startsWith('from.format.extraCharacters')) {
                     finalMessage = curMessages.fromExt;
-                    break;
                 } else if (alertKey.startsWith('to.format.extraCharacters')) {
                     finalMessage = curMessages.toExt;
-                    break;
+                } else {
+                    finalMessage = curMessages.unk;
                 }
-                finalMessage = alertKey;
         }
 
         return finalMessage;
@@ -262,7 +271,7 @@ class Converter {
                     $alert.dispatchEvent(new CustomEvent('showAlert', {
                         detail: {
                             type: 'error',
-                            message: 'Internal error, please try again later.'
+                            message: this.#getAlertMessage('internal', {})
                         }
                     }));
                 });
