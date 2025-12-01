@@ -561,6 +561,15 @@ class Converter {
                 this.#request.from.format.separation
             ];
 
+            // Orders
+            [
+                this.#request.from.format.order,
+                this.#request.to.format.order
+            ] = [
+                this.#request.to.format.order,
+                this.#request.from.format.order
+            ];
+
             // Extra characters
             [
                 this.#request.from.format.extraCharacters,
