@@ -1,4 +1,5 @@
 class Converter {
+    #lang;
     #request;
 
     /**
@@ -129,7 +130,7 @@ class Converter {
         $convertBtn.addEventListener('click', () => {
             this.#makeRequest()
                 .then(response => {
-                    console.log(response);
+                    console.log('Response:', response);
 
                     // Check if the response has errors
                     if (response.errors != undefined) {
@@ -355,6 +356,12 @@ class Converter {
                     if (value == 'text') $langs.classList.remove(langClass);
                     else $langs.classList.add(langClass);
 
+                    // Change the current order if type is base 62 or base 64
+                    if (value == 'base62' || value == 'base64') {
+                        const ord = this.#request[type].extra.lastOrder[value];
+                        this.#request[type].format.order = ord;
+                    }
+
                     break;
                 case 'lang':
                     this.#request[type].format.lang = value;
@@ -364,9 +371,10 @@ class Converter {
                     break;
                 case 'order':
                     // Set the default order depending on the type
-                    const defOrd = (this.#request[type].type == 'base62')
+                    const curType = this.#request[type].type;
+                    const defOrd = (curType == 'base62')
                         ? 'num-upper-lower'  // Base 62
-                        : 'upper-lower-int-extra';  // Base 64
+                        : 'upper-lower-num-extra';  // Base 64
 
                     // Get the separated current order
                     const curOrd = this.#request[type].format.order ?? defOrd;
@@ -376,8 +384,11 @@ class Converter {
                     const idx = Number(value[0]) - 1;
                     sepOrd[idx] = value.replace(`${value[0]}-`, '');
 
-                    // Update the order
-                    this.#request[type].format.order = sepOrd.join('-');
+                    // Update the order and the last order
+                    const newOrd = sepOrd.join('-');
+                    this.#request[type].format.order = newOrd;
+                    this.#request[type].extra.lastOrder[curType] = newOrd;
+
                     break;
                 case 'preserve':
                     this.#request[type].format.preserveZeros = value;
@@ -481,6 +492,8 @@ class Converter {
                     document.querySelector('#from-base64-order4')
                 ],
             ],
+            '$extra1': document.querySelector('#from-extra1'),
+            '$extra2': document.querySelector('#from-extra2'),
         }
         const toElements = {
             '$textArea': document.querySelector('#to-textarea'),
@@ -526,6 +539,8 @@ class Converter {
                     document.querySelector('#to-base64-order4')
                 ],
             ],
+            '$extra1': document.querySelector('#to-extra1'),
+            '$extra2': document.querySelector('#to-extra2'),
         }
 
         /**
@@ -577,6 +592,15 @@ class Converter {
             ] = [
                 this.#request.to.format.extraCharacters,
                 this.#request.from.format.extraCharacters
+            ];
+
+            // Extra information
+            [
+                this.#request.from.extra,
+                this.#request.to.extra
+            ] = [
+                this.#request.to.extra,
+                this.#request.from.extra
             ];
         };
 
@@ -641,33 +665,87 @@ class Converter {
                 $toNewSel.classList.add(selClass);
             }
 
+            // Switch the content in the extra characters
+            [
+                fromElements['$extra1'].value, fromElements['$extra2'].value,
+                toElements['$extra1'].value, toElements['$extra2'].value
+            ] = [
+                toElements['$extra1'].value, toElements['$extra2'].value,
+                fromElements['$extra1'].value, fromElements['$extra2'].value
+            ];
+
             // Switch the values in the request
             switchRequestValues();
         });
     }
 
     /**
-     * Handle the action of writting in the 'from' textarea. This method adds
-     * the written text in the `request.from.value`.
+     * Handle the writing action, either in the 'from' text area or in the
+     * inputs for extra characters. This method adds the written text in the
+     * request.
      * 
      * @private
      * @returns {void}
      */
     #handleWritting() {
-        // Get the textareas
-        const $fromTextarea = document.querySelector('#from-textarea');
-        const $toTextarea = document.querySelector('#to-textarea');
+        // Get the writing elements
+        const from = {
+            '$textarea': document.querySelector('#from-textarea'),
+            '$extra1': document.querySelector('#from-extra1'),
+            '$extra2': document.querySelector('#from-extra2'),
+        };
+        const to = {
+            '$textarea': document.querySelector('#to-textarea'),
+            '$extra1': document.querySelector('#to-extra1'),
+            '$extra2': document.querySelector('#to-extra2'),
+        };
 
-        // Clear the initial values
-        $fromTextarea.value = '';
-        $toTextarea.value = '';
+        // Clear the initial text areas
+        from['$textarea'].value = '';
+        to['$textarea'].value = '';
 
-        $fromTextarea.addEventListener('change', e => {
+        // Add the event for writting in the text area
+        from['$textarea'].addEventListener('change', e => {
             const newValue = e.target.value;
             this.#request.from.value = newValue;
 
             // Clear the 'to' textarea after each change
-            $toTextarea.value = '';
+            to['$textarea'].value = '';
+        });
+
+        /**
+         * Hanldes the change in the value of all the extra characters.
+         * 
+         * @param {"from"|"to"} type - The corresponding type of the object.
+         * @param {number} id - The identifier of the extra character.
+         * @returns {void}
+         */
+        const changeExtraChar = (type, id) => {
+            // Get the current object
+            const curObj = (type == 'from') ? from : to;
+
+            // Get the value of the character
+            const value = curObj[`$extra${id}`].value;
+
+            // Set the new value
+            this.#request[type].format.extraCharacters[id - 1] = value;
+        };
+
+        // Set the events for changing the extra characters
+        //--From
+        from['$extra1'].addEventListener('change', () => {
+            changeExtraChar('from', 1);
+        });
+        from['$extra2'].addEventListener('change', () => {
+            changeExtraChar('from', 2);
+        });
+
+        //--To
+        to['$extra1'].addEventListener('change', () => {
+            changeExtraChar('to', 1);
+        });
+        to['$extra2'].addEventListener('change', () => {
+            changeExtraChar('to', 2);
         });
     }
 
@@ -679,7 +757,7 @@ class Converter {
      */
     constructor() {
         // Set attributes
-        const currentLang = (window.location.pathname.includes('en'))
+        this.#lang = (window.location.pathname.includes('en'))
             ? 'en'
             : 'es';
 
@@ -688,21 +766,33 @@ class Converter {
                 value: '',
                 type: 'decimal',
                 format: {
-                    lang: currentLang,
+                    lang: this.#lang,
                     separation: 'none',
                     order: null,
-                    extraCharacters: null
+                    extraCharacters: ['+', '/']
+                },
+                extra: {
+                    lastOrder: {
+                        base62: null,
+                        base64: null
+                    }
                 }
             },
             to: {
                 value: '',
                 type: 'binary',
                 format: {
-                    lang: currentLang,
+                    lang: this.#lang,
                     separation: 'none',
                     preserveZeros: 'none',
                     order: null,
-                    extraCharacters: null
+                    extraCharacters: ['+', '/']
+                },
+                extra: {
+                    lastOrder: {
+                        base62: null,
+                        base64: null
+                    }
                 }
             }
         };
