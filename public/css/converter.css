@@ -305,6 +305,12 @@
     bottom: 0;
 }
 
+.select__menu--top {
+    top: 0;
+    left: 0;
+    translate: 0 -107%;
+}
+
 .select__menu--hidden {
     display: none;
     visibility: hidden;
