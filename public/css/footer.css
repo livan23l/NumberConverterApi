@@ -4,8 +4,6 @@
     padding-block: 0.5rem 0.6rem;
     padding-inline: 1rem;
     background-color: var(--secondary);
-    position: relative;
-    z-index: 10;
     color: var(--text-secondary);
 }
 
