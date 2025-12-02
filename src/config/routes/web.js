@@ -10,3 +10,7 @@ Router.GET('/es', [MainController, 'homeEs']);
 /** Converter page */
 Router.GET('/en/converter', [MainController, 'converterEn']);
 Router.GET('/es/converter', [MainController, 'converterEs']);
+
+/** Documentation page */
+Router.GET('/en/documentation', [MainController, 'documentationEn']);
+Router.GET('/es/documentation', [MainController, 'documentationEs']);

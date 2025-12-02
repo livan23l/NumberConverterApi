@@ -20,4 +20,12 @@ export class MainController extends Controller {
     converterEs() {
         return this._view('es.converter');
     }
+
+    documentationEn() {
+        return this._view('en.documentation');
+    }
+
+    documentationEs() {
+        return this._view('es.documentation');
+    }
 }

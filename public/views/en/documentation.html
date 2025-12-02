@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Documentation</title>
+  <base href="http://localhost:3300">
+  <meta name="description" content="This page provides an API for performing number conversions in different bases, as well as number to text (written number). The documentation is available in English and Spanish.">
+  <meta name="keywords" content="api, base62, number-converter, text-conversion, octal-converter, base64-converter, binary-conversion, hexadecimal-conversion">
+  <link rel="shortcut icon" href="../../img/favicon.webp">
+  <link rel="stylesheet" href="../../css/app.css">
+  <link rel="stylesheet" href="../../css/documentation.css">
+  <script type="module" src="../../js/app.js"></script>
+  <script src="../../js/Documentation.js" defer></script>
+</head>
+
+<body>
+  <header class="header">
+    <div class="header__content">
+      <a class="header__anchor header__anchor--nohover" href="/en/converter">
+        <h1 class="header__title">Web converter</h1>
+      </a>
+
+      <div class="header__submenu">
+        <!-- Documentation -->
+        <a class="header__anchor" href="/en/documentation">
+          <span class="header__label">Documentation</span>
+          <svg class="header__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
+            <path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
+            <path d="M3 6l0 13" />
+            <path d="M12 6l0 13" />
+            <path d="M21 6l0 13" />
+          </svg>
+        </a>
+
+        <!-- Languages -->
+        <div class="header__list">
+          <button data-menu="languages-menu" class="header__default">
+            <span class="header__label">English</span>
+            <svg class="header__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+              <path d="M4 5h7" />
+              <path d="M7 4c0 4.846 0 7 .5 8" />
+              <path d="M10 8.5c0 2.286 -2 4.5 -3.5 4.5s-2.5 -1.135 -2.5 -2c0 -2 1 -3 3 -3s5 .57 5 2.857c0 1.524 -.667 2.571 -2 3.143" />
+              <path d="M12 20l4 -9l4 9" />
+              <path d="M19.1 18h-6.2" />
+            </svg>
+          </button>
+
+          <div id="languages-menu" class="header__languages header__languages--hidden" data-hidden-class="header__languages--hidden">
+            <a href="/en/documentation" class="header__language header__language--selected">English</a>
+            <a href="/es/documentation" class="header__language">Español</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main></main>
+
+  <footer class="footer">
+    <ul class="footer__content">
+      <li>
+        <a class="footer__paragraph" href="https://github.com/livan23l/NumberConverterApi" target="_blank" rel="noopener noreferrer">
+          <span>View project</span>
+          <svg class="footer__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+          </svg>
+        </a>
+      </li>
+      <li class="footer__paragraph">
+        <a href="/en/contact">Contact</a>
+      </li>
+    </ul>
+  </footer>
+</body>
+
+</html>
