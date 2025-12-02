@@ -1,0 +1,17 @@
+body {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+header {
+    grid-row: 1/2;
+}
+
+main {
+    grid-row: 2/3;
+}
+
+footer {
+    grid-row: 3/4;
+}
