@@ -66,7 +66,7 @@
         <div class="aside__section">
           <p class="aside__title">Introduction</p>
           <div class="aside__options">
-            <button id="btn-getting-started" class="aside__option aside__option--active" data-button-for="getting-started">Getting started</button>
+            <button id="btn-getting-started" class="aside__option" data-button-for="getting-started">Getting started</button>
             <button id="btn-first-request" class="aside__option" data-button-for="first-request">First request</button>
           </div>
         </div>
@@ -103,7 +103,7 @@
       </aside>
 
       <!-- Getting started section -->
-      <section id="getting-started" class="main__section">
+      <section id="getting-started" class="main__section main__section--hidden">
         <h2 class="section__title">Getting started</h2>
 
         <div class="section__content">
@@ -276,7 +276,16 @@
       <section id="request" class="main__section main__section--hidden">
         <h2 class="section__title">Request structure</h2>
 
-        <div class="section__content"></div>
+        <div class="section__content">
+          <p class="section__paragraph">
+            <span>La estructura de las solicitudes consiste únicamente de dos elementos:</span>
+            <code class="paragraph__code"><span class="code__value">from</span></code><span>,</span>
+            <span>que indica el valor a convertir, y</span>
+            <code class="paragraph__code"><span class="code__value">to</span></code><span>,</span>
+            <span>que indica la respuesta esperada.</span>
+          </p>
+          <h3 class="section__subtitle">From</h3>
+        </div>
       </section>
 
       <!-- Response structure section -->

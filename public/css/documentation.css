@@ -92,6 +92,15 @@
     display: none;
 }
 
+.section__title {
+    font-size: 1.5rem;
+}
+
+.section__subtitle {
+    margin-top: 1rem;
+    font-size: 1.35rem;
+}
+
 .section__icon {
     aspect-ratio: 1;
     width: 1.5rem;
