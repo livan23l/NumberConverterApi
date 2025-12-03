@@ -66,8 +66,8 @@
         <div class="aside__section">
           <p class="aside__title">Introduction</p>
           <div class="aside__options">
-            <button class="aside__option" data-button-for="getting-started">Getting started</button>
-            <button class="aside__option" data-button-for="first-request">First request</button>
+            <button id="btn-getting-started" class="aside__option aside__option--active" data-button-for="getting-started">Getting started</button>
+            <button id="btn-first-request" class="aside__option" data-button-for="first-request">First request</button>
           </div>
         </div>
 
@@ -75,8 +75,8 @@
         <div class="aside__section">
           <p class="aside__title">Structures</p>
           <div class="aside__options">
-            <button class="aside__option" data-button-for="request">Request</button>
-            <button class="aside__option" data-button-for="response">Response</button>
+            <button id="btn-request" class="aside__option" data-button-for="request">Request</button>
+            <button id="btn-response" class="aside__option" data-button-for="response">Response</button>
           </div>
         </div>
 
@@ -84,18 +84,18 @@
         <div class="aside__section">
           <p class="aside__title">Additionals</p>
           <div class="aside__options">
-            <button class="aside__option" data-button-for="types">Types</button>
+            <button id="btn-types" class="aside__option" data-button-for="types">Types</button>
 
             <!-- Formats sub menu -->
             <div class="aside__submenu">
-              <button class="aside__option" data-button-for="formats">Formats</button>
+              <button id="btn-formats" class="aside__option" data-button-for="formats">Formats</button>
 
               <div class="submenu__options">
-                <button class="aside__option" data-button-for="separation">Separation</button>
-                <button class="aside__option" data-button-for="language">Language</button>
-                <button class="aside__option" data-button-for="preserve-zeros">PreserveZeros</button>
-                <button class="aside__option" data-button-for="order">Order</button>
-                <button class="aside__option" data-button-for="extra-characters">ExtraCharacters</button>
+                <button id="btn-separation" class="aside__option" data-button-for="separation">Separation</button>
+                <button id="btn-language" class="aside__option" data-button-for="language">Language</button>
+                <button id="btn-preserve-zeros" class="aside__option" data-button-for="preserve-zeros">PreserveZeros</button>
+                <button id="btn-order" class="aside__option" data-button-for="order">Order</button>
+                <button id="btn-extra-characters" class="aside__option" data-button-for="extra-characters">ExtraCharacters</button>
               </div>
             </div>
           </div>
@@ -202,7 +202,7 @@
               which specifies the value to convert, and
             </span>
             <code class="paragraph__code"><span class="code__value">to</span></code><span>,</span>
-            <span>which specifies the desired output format.</span>
+            <span>which indicates the expected response.</span>
           </p>
           <p class="section__paragraph">
             <span>The</span>
@@ -270,6 +270,69 @@
 }</pre>
           </div>
         </div>
+      </section>
+
+      <!-- Request structure section -->
+      <section id="request" class="main__section main__section--hidden">
+        <h2 class="section__title">Request structure</h2>
+
+        <div class="section__content"></div>
+      </section>
+
+      <!-- Response structure section -->
+      <section id="response" class="main__section main__section--hidden">
+        <h2 class="section__title">Response structure</h2>
+
+        <div class="section__content"></div>
+      </section>
+
+      <!-- Types section -->
+      <section id="types" class="main__section main__section--hidden">
+        <h2 class="section__title">Types of values</h2>
+
+        <div class="section__content"></div>
+      </section>
+
+      <!-- Formats section -->
+      <section id="formats" class="main__section main__section--hidden">
+        <h2 class="section__title">Formats</h2>
+
+        <div class="section__content"></div>
+      </section>
+
+      <!-- Separations section -->
+      <section id="separation" class="main__section main__section--hidden">
+        <h2 class="section__title">Separations</h2>
+
+        <div class="section__content"></div>
+      </section>
+
+      <!-- Languages section -->
+      <section id="language" class="main__section main__section--hidden">
+        <h2 class="section__title">Languages</h2>
+
+        <div class="section__content"></div>
+      </section>
+
+      <!-- Preserve zeros section -->
+      <section id="preserve-zeros" class="main__section main__section--hidden">
+        <h2 class="section__title">Preserve zeros</h2>
+
+        <div class="section__content"></div>
+      </section>
+
+      <!-- Order section -->
+      <section id="order" class="main__section main__section--hidden">
+        <h2 class="section__title">Order</h2>
+
+        <div class="section__content"></div>
+      </section>
+
+      <!-- Extra characters section -->
+      <section id="extra-characters" class="main__section main__section--hidden">
+        <h2 class="section__title">Extra characters</h2>
+
+        <div class="section__content"></div>
       </section>
     </div>
   </main>
