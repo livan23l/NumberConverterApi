@@ -59,7 +59,118 @@
     </div>
   </header>
 
-  <main></main>
+  <main class="main">
+    <div class="main__content">
+      <aside class="main__aside">
+        <!-- Introduction options -->
+        <div class="aside__section">
+          <p class="aside__title">Introduction</p>
+          <div class="aside__options">
+            <button class="aside__option" data-button-for="getting-started">Getting started</button>
+            <button class="aside__option" data-button-for="first-request">First request</button>
+          </div>
+        </div>
+
+        <!-- Structures options -->
+        <div class="aside__section">
+          <p class="aside__title">Structures</p>
+          <div class="aside__options">
+            <button class="aside__option" data-button-for="request">Request</button>
+            <button class="aside__option" data-button-for="response">Response</button>
+          </div>
+        </div>
+
+        <!-- Additionals options -->
+        <div class="aside__section">
+          <p class="aside__title">Additionals</p>
+          <div class="aside__options">
+            <button class="aside__option" data-button-for="types">Types</button>
+
+            <!-- Formats sub menu -->
+            <div class="aside__submenu">
+              <button class="aside__option" data-button-for="formats">Formats</button>
+
+              <div class="submenu__options">
+                <button class="aside__option" data-button-for="separation">Separation</button>
+                <button class="aside__option" data-button-for="language">Language</button>
+                <button class="aside__option" data-button-for="preserve-zeros">PreserveZeros</button>
+                <button class="aside__option" data-button-for="order">Order</button>
+                <button class="aside__option" data-button-for="extra-characters">ExtraCharacters</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Getting started section -->
+      <section id="getting-started" class="main__section">
+        <h2 class="section__title">Getting started</h2>
+
+        <div class="section__content">
+          <p class="section__paragraph">
+            <span>
+              This API is designed to perform numerical conversions between
+              different
+            </span>
+            <span class="paragraph__link" data-button-for="types">data types.</span>
+            <span>For example, converting from</span>
+            <code class="paragraph__code">
+              <span class="code__value">10</span>
+              <span class="code__base">decimal</span>
+            </code>
+            <span>to</span>
+            <code class="paragraph__code">
+              <span class="code__value">1010</span>
+              <span class="code__base">binary</span>
+            </code>
+            <span>or from</span>
+            <code class="paragraph__code">
+              <span class="code__value">3.5</span>
+              <span class="code__base">decimal</span>
+            </code>
+            <span>to</span>
+            <code class="paragraph__code">
+              <span class="code__value">three point five</span>
+              <span class="code__base">text</span>
+            </code>
+            <span style="margin-left: -0.2rem;">.</span>
+          </p>
+          <p class="section__paragraph">
+            All requests must be sent to the following URL:
+          </p>
+          <p class="section__link">
+            <span id="getting-started-code-1" class="link__text">https://www.numberconverterapi.kodexiv.com/api/converter</span>
+            <span class="link__separator"></span>
+            <button class="link__copy" data-code-copy="getting-started-code-1">
+              <svg class="section__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+              </svg>
+              <svg class="section__icon section__icon--hidden" style="color: var(--copy);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M5 12l5 5l10 -10" />
+              </svg>
+            </button>
+          </p>
+          <p class="section__paragraph">
+            <span>Additionally,</span>
+            <span class="paragraph__link" data-button-for="formats">formats</span>
+            <span>
+               can be used to define the structure of the input value or the
+               conversion result.
+            </span>
+          </p>
+        </div>
+      </section>
+
+      <!-- First request section -->
+      <section id="first-request" class="main__section main__section--hidden">
+        <h2 class="section__title">First request</h2>
+        <p>content of first request</p>
+      </section>
+    </div>
+  </main>
 
   <footer class="footer">
     <ul class="footer__content">
