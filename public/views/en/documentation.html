@@ -129,14 +129,14 @@
               <span class="code__base">decimal</span>
             </code>
             <span>to</span>
-            <code class="paragraph__code">
-              <span class="code__value">three point five</span>
-              <span class="code__base">text</span>
-            </code>
-            <span style="margin-left: -0.2rem;">.</span>
+            <code class="paragraph__code"><span class="code__value">three point five</span><span class="code__base">text</span></code><span>.</span>
           </p>
           <p class="section__paragraph">
-            All requests must be sent to the following URL:
+            <span>All requests must be sent using the</span>
+            <code class="paragraph__code">
+              <span class="code__value">POST</span>
+            </code>
+            <span>method to the following URL:</span>
           </p>
           <p class="section__link">
             <span id="getting-started-code-1" class="link__text">https://www.numberconverterapi.kodexiv.com/api/converter</span>
@@ -154,12 +154,9 @@
             </button>
           </p>
           <p class="section__paragraph">
-            <span>Additionally,</span>
-            <span class="paragraph__link" data-button-for="formats">formats</span>
-            <span>
-               can be used to define the structure of the input value or the
-               conversion result.
-            </span>
+            <span>Make your</span>
+            <span class="paragraph__link" data-button-for="first-request">first conversion request</span>
+            <span>now.</span>
           </p>
         </div>
       </section>
@@ -167,7 +164,93 @@
       <!-- First request section -->
       <section id="first-request" class="main__section main__section--hidden">
         <h2 class="section__title">First request</h2>
-        <p>content of first request</p>
+
+        <div class="section__content">
+          <p class="section__paragraph">
+            A continuación se mostrará un ejemplo básico de como realizar una
+            conversión usando la API.
+          </p>
+          <p class="section__paragraph">
+            <span>
+              Todas las peticiones deben ser enviadas usando el método
+            </span>
+            <code class="paragraph__code">
+              <span class="code__value">POST</span>
+            </code>
+            <span>a la siguiente URL:</span>
+          </p>
+          <p class="section__link">
+            <span id="first-request-code-1" class="link__text">https://www.numberconverterapi.kodexiv.com/api/converter</span>
+            <span class="link__separator"></span>
+            <button class="link__copy" data-code-copy="first-request-code-1">
+              <svg class="section__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+              </svg>
+              <svg class="section__icon section__icon--hidden" style="color: var(--copy);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M5 12l5 5l10 -10" />
+              </svg>
+            </button>
+          </p>
+          <p class="section__paragraph">
+            <span>
+              Las solicitudes de conversion requieren solamente dos aspectos, lo
+              que se busca convertir
+            </span>
+            <span>(</span><code class="paragraph__code"><span class="code__value">from</span></code><span>)</span>
+            <span>
+              y el resultado que se espera obtener
+            </span>
+            <span>(</span><code class="paragraph__code"><span class="code__value">to</span></code><span>).</span>
+          </p>
+          <p class="section__paragraph">
+            <span>
+              Para la parte de lo que se busca convertir es necesario enviar dos
+              elementos: el valor que se busca convertir y el tipo de dicho
+              valor.
+            </span>
+            <span>
+              Por otro lado, para el resultado únicamente es necesario enviar
+              el tipo de valor esperado.
+            </span>
+          </p>
+          <p class="section__paragraph">
+            <span>Entonces, para convertir el valor</span>
+            <code class="paragraph__code">
+              <span class="code__value">10</span>
+              <span class="code__base">decimal</span>
+            </code>
+            <span>a</span>
+            <code class="paragraph__code"><span class="code__value">binario</span></code>
+            <span>es necesario enviar la siguiente solicitud:</span>
+          </p>
+          <div class="section__code">
+            <button class="code__copy" data-code-copy="first-request-code-2">
+              <svg class="section__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+              </svg>
+              <svg class="section__icon section__icon--hidden" style="color: var(--copy);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M5 12l5 5l10 -10" />
+              </svg>
+            </button>
+<pre id="first-request-code-2" class="code__text">
+{
+  "from": {
+    "value": "10",
+    "type": "decimal"
+    }
+  },
+  "to": {
+    "type": "binary"
+  }
+}</pre>
+        </div>
+        </div>
       </section>
     </div>
   </main>
