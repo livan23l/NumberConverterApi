@@ -625,8 +625,8 @@
               <span>
                 The value to convert is sent in numeric form (the
               </span>
-              <code class="paragraph__code"><span class="code__value">string</span></code>
-              <span>form is preferable to maintain precision with very large numbers).</span>
+              <i>string form</i>
+              <span>is preferable to maintain precision with very large numbers).</span>
             </li>
             <li class="list__paragraph">
               <span>A</span>
@@ -641,7 +641,10 @@
                 In this case, the decimals in the
               </span>
               <span class="paragraph__link" data-button-for="response">response</span>
-              <span>are truncated to 25 characters.</span>
+              <span>are</span>
+              <b>truncated</b>
+              <span>to</span>
+              <b>25 characters</b><span>.</span>
             </li>
             <li class="list__paragraph">
               <span>A conversion is performed where</span>
@@ -750,7 +753,9 @@
 
         <div class="section__content">
           <p class="section__paragraph">
-            <span>These are elements that must be sent in both the</span>
+            <span>These are elements that</span>
+            <b>must</b>
+            <span> be sent in both the</span>
             <code class="paragraph__code"><span class="code__value">from</span></code>
             <span>element and the</span>
             <code class="paragraph__code"><span class="code__value">to</span></code><span></span>
@@ -907,7 +912,7 @@
             <code class="paragraph__code">
               <span class="code__value">five point six</span>
               <span class="code__base">text</span>
-            </code><span> o </span>
+            </code><span>, or </span>
             <code class="paragraph__code">
               <span class="code__value">one thousand one</span>
               <span class="code__base">text</span>
@@ -915,7 +920,9 @@
             <span>
               Conversions of this type can be performed in either
             </span>
-            <i>English</i><span> or </span><i>Spanish</i><span>. The</span>
+            <i>English</i><span> or </span><i>Spanish</i><span>,</span>
+            <span>which is why the language</span>
+            <b>must</b><span> be specified. The</span>
             <span class="paragraph__link" data-button-for="formats">formats</span>
             <span>that can be used for this type are:</span>
           </p>
@@ -932,14 +939,156 @@
         <h2 class="section__title">Formats</h2>
 
         <div class="section__content">
+          <p class="section__paragraph">
+            <span>They are </span><b>optional</b><span> parameters that can be included in both the </span>
+            <code class="paragraph__code"><span class="code__value">from</span></code>
+            <span>element and the</span>
+            <code class="paragraph__code"><span class="code__value">to</span></code><span>element.</span>
+            <span>
+              They are used to specify the structure of the value being sent
+              and/or the structure expected in the conversion result. It is
+              important to note that their use
+            </span>
+            <b>modifies</b>
+            <span>the way the value is interpreted or generated.</span>
+          </p>
+          <p class="section__paragraph">The following formats exist:</p>
+          <ul class="section__list">
+            <li class="list__paragraph">
+              <span class="paragraph__link" data-button-for="separation">Separation</span>
+            </li>
+            <li class="list__paragraph">
+              <span class="paragraph__link" data-button-for="language">Language</span>
+            </li>
+            <li class="list__paragraph">
+              <span class="paragraph__link" data-button-for="preserve-zeros">Preserve zeros</span>
+            </li>
+            <li class="list__paragraph">
+              <span class="paragraph__link" data-button-for="order">Order</span>
+            </li>
+            <li class="list__paragraph">
+              <span class="paragraph__link" data-button-for="extra-characters">Extra characters</span>
+            </li>
+          </ul>
         </div>
       </section>
 
-      <!-- Separations section -->
+      <!-- Separation section -->
       <section id="separation" class="main__section main__section--hidden">
-        <h2 class="section__title">Separations</h2>
+        <h2 class="section__title">Separation</h2>
 
-        <div class="section__content"></div>
+        <div class="section__content">
+          <p class="section__paragraph">
+            <span>The</span>
+            <code class="paragraph__code"><span class="code__value">separation</span></code>
+            <span class="paragraph__link" data-button-for="formats">format</span>
+            <span>is an</span>
+            <b>optional</b>
+            <span>parameter that can be included inside the</span>
+            <code class="paragraph__code"><span class="code__value">from.format</span></code>
+            <span>element or the</span>
+            <code class="paragraph__code"><span class="code__value">to.format</span></code>
+            <span>element with the following</span>
+            <span class="paragraph__link" data-button-for="formats">types</span><span>:</span>
+            <code class="paragraph__code"><span class="code__value">binary</span></code><span>,</span>
+            <code class="paragraph__code"><span class="code__value">octal</span></code><span>,</span>
+            <code class="paragraph__code"><span class="code__value">decimal</span></code><span>,</span>
+            <code class="paragraph__code"><span class="code__value">hexadecimal</span></code><span>,</span>
+            <code class="paragraph__code"><span class="code__value">base62</span></code><span>, and</span>
+            <code class="paragraph__code"><span class="code__value">base64</span></code><span>.</span>
+            <span>If it is sent in the</span>
+            <code class="paragraph__code"><span class="code__value">text</span></code><span></span>
+            <span class="paragraph__link" data-button-for="types">type</span><span>,</span>
+            <span>it will be </span><b>ignored</b><span>.</span>
+          </p>
+          <p class="section__paragraph">
+            This parameter is used to specify a numeric separation within the
+            input value or the resulting value. The possible values are:
+          </p>
+          <ul class="section__list">
+            <li class="list__paragraph">
+              <b>null</b><span>: If you do not want to specify the parameter.</span>
+            </li>
+            <li class="list__paragraph">
+              <b>"none"</b><span>:</span>
+              <span>
+                To indicate that the value does not have (or should not have)
+                any separation.
+              </span>
+            </li>
+            <li class="list__paragraph">
+              <b>"comma"</b><span>:</span>
+              <span>
+                To indicate that the value has (or should have) comma
+                separation. Example:
+              </span>
+              <code class="paragraph__code">
+                <span class="code__value">1,532.5</span>
+                <span class="code__base">decimal</span>
+              </code>
+            </li>
+            <li class="list__paragraph">
+              <b>"period"</b><span>:</span>
+              <span>
+                To indicate that the value has (or should have) period
+                separation. Example:
+              </span>
+              <code class="paragraph__code">
+                <span class="code__value">1.532,5</span>
+                <span class="code__base">decimal</span>
+              </code>
+            </li>
+          </ul>
+          <h2 class="section__title2">Example</h2>
+          <h3 class="section__title3">Request</h3>
+          <div class="section__code section__code--big">
+            <button class="code__copy" data-code-copy="separation-code-1">
+              <svg class="section__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+              </svg>
+              <svg class="section__icon section__icon--hidden" style="color: var(--copy);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M5 12l5 5l10 -10" />
+              </svg>
+            </button>
+<pre id="separation-code-1" class="code__text">
+{
+  "from": {
+    "value": "1,526.5",
+    "type": "decimal",
+    "format": {
+      "separation": "comma"
+    }
+  },
+  "to": {
+    "type": "decimal",
+    "format": {
+      "separation": "period"
+    }
+  }
+}</pre>
+          </div>
+          <h3 class="section__title3">Response</h3>
+          <div class="section__code section__code--small">
+            <button class="code__copy" data-code-copy="separation-code-2">
+              <svg class="section__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+              </svg>
+              <svg class="section__icon section__icon--hidden" style="color: var(--copy);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M5 12l5 5l10 -10" />
+              </svg>
+            </button>
+<pre id="separation-code-2" class="code__text code__text--break">
+{
+  "data": "1.526,5"
+}</pre>
+          </div>
+        </div>
       </section>
 
       <!-- Languages section -->
