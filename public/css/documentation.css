@@ -130,6 +130,23 @@
     gap: 0.85rem;
 }
 
+.section__list {
+    padding-left: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.list__paragraph {
+    list-style-position: inside;
+    font-size: 1.03rem;
+    line-height: 1.3rem;
+}
+
+.list__paragraph::marker {
+  font-weight: bold;
+}
+
 .section__paragraph {
     font-size: 1.1rem;
     line-height: 1.6rem;
@@ -200,7 +217,7 @@
 
 /** Code styles */
 .section__code {
-    max-width: 22.5rem;
+    max-width: 18rem;
     width: 100%;
     margin-inline: auto;
     padding: 0.5rem 1rem;
@@ -214,6 +231,10 @@
     max-width: 14rem;
 }
 
+.section__code--big {
+    max-width: 23.5rem;
+}
+
 .code__text {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -221,6 +242,12 @@
     letter-spacing: 0.05rem;
     word-spacing: 0.25rem;
     line-height: 1.65rem;
+}
+
+.code__text--scrollable {
+    overflow-x: auto;
+    text-overflow: unset;
+    scrollbar-width: thin;
 }
 
 .code__text--break {

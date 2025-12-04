@@ -332,11 +332,11 @@
   "from": {
     "value": "",
     "type": "",
-    "formats": {}
+    "format": {}
   },
   "to": {
     "type": "",
-    "formats": {}
+    "format": {}
   }
 }</pre>
           </div>
@@ -370,7 +370,7 @@
             <code class="paragraph__code"><span class="code__value">data</span></code><span></span>
             <span>object, which contains the final result.</span>
           </p>
-          <h4 class="section__title3">Request</h4>
+          <h3 class="section__title3">Request</h3>
           <div class="section__code">
             <button class="code__copy" data-code-copy="response-code-1">
               <svg class="section__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -383,7 +383,7 @@
                 <path d="M5 12l5 5l10 -10" />
               </svg>
             </button>
-<pre id="response-code-1" class="code__text code__text--break">
+<pre id="response-code-1" class="code__text">
 {
   "from": {
     "value": "10",
@@ -394,7 +394,7 @@
   }
 }</pre>
           </div>
-          <h4 class="section__title3">Response</h4>
+          <h3 class="section__title3">Response</h3>
           <div class="section__code section__code--small">
             <button class="code__copy" data-code-copy="response-code-2">
               <svg class="section__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -407,7 +407,7 @@
                 <path d="M5 12l5 5l10 -10" />
               </svg>
             </button>
-<pre id="response-code-2" class="code__text code__text--break">
+<pre id="response-code-2" class="code__text">
 {
   "data": "1010"
 }</pre>
@@ -426,7 +426,7 @@
               situation.
             </span>
           </p>
-          <h4 class="section__title3">Request</h4>
+          <h3 class="section__title3">Request</h3>
           <div class="section__code">
             <button class="code__copy" data-code-copy="response-code-3">
               <svg class="section__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -439,7 +439,7 @@
                 <path d="M5 12l5 5l10 -10" />
               </svg>
             </button>
-<pre id="response-code-3" class="code__text code__text--break">
+<pre id="response-code-3" class="code__text">
 {
   "from": {
     "value": "A",
@@ -450,8 +450,8 @@
   }
 }</pre>
           </div>
-          <h4 class="section__title3">Response</h4>
-          <div class="section__code">
+          <h3 class="section__title3">Response</h3>
+          <div class="section__code section__code--big">
             <button class="code__copy" data-code-copy="response-code-4">
               <svg class="section__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -483,7 +483,7 @@
               object is returned.
             </span>
           </p>
-          <h4 class="section__title3">Request</h4>
+          <h3 class="section__title3">Request</h3>
           <div class="section__code">
             <button class="code__copy" data-code-copy="response-code-5">
               <svg class="section__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -496,7 +496,7 @@
                 <path d="M5 12l5 5l10 -10" />
               </svg>
             </button>
-<pre id="response-code-5" class="code__text code__text--break">
+<pre id="response-code-5" class="code__text">
 {
   "from": {
     "value": "10"
@@ -506,8 +506,8 @@
   }
 }</pre>
           </div>
-          <h4 class="section__title3">Response</h4>
-          <div class="section__code">
+          <h3 class="section__title3">Response</h3>
+          <div class="section__code section__code--big">
             <button class="code__copy" data-code-copy="response-code-6">
               <svg class="section__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -533,14 +533,215 @@
       <section id="error" class="main__section main__section--hidden">
         <h2 class="section__title">Error structure</h2>
 
-        <div class="section__content"></div>
+        <div class="section__content">
+          <p class="section__paragraph">
+            <span>Errors are objects returned in the</span>
+            <span class="paragraph__link" data-button-for="response">response</span>
+            <span>of a conversion. They are generated when the</span>
+            <span class="paragraph__link" data-button-for="request">request</span>
+            <span>contains an incorrect value or when a required element is missing.</span>
+          </p>
+          <h2 class="section__title2">Structure</h2>
+          <p class="section__paragraph">
+            <span>The</span>
+            <code class="paragraph__code"><span class="code__value">errors</span></code>
+            <span>
+              object contains a set of key-value pairs, where the key identifies
+              the element that produced the error and the value is the
+              corresponding error message.
+            </span>
+          </p>
+          <h3 class="section__title3">Request</h3>
+          <div class="section__code">
+            <button class="code__copy" data-code-copy="error-code-1">
+              <svg class="section__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+              </svg>
+              <svg class="section__icon section__icon--hidden" style="color: var(--copy);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M5 12l5 5l10 -10" />
+              </svg>
+            </button>
+<pre id="error-code-1" class="code__text">
+{
+  "from": {
+    "type": null
+  },
+  "to": {
+    "type": "base10"
+  }
+}</pre>
+          </div>
+          <h3 class="section__title3">Response</h3>
+          <div class="section__code section__code--big">
+            <button class="code__copy" data-code-copy="error-code-2">
+              <svg class="section__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+              </svg>
+              <svg class="section__icon section__icon--hidden" style="color: var(--copy);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M5 12l5 5l10 -10" />
+              </svg>
+            </button>
+<pre id="error-code-2" class="code__text code__text--scrollable">
+{
+  "errors": {
+    "from.type": "The `from.type` element cannot be null.",
+    "from.value": "The `from.value` element is required.",
+    "to.type": "'base10' is not a valid `to.type` value. Accepted values are: 'hexadecimal', 'decimal', 'octal', 'binary', 'base62', 'base64', 'text'."
+  }
+}</pre>
+          </div>
+        </div>
       </section>
 
       <!-- Warnings structure section -->
       <section id="warning" class="main__section main__section--hidden">
         <h2 class="section__title">Warning structure</h2>
 
-        <div class="section__content"></div>
+        <div class="section__content">
+          <p class="section__paragraph">
+            <span>Warnings are objects returned in the</span>
+            <span class="paragraph__link" data-button-for="response">response</span>
+            <span>
+              of a conversion. These are generated when, during the conversion,
+              any of the following events occurs:
+            </span>
+          </p>
+          <ol class="section__list">
+            <li class="list__paragraph">
+              <span>An invalid value is sent for the selected</span>
+              <span class="paragraph__link" data-button-for="types">type</span><span>.</span>
+              <span>In this case, the</span>
+              <code class="paragraph__code"><span class="code__value">data</span></code>
+              <span>will always return</span>
+              <code class="paragraph__code"><span class="code__value">null</span></code><span>.</span>
+            </li>
+            <li class="list__paragraph">
+              <span>
+                The value to convert is sent in numeric form (the
+              </span>
+              <code class="paragraph__code"><span class="code__value">string</span></code>
+              <span>form is preferable to maintain precision with very large numbers).</span>
+            </li>
+            <li class="list__paragraph">
+              <span>A</span>
+              <span class="paragraph__link" data-button-for="separation">separation</span>
+              <span>is specified in the</span>
+              <code class="paragraph__code"><span class="code__value">from</span></code>
+              <span>object that is not used by the value sent.</span>
+            </li>
+            <li class="list__paragraph">
+              <span>
+                A conversion with a decimal part cannot produce an exact result.
+                In this case, the decimals in the
+              </span>
+              <span class="paragraph__link" data-button-for="response">response</span>
+              <span>are truncated to 25 characters.</span>
+            </li>
+            <li class="list__paragraph">
+              <span>A conversion is performed where</span>
+              <code class="paragraph__code"><span class="code__value">to.type</span></code>
+              <span>is set to</span>
+              <code class="paragraph__code"><span class="code__value">text</span></code>
+              <span>
+                and the number sent for that conversion is too large. In this
+                case, the
+              </span>
+              <code class="paragraph__code"><span class="code__value">data</span></code>
+              <span>object will always return</span>
+              <code class="paragraph__code"><span class="code__value">NTL</span></code>
+              <span>(number too large).</span>
+            </li>
+            <li class="list__paragraph">
+              <span>A conversion is performed where</span>
+              <code class="paragraph__code"><span class="code__value">from.type</span></code>
+              <span>is set to</span>
+              <code class="paragraph__code"><span class="code__value">text</span></code>
+              <span>and the value sent is not a valid number. In this case, the</span>
+              <code class="paragraph__code"><span class="code__value">data</span></code>
+              <span>object will always return</span>
+              <code class="paragraph__code"><span class="code__value">NaN</span></code>
+              <span>(not a number).</span>
+            </li>
+          </ol>
+          <h2 class="section__title2">Structure</h2>
+          <p class="section__paragraph">
+            <span>The</span>
+            <code class="paragraph__code"><span class="code__value">warnings</span></code>
+            <span>
+              object contains a set of key-value pairs, where the key identifies
+              the element that produced the warning and the value is the
+              corresponding message. It is important to note that warnings
+            </span>
+            <b>4</b><span>,</span>
+            <b>5</b><span>, and</span>
+            <b>6</b>
+            <span>use</span>
+            <code class="paragraph__code"><span class="code__value">data</span></code><span></span>
+            <span>
+              as their key, since they are considered issues related to the
+              result of the conversion and not to the
+            </span>
+            <code class="paragraph__code"><span class="code__value">from</span></code>
+            <span>element sent.</span>
+          </p>
+          <h2 class="section__title2">Example</h2>
+          <h3 class="section__title3">Request</h3>
+          <div class="section__code section__code--big">
+            <button class="code__copy" data-code-copy="warning-code-1">
+              <svg class="section__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+              </svg>
+              <svg class="section__icon section__icon--hidden" style="color: var(--copy);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M5 12l5 5l10 -10" />
+              </svg>
+            </button>
+<pre id="warning-code-1" class="code__text">
+{
+  "from": {
+    "value": 10.9,
+    "type": "decimal",
+    "format": {
+      "separation": "comma"
+    }
+  },
+  "to": {
+    "type": "binary"
+  }
+}</pre>
+          </div>
+          <h3 class="section__title3">Response</h3>
+          <div class="section__code section__code--big">
+            <button class="code__copy" data-code-copy="warning-code-2">
+              <svg class="section__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+              </svg>
+              <svg class="section__icon section__icon--hidden" style="color: var(--copy);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M5 12l5 5l10 -10" />
+              </svg>
+            </button>
+<pre id="warning-code-2" class="code__text code__text--scrollable">
+{
+  "warnings": {
+    "from.value": "To maintain precision, always try to send `from.value` in string format, not number format: '10.9' instead of 10.9.",
+    "from.format.separation": "The value sent did not have the specified separation.",
+    "data": "The result had too many decimals. These were truncated to only twenty-five characters."
+  },
+  "data": "1010.11100110011001100110011"
+}</pre>
+          </div>
+        </div>
       </section>
 
       <!-- Types section -->
