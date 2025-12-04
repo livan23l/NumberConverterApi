@@ -29,8 +29,8 @@ class Converter {
                 toExt: "The extra characters entered in the 'to' field " +
                        'are not valid.',
                 NotAN: 'Invalid number. Check the language and punctuation.',
-                NTL: 'The number is too long. The maximum supported scale is ' +
-                     'vigintillion.',
+                NTL: 'The number is too large. The maximum supported scale ' +
+                     'is vigintillion.',
                 int: 'Internal error, please try again later.',
                 unk: 'An unknown error has occurred. Refresh the page or try ' +
                      'again in a few minutes.',
@@ -65,7 +65,7 @@ class Converter {
                 finalMessage = curMessages.int;
                 break;
             case 'data':
-                if (curMessage.startsWith('The number is too long.')) {
+                if (curMessage.startsWith('The number is too large.')) {
                     finalMessage = curMessages.NTL;
                 } else if (curMessage.startsWith('The text you sent')) {
                     finalMessage = curMessages.NotAN;

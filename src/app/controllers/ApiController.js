@@ -165,7 +165,7 @@ export class ApiController extends Controller {
             warnings['data'] = WarningsEnum.TOOMANYDECIMALS();
             result.data = result.data.replace(/\.\.\.$/, '');
         }
-        // Check if the data has the 'NTL' (Number too long) warning
+        // Check if the data has the 'NTL' (Number too large) warning
         else if (result.data == 'NTL') {
             warnings['data'] = WarningsEnum.NTL();
         }

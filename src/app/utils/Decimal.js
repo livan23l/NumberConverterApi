@@ -737,7 +737,7 @@ export class Decimal extends Base {
         // Generate the number
         const [intPart, decPart] = number.split('.');
 
-        // Validate if the integer part of the number is too long
+        // Validate if the integer part of the number is too large
         const isNegative = (intPart.startsWith('-'));
         const langMax = remaining[lang].scale.maximumDigits;
         const maxDigits = (isNegative) ? langMax + 1 : langMax;
