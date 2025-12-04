@@ -51,7 +51,7 @@ class Converter {
                 toExt: 'Los caracteres extra ingresados en el apartado ' +
                        "'hacia' no son válidos.",
                 NotAN: 'Número inválido. Verifica el idioma y la puntuación.',
-                NTL: 'El número es demasiado largo. La escala máxima ' +
+                NTL: 'El número es demasiado grande. La escala máxima ' +
                      'admitida es vigintillón.',
                 int: 'Error interno, inténtelo de nuevo más tarde.',
                 unk: 'Ha sucedido un error desconocido. Recarga la página ' +
