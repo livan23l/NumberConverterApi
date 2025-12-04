@@ -79,8 +79,8 @@ class Documentation {
         // Define the valid sections
         const validSections = [
             'getting-started', 'first-request', 'request', 'response',
-            'types', 'formats', 'separation', 'language',
-            'preserve-zeros', 'order', 'extra-characters',
+            'error', 'warning', 'types', 'formats', 'separation',
+            'language', 'preserve-zeros', 'order', 'extra-characters',
         ];
 
         // Get the initial section

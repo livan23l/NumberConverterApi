@@ -77,6 +77,8 @@
           <div class="aside__options">
             <button id="btn-request" class="aside__option" data-button-for="request">Request</button>
             <button id="btn-response" class="aside__option" data-button-for="response">Response</button>
+            <button id="btn-error" class="aside__option" data-button-for="error">Errors</button>
+            <button id="btn-warning" class="aside__option" data-button-for="warning">Warnings</button>
           </div>
         </div>
 
@@ -101,6 +103,8 @@
           </div>
         </div>
       </aside>
+
+      <div class="main__separator"></div>
 
       <!-- Getting started section -->
       <section id="getting-started" class="main__section main__section--hidden">
@@ -202,7 +206,8 @@
               which specifies the value to convert, and
             </span>
             <code class="paragraph__code"><span class="code__value">to</span></code><span>,</span>
-            <span>which indicates the expected response.</span>
+            <span>which indicates the expected</span>
+            <span class="paragraph__link" data-button-for="response">response</span><span>.</span>
           </p>
           <p class="section__paragraph">
             <span>The</span>
@@ -244,7 +249,6 @@
   "from": {
     "value": "10",
     "type": "decimal"
-    }
   },
   "to": {
     "type": "binary"
@@ -278,19 +282,263 @@
 
         <div class="section__content">
           <p class="section__paragraph">
-            <span>La estructura de las solicitudes consiste únicamente de dos elementos:</span>
+            <span>The structure of the requests consists of only two elements:</span>
             <code class="paragraph__code"><span class="code__value">from</span></code><span>,</span>
-            <span>que indica el valor a convertir, y</span>
+            <span>which indicates the value to be converted, and</span>
             <code class="paragraph__code"><span class="code__value">to</span></code><span>,</span>
-            <span>que indica la respuesta esperada.</span>
+            <span>which indicates the expected</span>
+            <span class="paragraph__link" data-button-for="response">response</span><span>.</span>
           </p>
-          <h3 class="section__subtitle">From</h3>
+          <h3 class="section__title2">From</h3>
+          <p class="section__paragraph">
+            <span>
+              This object contains the initial value of the conversion. It must
+              include the value to be converted and its
+            </span>
+            <span class="paragraph__link" data-button-for="types">type</span><span>.</span>
+            <span>Optionally, it may also include</span>
+            <span class="paragraph__link" data-button-for="formats">formats</span>
+            <span>that describe the structure of the input value.</span>
+          </p>
+          <h3 class="section__title2">To</h3>
+          <p class="section__paragraph">
+            <span>
+              This object defines the data
+            </span>
+            <span class="paragraph__link" data-button-for="types">type</span>
+            <span>expected as the result.</span>
+            <span>Optionally, it may include</span>
+            <span class="paragraph__link" data-button-for="formats">formats</span>
+            <span>that specify the desired structure of the output.</span>
+          </p>
+          <h3 class="section__title2">Structure</h3>
+          <p class="section__paragraph">
+            Based on the above, the structure of a request is as follows:
+          </p>
+          <div class="section__code">
+            <button class="code__copy" data-code-copy="request-code-1">
+              <svg class="section__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+              </svg>
+              <svg class="section__icon section__icon--hidden" style="color: var(--copy);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M5 12l5 5l10 -10" />
+              </svg>
+            </button>
+<pre id="request-code-1" class="code__text">
+{
+  "from": {
+    "value": "",
+    "type": "",
+    "formats": {}
+  },
+  "to": {
+    "type": "",
+    "formats": {}
+  }
+}</pre>
+          </div>
+          <p class="section__paragraph">
+            If additional elements are sent, they will be ignored by the API.
+          </p>
         </div>
       </section>
 
       <!-- Response structure section -->
       <section id="response" class="main__section main__section--hidden">
         <h2 class="section__title">Response structure</h2>
+
+        <div class="section__content">
+          <p class="section__paragraph">
+            <span>
+              The API can return three types of responses, depending on the
+              values sent in the
+            </span>
+            <span class="paragraph__link" data-button-for="request">request</span><span>.</span>
+          </p>
+          <h3 class="section__title2">Ideal response</h3>
+          <p class="section__paragraph">
+            <span>This response is returned when no</span>
+            <span class="paragraph__link" data-button-for="error">error</span>
+            <span>or</span>
+            <span class="paragraph__link" data-button-for="warning">warning</span>
+            <span>
+              occurs during the conversion. The response consists only of the
+            </span>
+            <code class="paragraph__code"><span class="code__value">data</span></code><span></span>
+            <span>object, which contains the final result.</span>
+          </p>
+          <h4 class="section__title3">Request</h4>
+          <div class="section__code">
+            <button class="code__copy" data-code-copy="response-code-1">
+              <svg class="section__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+              </svg>
+              <svg class="section__icon section__icon--hidden" style="color: var(--copy);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M5 12l5 5l10 -10" />
+              </svg>
+            </button>
+<pre id="response-code-1" class="code__text code__text--break">
+{
+  "from": {
+    "value": "10",
+    "type": "decimal"
+  },
+  "to": {
+    "type": "binary"
+  }
+}</pre>
+          </div>
+          <h4 class="section__title3">Response</h4>
+          <div class="section__code section__code--small">
+            <button class="code__copy" data-code-copy="response-code-2">
+              <svg class="section__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+              </svg>
+              <svg class="section__icon section__icon--hidden" style="color: var(--copy);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M5 12l5 5l10 -10" />
+              </svg>
+            </button>
+<pre id="response-code-2" class="code__text code__text--break">
+{
+  "data": "1010"
+}</pre>
+          </div>
+          <h3 class="section__title2">Response with warnings</h3>
+          <p class="section__paragraph">
+            <span>
+              This response is returned when a non-critical condition occurs
+              during the conversion. The response includes the
+            </span>
+            <code class="paragraph__code"><span class="code__value">warnings</span></code><span></span>
+            <span>object, and</span>
+            <code class="paragraph__code"><span class="code__value">data</span></code>
+            <span>
+              may contain the final conversion value or not, depending on the
+              situation.
+            </span>
+          </p>
+          <h4 class="section__title3">Request</h4>
+          <div class="section__code">
+            <button class="code__copy" data-code-copy="response-code-3">
+              <svg class="section__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+              </svg>
+              <svg class="section__icon section__icon--hidden" style="color: var(--copy);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M5 12l5 5l10 -10" />
+              </svg>
+            </button>
+<pre id="response-code-3" class="code__text code__text--break">
+{
+  "from": {
+    "value": "A",
+    "type": "decimal"
+  },
+  "to": {
+    "type": "binary"
+  }
+}</pre>
+          </div>
+          <h4 class="section__title3">Response</h4>
+          <div class="section__code">
+            <button class="code__copy" data-code-copy="response-code-4">
+              <svg class="section__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+              </svg>
+              <svg class="section__icon section__icon--hidden" style="color: var(--copy);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M5 12l5 5l10 -10" />
+              </svg>
+            </button>
+<pre id="response-code-4" class="code__text code__text--break">
+{
+  "warnings": {
+    "validation": "`A` is not a valid decimal number."
+  },
+  "data": null
+}</pre>
+          </div>
+          <h3 class="section__title2">Response with errors</h3>
+          <p class="section__paragraph">
+            <span>
+              This response is returned when the conversion cannot be performed,
+              usually due to an invalid value or a missing required element. In
+              this case, only the
+            </span>
+            <code class="paragraph__code"><span class="code__value">errors</span></code><span></span>
+            <span>
+              object is returned.
+            </span>
+          </p>
+          <h4 class="section__title3">Request</h4>
+          <div class="section__code">
+            <button class="code__copy" data-code-copy="response-code-5">
+              <svg class="section__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+              </svg>
+              <svg class="section__icon section__icon--hidden" style="color: var(--copy);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M5 12l5 5l10 -10" />
+              </svg>
+            </button>
+<pre id="response-code-5" class="code__text code__text--break">
+{
+  "from": {
+    "value": "10"
+  },
+  "to": {
+    "type": "binary"
+  }
+}</pre>
+          </div>
+          <h4 class="section__title3">Response</h4>
+          <div class="section__code">
+            <button class="code__copy" data-code-copy="response-code-6">
+              <svg class="section__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+              </svg>
+              <svg class="section__icon section__icon--hidden" style="color: var(--copy);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M5 12l5 5l10 -10" />
+              </svg>
+            </button>
+<pre id="response-code-6" class="code__text code__text--break">
+{
+  "errors": {
+    "from.type": "The `from.type` element is required."
+  }
+}</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Errors structure section -->
+      <section id="error" class="main__section main__section--hidden">
+        <h2 class="section__title">Error structure</h2>
+
+        <div class="section__content"></div>
+      </section>
+
+      <!-- Warnings structure section -->
+      <section id="warning" class="main__section main__section--hidden">
+        <h2 class="section__title">Warning structure</h2>
 
         <div class="section__content"></div>
       </section>
