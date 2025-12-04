@@ -748,14 +748,191 @@
       <section id="types" class="main__section main__section--hidden">
         <h2 class="section__title">Types of values</h2>
 
-        <div class="section__content"></div>
+        <div class="section__content">
+          <p class="section__paragraph">
+            <span>These are elements that must be sent in both the</span>
+            <code class="paragraph__code"><span class="code__value">from</span></code>
+            <span>element and the</span>
+            <code class="paragraph__code"><span class="code__value">to</span></code><span></span>
+            <span>
+              element. They indicate the type of value being sent or the type of
+              value expected in a conversion.
+            </span>
+          </p>
+          <p class="section__paragraph">
+            <span>The API supports seven different data types:</span>
+            <code class="paragraph__code"><span class="code__value">binary</span></code><span>,</span>
+            <code class="paragraph__code"><span class="code__value">octal</span></code><span>,</span>
+            <code class="paragraph__code"><span class="code__value">decimal</span></code><span>,</span>
+            <code class="paragraph__code"><span class="code__value">hexadecimal</span></code><span>,</span>
+            <code class="paragraph__code"><span class="code__value">base62</span></code><span>,</span>
+            <code class="paragraph__code"><span class="code__value">base64</span></code><span>, and</span>
+            <code class="paragraph__code"><span class="code__value">text</span></code><span>.</span>
+          </p>
+          <h2 class="section__title2">Binary</h2>
+          <p class="section__paragraph">
+            <span>
+              Base used by computers and consisting of only two characters,
+            </span>
+            <b>0</b>
+            <span>and</span>
+            <b>1</b><span>. The</span>
+            <span class="paragraph__link" data-button-for="formats">formats</span>
+            <span>that can be used for this type are:</span>
+          </p>
+          <ul class="section__list">
+            <li class="list__paragraph">
+              <span class="paragraph__link" data-button-for="separation">Separation</span><span>.</span>
+            </li>
+            <li class="list__paragraph">
+              <span class="paragraph__link" data-button-for="preserve-zeros">Preserve zeros</span><span>.</span>
+            </li>
+          </ul>
+          <h2 class="section__title2">Octal</h2>
+          <p class="section__paragraph">
+            <span>
+              Base used in Unix to represent permissions and compact data, using
+              the numbers from
+            </span>
+            <b>0</b><span> to </span><b>7</b><span>. The</span>
+            <span class="paragraph__link" data-button-for="formats">formats</span>
+            <span>that can be used for this type are:</span>
+          </p>
+          <ul class="section__list">
+            <li class="list__paragraph">
+              <span class="paragraph__link" data-button-for="separation">Separation</span><span>.</span>
+            </li>
+            <li class="list__paragraph">
+              <span class="paragraph__link" data-button-for="preserve-zeros">Preserve zeros</span><span>.</span>
+            </li>
+          </ul>
+          <h2 class="section__title2">Decimal</h2>
+          <p class="section__paragraph">
+            <span>
+              Base used in mathematics for calculations and everyday counting,
+              using the numbers from
+            </span>
+            <b>0</b><span> to </span><b>9</b><span>. The</span>
+            <span class="paragraph__link" data-button-for="formats">formats</span>
+            <span>that can be used for this type are:</span>
+          </p>
+          <ul class="section__list">
+            <li class="list__paragraph">
+              <span class="paragraph__link" data-button-for="separation">Separation</span><span>.</span>
+            </li>
+            <li class="list__paragraph">
+              <span class="paragraph__link" data-button-for="preserve-zeros">Preserve zeros</span><span>.</span>
+            </li>
+          </ul>
+          <h2 class="section__title2">Hexadecimal</h2>
+          <p class="section__paragraph">
+            <span>
+              Base used in programming to represent memory and binary data. It
+              uses the numbers from
+            </span>
+            <b>0</b><span> to </span><b>9</b>
+            <span>and the uppercase letters</span>
+            <b>A</b><span> to </span><b>F</b><span>. The</span>
+            <span class="paragraph__link" data-button-for="formats">formats</span>
+            <span>that can be used for this type are:</span>
+          </p>
+          <ul class="section__list">
+            <li class="list__paragraph">
+              <span class="paragraph__link" data-button-for="separation">Separation</span><span>.</span>
+            </li>
+            <li class="list__paragraph">
+              <span class="paragraph__link" data-button-for="preserve-zeros">Preserve zeros</span><span>.</span>
+            </li>
+          </ul>
+          <h2 class="section__title2">Base 62</h2>
+          <p class="section__paragraph">
+            <span>
+              Base used to generate short and readable identifiers. It uses the
+              numbers from
+            </span>
+            <b>0</b><span> to </span><b>9</b><span>, the</span>
+            <b>lowercase</b><span> English alphabet, and the</span>
+            <b>uppercase</b><span> English alphabet. The</span>
+            <span class="paragraph__link" data-button-for="formats">formats</span>
+            <span>that can be used for this type are:</span>
+          </p>
+          <ul class="section__list">
+            <li class="list__paragraph">
+              <span class="paragraph__link" data-button-for="separation">Separation</span><span>.</span>
+            </li>
+            <li class="list__paragraph">
+              <span class="paragraph__link" data-button-for="preserve-zeros">Preserve zeros</span><span>.</span>
+            </li>
+            <li class="list__paragraph">
+              <span class="paragraph__link" data-button-for="order">Order</span><span>.</span>
+            </li>
+          </ul>
+          <h2 class="section__title2">Base 64</h2>
+          <p class="section__paragraph">
+            <span>
+              Base used to encode binary data into compatible text, URLs,
+              emails, and file transmission. It uses
+            </span>
+            <b>uppercase</b><span> English letters,</span>
+            <b>lowercase</b><span> English letters, the numbers from</span>
+            <b>0</b><span> to </span><b>9</b><span>, and two extra characters, by default:</span>
+            <span>'</span><b>+</b><span>' and '</span><b>/</b><span>'. The</span>
+            <span class="paragraph__link" data-button-for="formats">formats</span>
+            <span>that can be used for this type are:</span>
+          </p>
+          <ul class="section__list">
+            <li class="list__paragraph">
+              <span class="paragraph__link" data-button-for="separation">Separation</span><span>.</span>
+            </li>
+            <li class="list__paragraph">
+              <span class="paragraph__link" data-button-for="preserve-zeros">Preserve zeros</span><span>.</span>
+            </li>
+            <li class="list__paragraph">
+              <span class="paragraph__link" data-button-for="order">Order</span><span>.</span>
+            </li>
+            <li class="list__paragraph">
+              <span class="paragraph__link" data-button-for="extra-characters">Extra characters</span><span>.</span>
+            </li>
+          </ul>
+          <h2 class="section__title2">Text</h2>
+          <p class="section__paragraph">
+            <span>
+              This data type is intended for numbers written as text, for
+              example:
+            </span>
+            <code class="paragraph__code">
+              <span class="code__value">one hundred</span>
+              <span class="code__base">text</span>
+            </code><span>,</span>
+            <code class="paragraph__code">
+              <span class="code__value">five point six</span>
+              <span class="code__base">text</span>
+            </code><span> o </span>
+            <code class="paragraph__code">
+              <span class="code__value">one thousand one</span>
+              <span class="code__base">text</span>
+            </code><span>.</span>
+            <span>
+              Conversions of this type can be performed in either
+            </span>
+            <i>English</i><span> or </span><i>Spanish</i><span>. The</span>
+            <span class="paragraph__link" data-button-for="formats">formats</span>
+            <span>that can be used for this type are:</span>
+          </p>
+          <ul class="section__list">
+            <li class="list__paragraph">
+              <span class="paragraph__link" data-button-for="language">Language</span><span>.</span>
+            </li>
+          </ul>
+        </div>
       </section>
 
       <!-- Formats section -->
       <section id="formats" class="main__section main__section--hidden">
         <h2 class="section__title">Formats</h2>
 
-        <div class="section__content"></div>
+        <div class="section__content">
+        </div>
       </section>
 
       <!-- Separations section -->
